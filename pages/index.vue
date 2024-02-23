@@ -1,21 +1,16 @@
 <script setup lang="ts">
-import { sub } from 'date-fns'
-import type { Period, Range } from '~/types'
+import type { Template } from '~/types'
+
+const { data: templates } = await useFetch<Template[]>('/api/members', { default: () => [] })
+
+const loading = ref(false)
+
+const q = ref('')
+const isInviteModalOpen = ref(false)
+
 
 const { isNotificationsSlideoverOpen } = useDashboard()
 
-const items = [[{
-  label: 'New mail',
-  icon: 'i-heroicons-paper-airplane',
-  to: '/inbox'
-}, {
-  label: 'New user',
-  icon: 'i-heroicons-user-plus',
-  to: '/users'
-}]]
-
-const range = ref<Range>({ start: sub(new Date(), { days: 14 }), end: new Date() })
-const period = ref<Period>('daily')
 </script>
 
 <template>
@@ -30,34 +25,31 @@ const period = ref<Period>('daily')
               </UChip>
             </UButton>
           </UTooltip>
-
-          <UDropdown :items="items">
-            <UButton icon="i-heroicons-plus" size="md" class="ml-1.5 rounded-full" />
-          </UDropdown>
         </template>
       </UDashboardNavbar>
+      <UDashboardPanelContent class="pb-24">
+        <UDashboardSection title="Create Templates" description="Invite new members by email address."
+          orientation="horizontal" :ui="{ container: 'lg:sticky top-2' }">
+        </UDashboardSection>
+        <UCard :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }" class="min-w-0">
+          <template #header>
+            <div class="flex items-center justify-between gap-2">
 
-      <UDashboardToolbar>
-        <template #left>
-          <!-- ~/components/home/HomeDateRangePicker.vue -->
-          <HomeDateRangePicker v-model="range" class="-ml-2.5" />
+              <UInput v-model="q" icon="i-heroicons-magnifying-glass" placeholder="Search members" autofocus />
+              <UButton label="Create New Template" color="black" @click="isInviteModalOpen = true" />
+            </div>
+          </template>
 
-          <!-- ~/components/home/HomePeriodSelect.vue -->
-          <HomePeriodSelect v-model="period" :range="range" />
-        </template>
-      </UDashboardToolbar>
-
-      <UDashboardPanelContent>
-        <!-- ~/components/home/HomeChart.vue -->
-        <HomeChart :period="period" :range="range" />
-
-        <div class="grid lg:grid-cols-2 lg:items-start gap-8 mt-8">
-          <!-- ~/components/home/HomeSales.vue -->
-          <HomeSales />
-          <!-- ~/components/home/HomeCountries.vue -->
-          <HomeCountries />
-        </div>
+          <!-- ~/components/settings/MembersList.vue -->
+          <SettingsMembersList :templates="templates" />
+        </UCard>
+        <UDashboardModal v-model="isInviteModalOpen" title="Invite people"
+          description="Invite new members by email address" :ui="{ width: 'sm:max-w-md' }">
+          <!-- ~/components/settings/MembersForm.vue -->
+          <SettingsMembersForm @close="isInviteModalOpen = false" />
+        </UDashboardModal>
       </UDashboardPanelContent>
+
     </UDashboardPanel>
   </UDashboardPage>
 </template>

@@ -2,19 +2,31 @@ import type { Avatar } from '#ui/types'
 
 export type UserStatus = 'subscribed' | 'unsubscribed' | 'bounced'
 
-export interface User {
-  id: number
-  name: string
-  email: string
-  avatar?: Avatar
-  status: UserStatus
-  location: string
+export interface Template {
+  id?: string
+  name?: string
+  githubID?: string
+  flakeUrl: string
+  awsInstanceType?: string
+}
+
+export interface Instance {
+  id: string
+  domain: string
+  ip: string
+  template: Template
+}
+
+export interface File {
+  id: string
+  path: string
+  content: string 
 }
 
 export interface Mail {
   id: number
   unread?: boolean
-  from: User
+  from: Template
   subject: string
   body: string
   date: string
@@ -30,7 +42,7 @@ export interface Member {
 export interface Notification {
   id: number
   unread?: boolean
-  sender: User
+  sender: Template
   body: string
   date: string
 }

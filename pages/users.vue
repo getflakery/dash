@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { User } from '~/types'
+import type { Template } from '~/types'
 
 const defaultColumns = [{
   key: 'id',

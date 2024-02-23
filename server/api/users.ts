@@ -1,6 +1,6 @@
-import type { User, UserStatus } from '~/types'
+import type { Template, UserStatus } from '~/types'
 
-const users: User[] = [{
+const users: Template[] = [{
   id: 1,
   name: 'Alex Smith',
   email: 'alex.smith@example.com',

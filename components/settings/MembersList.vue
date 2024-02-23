@@ -1,51 +1,56 @@
 <script setup lang="ts">
-import type { Member } from '~/types'
+import type { Template } from '~/types'
 
 defineProps({
-  members: {
-    type: Array as PropType<Member[]>,
+  templates: {
+    type: Array as PropType<Template[]>,
     default: () => []
   }
 })
 
-function getItems (member: Member) {
+function getItems (template: Template) {
   return [[{
-    label: 'Edit member',
-    click: () => console.log('Edit', member)
-  }, {
-    label: 'Remove member',
+    label: 'Edit template',
+    icon: 'i-heroicons-pencil-square-20-solid',
+    click: () => console.log('Edit', template)
+  }, 
+  {
+    label: 'Deploy Instance',
+    icon: 'i-heroicons-server',
+    click: () => console.log('Edit', template)
+  }, 
+  {
+    label: 'Remove template',
+    icon: 'i-heroicons-trash-20-solid',
     labelClass: 'text-red-500 dark:text-red-400',
-    click: () => console.log('Remove', member)
+    click: () => console.log('Remove', template)
   }]]
 }
 
-function onRoleChange (member: Member, role: string) {
+function onRoleChange (template: Template, role: string) {
   // Do something with data
-  console.log(member.username, role)
+  console.log(template.flakeUrl, role)
 }
 </script>
 
 <template>
   <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-800">
-    <li v-for="(member, index) in members" :key="index" class="flex items-center justify-between gap-3 py-3 px-4 sm:px-6">
+    <li v-for="(template, index) in templates" :key="index" class="flex items-center justify-between gap-3 py-3 px-4 sm:px-6">
       <div class="flex items-center gap-3 min-w-0">
-        <UAvatar v-bind="member.avatar" size="md" />
 
         <div class="text-sm min-w-0">
           <p class="text-gray-900 dark:text-white font-medium truncate">
-            {{ member.name }}
+            {{ template.name }} 
           </p>
           <p class="text-gray-500 dark:text-gray-400 truncate">
-            {{ member.username }}
+            {{ template.flakeUrl }}
           </p>
         </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <USelectMenu :model-value="member.role" :options="['member', 'owner']" color="white" :ui-menu="{ select: 'capitalize', option: { base: 'capitalize' } }" @update:model-value="onRoleChange(member, $event)" />
-
-        <UDropdown :items="getItems(member)" position="bottom-end">
-          <UButton icon="i-heroicons-ellipsis-vertical" color="gray" variant="ghost" />
+        <UDropdown :items="getItems(template)" position="bottom-end">
+          <UButton color="white" label="Actions" trailing-icon="i-heroicons-chevron-down-20-solid" />
         </UDropdown>
       </div>
     </li>
