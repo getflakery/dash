@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Template } from '~/types'
+import type {  Networking } from '~/types'
 
-const { data: templates } = await useFetch<Template[]>('/api/members', { default: () => [] })
+const { data: networks } = await useFetch<Networking[]>('/api/networks', { default: () => [] })
 
 const loading = ref(false)
 
@@ -9,26 +9,22 @@ const q = ref('')
 const isInviteModalOpen = ref(false)
 
 
-const { isNotificationsSlideoverOpen } = useDashboard()
-
 </script>
 
 <template>
   <UDashboardPage>
     <UDashboardPanel grow>
-      <UDashboardNavbar title="Home">
+      <UDashboardNavbar title="Files">
         <template #right>
-          <UTooltip text="Notifications" :shortcuts="['N']">
-            <UButton color="gray" variant="ghost" square @click="isNotificationsSlideoverOpen = true">
-              <UChip color="red" inset>
-                <UIcon name="i-heroicons-bell" class="w-5 h-5" />
-              </UChip>
-            </UButton>
-          </UTooltip>
+          <!-- link to documentation -->
+          <ULink href="" target="_blank" class="flex items-center gap-2">
+            <UIcon name="i-heroicons-book-open" />
+            <span>Documentation</span>
+          </ULink>
         </template>
       </UDashboardNavbar>
       <UDashboardPanelContent class="pb-24">
-        <UDashboardSection title="Create Templates" description="Invite new members by email address."
+        <UDashboardSection title="Create Files" description="Create an encrypted file that you can use to seed a new instance"
           orientation="horizontal" :ui="{ container: 'lg:sticky top-2' }">
         </UDashboardSection>
         <UCard :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }" class="min-w-0">
@@ -36,17 +32,16 @@ const { isNotificationsSlideoverOpen } = useDashboard()
             <div class="flex items-center justify-between gap-2">
 
               <UInput v-model="q" icon="i-heroicons-magnifying-glass" placeholder="Search members" autofocus />
-              <UButton label="Create New Template" color="black" @click="isInviteModalOpen = true" />
+              <UButton label="Create New File" color="black" @click="isInviteModalOpen = true" />
             </div>
           </template>
 
-          <!-- ~/components/settings/MembersList.vue -->
-          <SettingsMembersList :templates="templates" />
+          <NetworksList :networks="networks" />
         </UCard>
         <UDashboardModal v-model="isInviteModalOpen" title="Invite people"
           description="Invite new members by email address" :ui="{ width: 'sm:max-w-md' }">
           <!-- ~/components/settings/MembersForm.vue -->
-          <SettingsMembersForm @close="isInviteModalOpen = false" />
+          <EncryptedFilesForm @close="isInviteModalOpen = false" />
         </UDashboardModal>
       </UDashboardPanelContent>
 
