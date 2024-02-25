@@ -7,13 +7,13 @@ const links = [{
   id: 'templates',
   label: 'Templates',
   icon: 'i-heroicons-squares-2x2',
-  to: '/templates',
+  to: '/dashboard/templates',
 
 }, {
   id: 'instances',
   label: 'Instances',
   icon: 'i-heroicons-server',
-  to: '/instances',
+  to: '/dashboard/instances',
   badge: '4',
 }, {
   id: 'clusters',
@@ -25,12 +25,12 @@ const links = [{
   id: 'network',
   label: 'Networks',
   icon: 'i-heroicons-globe-alt',
-  to: '/network',
+  to: '/dashboard/network',
 }, {
   id: 'encrypted-files',
   label: 'Encrypted Files',
   icon: 'i-heroicons-lock-closed',
-  to: '/encrypted-files',
+  to: '/dashboard/encrypted-files',
 }]
 
 const footerLinks = [{
@@ -63,11 +63,6 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
 <template>
   <UDashboardLayout>
     <UDashboardPanel :width="250" :resizable="{ min: 200, max: 300 }" collapsible>
-      <UDashboardNavbar class="!border-transparent" :ui="{ left: 'flex-1' }">
-        <template #left>
-          <TeamsDropdown />
-        </template>
-      </UDashboardNavbar>
 
       <UDashboardSidebar>
         <template #header>

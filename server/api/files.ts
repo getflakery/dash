@@ -1,4 +1,5 @@
 import type {  File } from "~/types"
+import { useDB } from "../utils/db"
 
 const files: File[] = [
   {
@@ -20,5 +21,6 @@ const files: File[] = [
 ]
 
 export default eventHandler(async () => {
+  const db = useDB()
   return files
 })
