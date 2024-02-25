@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 // Template table definition
 export const template = sqliteTable('template', {
@@ -9,7 +9,7 @@ export const template = sqliteTable('template', {
 });
 
 // File table definition
-export const file = sqliteTable('file', {
+export const files = sqliteTable('file', {
   id: text('id').primaryKey(),
   path: text('path').notNull(),
   content: text('content').notNull(),
@@ -19,6 +19,6 @@ export const file = sqliteTable('file', {
 // Junction table to represent the many-to-many relationship
 export const templateFile = sqliteTable('template_file', {
   id: text('id').primaryKey(),
-  fileId: text('file_id').notNull().references(() => file.id, {onDelete: 'no action'}).notNull(),
+  fileId: text('file_id').notNull().references(() => files.id, {onDelete: 'no action'}).notNull(),
   templateId: text('template_id').notNull().references(() => template.id, {onDelete: 'no action'}).notNull(),
 });
