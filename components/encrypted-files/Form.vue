@@ -3,6 +3,10 @@
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
 
+defineProps({
+  refresh: Function,
+})
+
 const emit = defineEmits(['close'])
 
 const state = reactive({
@@ -17,7 +21,8 @@ const validate = (state: any): FormError[] => {
   return errors
 }
 
-async function onSubmit(event: FormSubmitEvent<any>) {
+function onSubmit(refresh) {
+ return async (event: FormSubmitEvent<any>) => {
   
   // // post to /api/files
   await $fetch('/api/files', {
@@ -27,14 +32,15 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     },
     body: JSON.stringify(event.data)
   })
-
+  refresh()
   emit('close')
+}
 }
 </script>
 
 
 <template>
-  <UForm :validate="validate" :validate-on="['submit']" :state="state" class="space-y-4" @submit="onSubmit">
+  <UForm :validate="validate" :validate-on="['submit']" :state="state" class="space-y-4" @submit="(event) => onSubmit(refresh)(event)">
     <UFormGroup label="Path" name="path">
       <UInput v-model="state.path" type="text" placeholder="/some/filesystem/path" autofocus />
     </UFormGroup>

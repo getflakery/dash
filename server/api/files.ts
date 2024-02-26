@@ -1,4 +1,3 @@
-import { useDB } from "../utils/db"
 import { files } from '~/server/database/schema'
 import { eq } from 'drizzle-orm'
 

@@ -5,25 +5,20 @@ defineProps({
   files: {
     type: Array as PropType<File[]>,
     default: () => []
-  }
+  },
+  refresh: Function,
 })
 
-function getItems (template: File) {
-  return [[{
-    label: 'Edit template',
-    icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => console.log('Edit', template)
-  }, 
+function getItems (file: File, refresh: Function) {
+  return [[
   {
-    label: 'Deploy Instance',
-    icon: 'i-heroicons-server',
-    click: () => console.log('Edit', template)
-  }, 
-  {
-    label: 'Remove template',
+    label: 'Delete File',
     icon: 'i-heroicons-trash-20-solid',
     labelClass: 'text-red-500 dark:text-red-400',
-    click: () => console.log('Remove', template)
+    click: async () => {
+      await $fetch(`/api/files/${file.id}`, { method: 'DELETE' })
+      refresh()
+    }
   }]]
 }
 
@@ -42,7 +37,7 @@ function getItems (template: File) {
       </div>
 
       <div class="flex items-center gap-3">
-        <UDropdown :items="getItems(template)" position="bottom-end">
+        <UDropdown :items="getItems(file, refresh)" position="bottom-end">
           <UButton color="white" label="Actions" trailing-icon="i-heroicons-chevron-down-20-solid" />
         </UDropdown>
       </div>
