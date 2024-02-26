@@ -1,26 +1,10 @@
-import type {  File } from "~/types"
 import { useDB } from "../utils/db"
+import { files } from '~/server/database/schema'
+import { eq } from 'drizzle-orm'
 
-const files: File[] = [
-  {
-    content: "/foo",
-    path: "/foo"
-  },
-  {
-    content: "/foo",
-    path: "/bar"
-  },
-  {
-    content: "/foo",
-    path: "/tsauth"
-  },
-  {
-    content: "/foo",
-    path: "/.env"
-  },
-]
-
-export default eventHandler(async () => {
+export default eventHandler(async (event) => {
   const db = useDB()
-  return files
+  const session = await requireUserSession(event)
+  const userID = session.user.id
+ return await db.select().from(files).where(eq(files.userID, userID))
 })

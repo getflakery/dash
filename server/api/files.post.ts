@@ -4,7 +4,7 @@ import { files } from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
 
 export default eventHandler(async (event) => {
-  const { path, content } = await useValidatedParams(event, {
+  const { path, content } = await useValidatedBody(event, {
     path: z.string(),
     content: z.string()
   })

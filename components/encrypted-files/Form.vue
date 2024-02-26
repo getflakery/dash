@@ -13,13 +13,20 @@ const state = reactive({
 // https://ui.nuxt.com/components/form
 const validate = (state: any): FormError[] => {
   const errors = []
-  if (!state.email) errors.push({ path: 'email', message: 'Please enter an email.' })
+  // if (!state.email) errors.push({ path: 'email', message: 'Please enter an email.' })
   return errors
 }
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-  // Do something with data
-  console.log(event.data)
+  
+  // // post to /api/files
+  await $fetch('/api/files', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(event.data)
+  })
 
   emit('close')
 }

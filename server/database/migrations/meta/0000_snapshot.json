@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "ba741da1-807d-4c83-bacb-646b83269c2d",
+  "id": "88c701c1-1d19-4270-8f42-5cc33823c524",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "file": {
-      "name": "file",
+    "files": {
+      "name": "files",
       "columns": {
         "id": {
           "name": "id",
@@ -27,6 +27,13 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -34,8 +41,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "template": {
-      "name": "template",
+    "templates": {
+      "name": "templates",
       "columns": {
         "id": {
           "name": "id",
@@ -71,8 +78,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "template_file": {
-      "name": "template_file",
+    "template_files": {
+      "name": "template_files",
       "columns": {
         "id": {
           "name": "id",
@@ -98,10 +105,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "template_file_file_id_file_id_fk": {
-          "name": "template_file_file_id_file_id_fk",
-          "tableFrom": "template_file",
-          "tableTo": "file",
+        "template_files_file_id_files_id_fk": {
+          "name": "template_files_file_id_files_id_fk",
+          "tableFrom": "template_files",
+          "tableTo": "files",
           "columnsFrom": [
             "file_id"
           ],
@@ -111,10 +118,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "template_file_template_id_template_id_fk": {
-          "name": "template_file_template_id_template_id_fk",
-          "tableFrom": "template_file",
-          "tableTo": "template",
+        "template_files_template_id_templates_id_fk": {
+          "name": "template_files_template_id_templates_id_fk",
+          "tableFrom": "template_files",
+          "tableTo": "templates",
           "columnsFrom": [
             "template_id"
           ],
