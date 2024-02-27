@@ -24,3 +24,12 @@ export const templateFiles = sqliteTable('template_files', {
   fileId: text('file_id').notNull().references(() => files.id, {onDelete: 'no action'}).notNull(),
   templateId: text('template_id').notNull().references(() => templates.id, {onDelete: 'no action'}).notNull(),
 });
+
+// instances table definition
+// id, name, and reference to template
+export const instances = sqliteTable('instances', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  templateID: text('template_id').notNull().references(() => templates.id, {onDelete: 'no action'}).notNull(),
+  flakeComputeID: text('flake_compute_id'),
+});
