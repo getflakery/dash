@@ -5,33 +5,20 @@ defineProps({
   instances: {
     type: Array as PropType<Instance[]>,
     default: () => []
-  }
+  },
+  refresh: Function,
 })
 
-function getItems (template: Instance) {
-  return [[{
-    label: 'Edit template',
-    icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => console.log('Edit', template)
-  }],
-  [{
-    label: 'Deploy Instance',
-    icon: 'i-heroicons-server',
-    click: async () => {
-      await $fetch(`/api/instances`, {
-         method: 'POST',
-         body: JSON.stringify({
-          "templateID": template.id
-         })
-     }
-      )
-    }
-  }],
+function getItems (instance: Instance, refresh: Function) {
+  return [
   [{
     label: 'Delete Template',
     icon: 'i-heroicons-trash-20-solid',
     labelClass: 'text-red-500 dark:text-red-400',
-    click: () => console.log('Delete', template)
+    click: async () => {
+      await $fetch(`/api/instances/${instance.id}`, { method: 'DELETE' })
+      refresh()
+    }
   }]]
 }
 
@@ -51,7 +38,7 @@ function getItems (template: Instance) {
       </div>
 
       <div class="flex items-center gap-3">
-        <UDropdown :items="getItems(i)" position="bottom-end">
+        <UDropdown :items="getItems(i, refresh)" position="bottom-end">
           <UButton color="white" label="Actions" trailing-icon="i-heroicons-chevron-down-20-solid" />
         </UDropdown>
       </div>
