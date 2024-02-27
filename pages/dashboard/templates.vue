@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Template } from '~/types'
 
-const { data: templates } = await useFetch<Template[]>('/api/members', { default: () => [] })
+const { data: templates, refresh } = await useFetch<Template[]>('/api/templates', { default: () => [] })
 
 const loading = ref(false)
 
@@ -39,12 +39,12 @@ const { isNotificationsSlideoverOpen } = useDashboard()
           </template>
 
           <!-- ~/components/settings/MembersList.vue -->
-          <SettingsMembersList :templates="templates" />
+          <TemplatesList :templates="templates" :refresh="refresh"/>
         </UCard>
         <UDashboardModal v-model="isInviteModalOpen" title="Invite people"
           description="Invite new members by email address" :ui="{ width: 'sm:max-w-md' }">
           <!-- ~/components/settings/MembersForm.vue -->
-          <TemplatesForm @close="isInviteModalOpen = false" />
+          <TemplatesForm @close="isInviteModalOpen = false" :refresh="refresh" />
         </UDashboardModal>
       </UDashboardPanelContent>
 

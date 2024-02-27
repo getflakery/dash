@@ -5,6 +5,10 @@ import type { FormError, FormSubmitEvent } from '#ui/types'
 import { reactive, ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 
+defineProps({
+  refresh: Function,
+})
+
 
 const emit = defineEmits(['close'])
 
@@ -22,9 +26,16 @@ const validate = (state: any): FormError[] => {
   return errors
 }
 
-async function onSubmit(event: FormSubmitEvent<any>) {
-  // Do something with data
-  console.log(event.data)
+async function onSubmit(event: FormSubmitEvent<any>, refresh) {
+  // post state too /api/templates
+  await $fetch('/api/templates', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(state)
+  })
+  refresh()
 
   emit('close')
 }
@@ -152,7 +163,7 @@ async function search(q: string) {
 
     <div class="flex justify-end gap-3">
       <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
-      <UButton type="submit" label="Save" color="black" />
+      <UButton type="submit" label="Save" color="black" @click="onSubmit(event, refresh)" />
     </div>
 
 

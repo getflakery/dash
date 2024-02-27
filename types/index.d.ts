@@ -3,8 +3,9 @@ import type { Avatar } from '#ui/types'
 export type UserStatus = 'subscribed' | 'unsubscribed' | 'bounced';
 
 export interface Template {
+  id: string
   name?: string
-  flakeUrl: string
+  flakeURL: string
 };
 
 export interface Instance {
