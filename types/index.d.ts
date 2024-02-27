@@ -9,9 +9,14 @@ export interface Template {
 };
 
 export interface Instance {
-  id?: string
-  template?: Template
-  name: string
+  id: string
+  templateID: string
+  name?: string
+  logs: {
+    items: {
+      content: string
+    }[]
+  }
 };
 
 export interface File {

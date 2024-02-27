@@ -1,0 +1,9 @@
+.dark {
+  color-scheme: dark;
+}
+
+a:focus-visible {
+  @apply outline-primary;
+}
+
+::selection { @apply bg-primary/40; }

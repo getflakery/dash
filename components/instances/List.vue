@@ -29,12 +29,15 @@ function getItems (instance: Instance, refresh: Function) {
     <li v-for="(i, index) in instances" :key="index" class="flex items-center justify-between gap-3 py-3 px-4 sm:px-6">
       <div class="flex items-center gap-3 min-w-0">
 
-        <div class="text-sm min-w-0">
+        <NuxtLink :to="`/dashboard/instance/${i.id}`">
+          <div class="text-sm min-w-0">
           <p class="text-gray-900 dark:text-white font-medium truncate">
             {{ i.name }} 
           </p>
 
         </div>
+        </NuxtLink>
+
       </div>
 
       <div class="flex items-center gap-3">
