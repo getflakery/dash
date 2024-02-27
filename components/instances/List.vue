@@ -13,17 +13,25 @@ function getItems (template: Instance) {
     label: 'Edit template',
     icon: 'i-heroicons-pencil-square-20-solid',
     click: () => console.log('Edit', template)
-  }, 
-  {
+  }],
+  [{
     label: 'Deploy Instance',
     icon: 'i-heroicons-server',
-    click: () => console.log('Edit', template)
-  }, 
-  {
-    label: 'Remove template',
+    click: async () => {
+      await $fetch(`/api/instances`, {
+         method: 'POST',
+         body: JSON.stringify({
+          "templateID": template.id
+         })
+     }
+      )
+    }
+  }],
+  [{
+    label: 'Delete Template',
     icon: 'i-heroicons-trash-20-solid',
     labelClass: 'text-red-500 dark:text-red-400',
-    click: () => console.log('Remove', template)
+    click: () => console.log('Delete', template)
   }]]
 }
 

@@ -32,4 +32,6 @@ export const instances = sqliteTable('instances', {
   name: text('name').notNull(),
   templateID: text('template_id').notNull().references(() => templates.id, {onDelete: 'no action'}).notNull(),
   flakeComputeID: text('flake_compute_id'),
+  awsInstanceID: text('aws_instance_id'),
+  userID: text('user_id').notNull(),
 });

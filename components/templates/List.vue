@@ -10,9 +10,24 @@ defineProps({
 })
 
 function getItems (template: Template, refresh: Function) {
-  return [[
+
+  return [
+  [{
+    label: 'Deploy Instance',
+    icon: 'i-heroicons-server',
+    click: async () => {
+      await $fetch(`/api/instances`, {
+         method: 'POST',
+         body: JSON.stringify({
+          "templateID": template.id
+         })
+     }
+      )
+    }
+  }],
+  [
   {
-    label: 'Delete File',
+    label: 'Delete Template',
     icon: 'i-heroicons-trash-20-solid',
     labelClass: 'text-red-500 dark:text-red-400',
     click: async () => {

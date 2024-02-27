@@ -15,6 +15,13 @@
       "when": 1709003293660,
       "tag": "0001_steep_madrox",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1709050449795,
+      "tag": "0002_lame_wallow",
+      "breakpoints": true
     }
   ]
 }

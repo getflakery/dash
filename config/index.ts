@@ -1,3 +1,3 @@
 export default {
-    BACKEND_URL: process.env.BACKEND_URL || 'https://staging.nixos.jjk.is',
+    BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:8002',
 }
