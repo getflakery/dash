@@ -26,7 +26,7 @@ const { isNotificationsSlideoverOpen } = useDashboard()
         </template>
       </UDashboardNavbar>
       <UDashboardPanelContent class="pb-24">
-        <UDashboardSection title="Create Templates" description="Invite new members by email address."
+        <UDashboardSection title="Create Templates" description="Create a template to deploy your nix flake"
           orientation="horizontal" :ui="{ container: 'lg:sticky top-2' }">
         </UDashboardSection>
         <UCard :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }" class="min-w-0">
@@ -44,7 +44,7 @@ const { isNotificationsSlideoverOpen } = useDashboard()
         <UDashboardModal v-model="isInviteModalOpen" title="Invite people"
           description="Invite new members by email address" :ui="{ width: 'sm:max-w-md' }">
           <!-- ~/components/settings/MembersForm.vue -->
-          <SettingsMembersForm @close="isInviteModalOpen = false" />
+          <TemplatesForm @close="isInviteModalOpen = false" />
         </UDashboardModal>
       </UDashboardPanelContent>
 

@@ -1,53 +1,55 @@
 <template>
-        <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between">
 
-        <UInputMenu v-model="selected" :search="search" :loading="loading" placeholder="Search for a user..."
-            option-attribute="name" by="id">
+        <USelectMenu v-model="selected" :loading="loading" :searchable="search" placeholder="Search for a file by path"
+            option-attribute="path" multiple trailing by="id" />
 
-        </UInputMenu>
         <UButton @click="addFile" icon="i-heroicons-plus" variant="secondary">Add New File</UButton>
 
     </div>
 
 
-    <div class="max-w-4xl mx-auto p-4">
 
-        <transition-group name="file-list" tag="div" class="space-y-4">
-            <div v-for="(file, index) in files" :key="file.id" class="p-3 rounded-lg shadow-sm file-list-enter-active">
-                <div v-if="editing[file.id]">
-                    <UTextarea :rows="1" v-model="file.path" placeholder="File System Path" class="mb-2 w-full" />
-                    <UTextarea resize v-model="file.content" placeholder="File Content" class="w-full" />
-                    <div class="flex justify-between mt-4">
-                        <UButton @click="cancelEdit(file, index)" icon="i-heroicons-arrow-left" variant="secondary">Cancel
-                            Editing</UButton>
-                        <div>
-                            <UButton @click="deleteFile(index)" icon="i-heroicons-x-mark" variant="secondary">Delete
-                            </UButton>
-                            <UButton @click="saveEdit(file)" icon="i-heroicons-check">Save</UButton>
-                        </div>
-                    </div>
-                </div>
-                <div v-else>
-                    <div class="flex items-center justify-between">
-                        <div class="flex-1 font-medium">{{ file.path }}</div>
-                        <div>
-                            <UButton class="mr-2" variant="soft" size="2xs" icon="i-heroicons-pencil-square"
-                                @click="startEdit(file)" />
-                            <UButton class="mr-2" color="red" variant="soft" size="2xs" icon="i-heroicons-x-mark-20-solid"
-                                @click="deleteFile(index)" />
-                        </div>
+
+    <transition-group name="file-list" tag="div" class="space-y-4 my-4">
+        <div v-for="(file, index) in files.concat(selected)" :key="file.id" class="rounded-lg file-list-enter-active">
+            <div v-if="editing[file.id]">
+                <UTextarea :rows="1" v-model="file.path" placeholder="File System Path" class="my-4 w-full" />
+                <UTextarea resize v-model="file.content" placeholder="File Content" class="w-full my-4" />
+                <div class="flex justify-between  my-4">
+                    <UButton @click="cancelEdit(file, index)" icon="i-heroicons-arrow-left" variant="secondary">Cancel
+                        Editing</UButton>
+                    <div>
+                        <UButton @click="deleteFile(index)" icon="i-heroicons-x-mark" variant="secondary">Delete
+                        </UButton>
+                        <UButton @click="saveEdit(file)" icon="i-heroicons-check">Save</UButton>
                     </div>
                 </div>
             </div>
-        </transition-group>
+            <div v-else>
 
-    </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex-1 font-medium">{{ file.path }}</div>
+                    <div>
+                        <UButton class="mr-2" variant="soft" size="2xs" icon="i-heroicons-pencil-square"
+                            @click="startEdit(file)" />
+                        <UButton class="mr-2" color="red" variant="soft" size="2xs" icon="i-heroicons-x-mark-20-solid"
+                            @click="deleteFile(index)" />
+                    </div>
+
+
+                </div>
+                <UDivider class="my-4" />
+
+
+            </div>
+        </div>
+    </transition-group>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
-
 
 const files = reactive([]);
 const editing = ref({});
@@ -84,17 +86,20 @@ function addFile() {
     startEdit(newFile);
 }
 
-const loading = ref(false)
-const selected = ref()
+const loading = ref(false);
+const selected = ref([])
+
 
 async function search(q: string) {
     loading.value = true
 
-    const users = await $fetch<any[]>('https://jsonplaceholder.typicode.com/users', { params: { q } })
+    let files = await $fetch('/api/files');
 
     loading.value = false
 
-    return users
+    return files.filter((file) => {
+        return file.path.toLowerCase().includes(q.toLowerCase())
+    })
 }
 
 </script>
