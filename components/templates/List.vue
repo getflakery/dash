@@ -45,11 +45,12 @@ function getItems (template: Template, refresh: Function) {
       <div class="flex items-center gap-3 min-w-0">
 
         <div class="text-sm min-w-0">
-          {{ template.name }} 
-
           <p class="text-gray-900 dark:text-white font-medium truncate">
-            {{ template.flakeURL }} 
+            {{ template.name }} 
           </p>
+          {{ template.flakeURL }} 
+
+
         </div>
       </div>
 
