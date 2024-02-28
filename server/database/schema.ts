@@ -1,4 +1,4 @@
-import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer} from 'drizzle-orm/sqlite-core';
 
 // Template table definition
 export const templates = sqliteTable('templates', {
@@ -35,3 +35,17 @@ export const instances = sqliteTable('instances', {
   awsInstanceID: text('aws_instance_id'),
   userID: text('user_id').notNull(),
 });
+
+// networks 
+export const networks  = sqliteTable('networks', {
+  id: text('id').primaryKey(),
+  domain: text('domain').notNull(),
+})
+
+
+//
+export const ports =  sqliteTable('ports', {
+  id: text('id').primaryKey(),
+  number: integer('number').notNull(),
+  network: text('network_id').notNull().references(() => networks.id, {onDelete: 'no action'}).notNull(),
+})
