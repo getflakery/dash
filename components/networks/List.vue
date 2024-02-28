@@ -5,7 +5,8 @@ defineProps({
   networks: {
     type: Array as PropType<Network[]>,
     default: () => []
-  }
+  },
+  refresh: Function,
 })
 
 function getItems (network: Network) {

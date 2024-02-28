@@ -29,6 +29,13 @@
       "when": 1709084104638,
       "tag": "0003_premium_sprite",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1709096552420,
+      "tag": "0004_curly_multiple_man",
+      "breakpoints": true
     }
   ]
 }

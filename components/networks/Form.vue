@@ -3,14 +3,30 @@
 import type { FormError, FormSubmitEvent } from '#ui/types'
 import { v4 as uuidv4 } from 'uuid';
 
+defineProps({
+  refresh: Function,
+})
 
 const emit = defineEmits(['close'])
 
 const state = reactive({
-  name: "",
-  flakeURL: "",
-  awsInstanceType: "",
+  domain: "",
+  ports: [22, 80, 443]
 })
+const selected = ref([22, 80, 443])
+
+const ports = computed({
+  get: () => selected.value,
+  set: async (i) => {
+
+
+    selected.value = i
+    state.ports.concat(i)
+    // deduplicate
+    state.ports = Array.from(new Set(state.ports))
+  }
+})
+
 
 // https://ui.nuxt.com/components/form
 const validate = (state: any): FormError[] => {
@@ -19,44 +35,46 @@ const validate = (state: any): FormError[] => {
   return errors
 }
 
-async function onSubmit(event: FormSubmitEvent<any>) {
-  // Do something with data
-  console.log(event.data)
+async function onSubmit(refresh) {
+  const body  = JSON.stringify({
+      domain: state.domain,
+      ports: selected.value,
+    })
+    console.log(body)
+  await $fetch('/api/networks', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body,
+  })
+  refresh()
 
   emit('close')
 }
+
 </script>
 
 
 <template>
-  <UForm :validate="validate" :validate-on="['submit']" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormGroup label="Flake URL" name="flakeURL">
-      <UInput v-model="state.flakeURL" type="text" placeholder="github:getflakery/basic-flake" autofocus />
+  <UForm :validate="validate" :validate-on="['submit']" :state="state" class="space-y-4" >
+    <UFormGroup label="Domain Name" name="domainName" description="If you do not provide a domain name, one will be generated for you.">
+      <UInput  v-model="state.domain">
+        <template #trailing>
+          <span class="text-gray-500 dark:text-gray-400 text-xs">.app.flakery.xyz</span>
+        </template>
+      </UInput>
     </UFormGroup>
 
-    <!-- rest of fields are optional  -->
-    <!-- name -->
-    <UFormGroup label="Name" name="name">
-      <UInput v-model="state.name" type="text" placeholder="Name" />
+    <UFormGroup label="Ports" name="ports" de>
+      <USelectMenu v-model="selected" :options="ports" multiple searchable searchable-placeholder="Select Ports..."
+        creatable />
     </UFormGroup>
 
-    <!-- awsInstanceType -->
-    <UFormGroup label="AWS Instance Type" name="awsInstanceType">
-      <UInput v-model="state.awsInstanceType" type="text" placeholder="t3.small" />
-    </UFormGroup>
-
-    <UFormGroup label="Files" name="files">
-
-      <FileMenu />
-    </UFormGroup>
-    <UFormGroup label="Network" name="network">
-
-      <FileMenu />
-    </UFormGroup>
 
     <div class="flex justify-end gap-3">
       <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
-      <UButton type="submit" label="Save" color="black" />
+      <UButton type="submit" label="Save" color="black" @click="onSubmit(refresh)"/>
     </div>
 
 

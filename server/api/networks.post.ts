@@ -7,10 +7,9 @@ import { v4 as uuidv4 } from 'uuid';
 export default eventHandler(async (event) => {
   const { domain, ports } = await useValidatedBody(event, {
     domain: z.string(),
-    ports: z.array(z.object({
-      number: z.number(),
-    })).optional(),    
+    ports: z.array(z.number()).optional(),    
   })
+  console.log(domain, ports)
   const session = await requireUserSession(event)
   const userID = session.user.id
 
@@ -19,12 +18,13 @@ export default eventHandler(async (event) => {
   const network = await db.insert(networks).values({
     domain,
     id: uuidv4(),
+    userID,
   }).returning().get()
 
 
   ports?.forEach( port => {
     db.insert(portsSchema).values({
-      number: port.number,
+      number: port,
       network: network.id,
       id: uuidv4(),
     }).execute()

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {  Network } from '~/types'
 
-const { data: networks } = await useFetch<Network[]>('/api/networks', { default: () => [] })
+const { data: networks, refresh } = await useFetch<Network[]>('/api/networks', { default: () => [] })
 
 const loading = ref(false)
 
@@ -36,12 +36,12 @@ const isInviteModalOpen = ref(false)
             </div>
           </template>
 
-          <NetworksList :networks="networks" />
+          <NetworksList :networks="networks" :refresh="refresh"/>
         </UCard>
-        <UDashboardModal v-model="isInviteModalOpen" title="Invite people"
-          description="Invite new members by email address" :ui="{ width: 'sm:max-w-md' }">
+        <UDashboardModal v-model="isInviteModalOpen" title="Create network"
+          description="Create networks to re use domain names and networking configuration across deployments" :ui="{ width: 'sm:max-w-md' }">
           <!-- ~/components/settings/MembersForm.vue -->
-          <EncryptedFilesForm @close="isInviteModalOpen = false" />
+          <NetworksForm @close="isInviteModalOpen = false" :refresh="refresh"/>
         </UDashboardModal>
       </UDashboardPanelContent>
 

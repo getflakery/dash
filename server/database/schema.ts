@@ -40,6 +40,7 @@ export const instances = sqliteTable('instances', {
 export const networks  = sqliteTable('networks', {
   id: text('id').primaryKey(),
   domain: text('domain').notNull(),
+  userID: text('user_id').notNull(),
 })
 
 

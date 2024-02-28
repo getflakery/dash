@@ -1,0 +1,1 @@
+ALTER TABLE networks ADD `user_id` text NOT NULL;
