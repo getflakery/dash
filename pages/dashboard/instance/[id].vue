@@ -38,9 +38,12 @@ const refreshAll = async () => {
 
             <Accordion :items="instance?.logs.items" class="py-4">
               <template #item="{ item }">
-                <pre class="code-block" style="overflow-x: scroll;">
+
+      <pre class="code-block custom-scroll">
+        <!-- Display item content with proper indentation and clarity -->
 {{ item.content }}
       </pre>
+
               </template>
             </Accordion>
           </UCard>
@@ -53,3 +56,29 @@ const refreshAll = async () => {
       </UDashboardPanel>
     </UDashboardPage>
 </template>
+
+
+<style scoped>
+/* Additional CSS for custom styling and scroll behavior */
+.code-block {
+  overflow-x: auto; /* Ensures that horizontal scrolling is only shown when necessary */
+  background-color: #f5f5f5; /* Light background color for the code block */
+  border-radius: 4px; /* Rounded corners for the code block */
+  padding: 1rem; /* Adequate padding around the content */
+  font-family: 'Fira Code', monospace; /* Monospace font for better code readability */
+  overflow-x: scroll;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 8px; /* Custom scrollbar width */
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #e0e0e0; /* Scrollbar track color */
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #a0a0a0; /* Scrollbar thumb color */
+  border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+}
+</style>
