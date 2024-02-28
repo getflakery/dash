@@ -4,6 +4,7 @@ import type { Instance } from '~/types'
 
 const route = useRoute()
 const { data: instance, refresh } = await useFetch<Instance>(`/api/instance/${route.params.id}`)
+
 console.log(instance)
 
 const refreshing = ref(false)
@@ -17,7 +18,6 @@ const refreshAll = async () => {
 
 }
 </script>
-<template>
   <template>
     <UDashboardPage>
       <UDashboardPanel grow>
@@ -31,7 +31,7 @@ const refreshAll = async () => {
           </template>
         </UDashboardNavbar>
         <UDashboardPanelContent class="pb-24">
-          <UDashboardSection :title="`${instance.name} details`" orientation="horizontal"
+          <UDashboardSection :title="`${instance?.name} details`" orientation="horizontal"
             :ui="{ container: 'lg:sticky top-2' }">
           </UDashboardSection>
           <UCard :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }" class="min-w-0">
@@ -52,5 +52,4 @@ const refreshAll = async () => {
 
       </UDashboardPanel>
     </UDashboardPage>
-  </template>
 </template>
