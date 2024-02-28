@@ -1,6 +1,6 @@
-import type {  Networking } from "~/types"
+import type {  Network } from "~/types"
 
-const files: Networking[] = [
+const files: Network[] = [
   {
     domain: "foo.app.flakery.xyz",
     ip: "33.33.33.33"

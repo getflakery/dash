@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import type { Networking } from '~/types'
+import type { Network } from '~/types'
 
 defineProps({
   networks: {
-    type: Array as PropType<Networking[]>,
+    type: Array as PropType<Network[]>,
     default: () => []
   }
 })
 
-function getItems (template: Networking) {
+function getItems (network: Network) {
   return [[{
     label: 'Edit template',
     icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => console.log('Edit', template)
+    click: () => console.log('Edit', network)
   }, 
   {
     label: 'Deploy Instance',
     icon: 'i-heroicons-server',
-    click: () => console.log('Edit', template)
+    click: () => console.log('Edit', network)
   }, 
   {
     label: 'Remove template',
     icon: 'i-heroicons-trash-20-solid',
     labelClass: 'text-red-500 dark:text-red-400',
-    click: () => console.log('Remove', template)
+    click: () => console.log('Remove', network)
   }]]
 }
 
@@ -38,8 +38,6 @@ function getItems (template: Networking) {
           <p class="text-gray-900 dark:text-white font-medium truncate">
             {{ i.domain }} 
           </p>
-          {{ i.ip }}
-
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type {  Networking } from '~/types'
+import type {  Network } from '~/types'
 
-const { data: networks } = await useFetch<Networking[]>('/api/networks', { default: () => [] })
+const { data: networks } = await useFetch<Network[]>('/api/networks', { default: () => [] })
 
 const loading = ref(false)
 

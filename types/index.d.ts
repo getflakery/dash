@@ -25,8 +25,13 @@ export interface File {
   content: string 
 }
 
-export interface Networking {
-  id?: string
+export interface Network {
+  id: string
   domain: string
-  ip: string
+  ports: Port[] 
+}
+
+export interface Port {
+  id: string,
+  number: integer,
 }
