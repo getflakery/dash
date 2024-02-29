@@ -14,7 +14,7 @@ const isInviteModalOpen = ref(false)
 <template>
   <UDashboardPage>
     <UDashboardPanel grow>
-      <UDashboardNavbar title="Files">
+      <UDashboardNavbar title="Networks">
         <template #right>
           <!-- link to documentation -->
           <ULink href="" target="_blank" class="flex items-center gap-2">
@@ -24,7 +24,7 @@ const isInviteModalOpen = ref(false)
         </template>
       </UDashboardNavbar>
       <UDashboardPanelContent class="pb-24">
-        <UDashboardSection title="Create Files" description="Create an encrypted file that you can use to seed a new instance"
+        <UDashboardSection title="Create Network" description="Create a network and domain to associate with a deployment"
           orientation="horizontal" :ui="{ container: 'lg:sticky top-2' }">
         </UDashboardSection>
         <UCard :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }" class="min-w-0">
@@ -32,7 +32,7 @@ const isInviteModalOpen = ref(false)
             <div class="flex items-center justify-between gap-2">
 
               <UInput v-model="q" icon="i-heroicons-magnifying-glass" placeholder="Search members" autofocus />
-              <UButton label="Create New File" color="black" @click="isInviteModalOpen = true" />
+              <UButton label="Create New Network" color="black" @click="isInviteModalOpen = true" />
             </div>
           </template>
 

@@ -36,6 +36,20 @@
       "when": 1709096552420,
       "tag": "0004_curly_multiple_man",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1709097130261,
+      "tag": "0005_equal_ultimates",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1709097181773,
+      "tag": "0006_fixed_old_lace",
+      "breakpoints": true
     }
   ]
 }

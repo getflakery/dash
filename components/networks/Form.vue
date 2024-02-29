@@ -76,7 +76,5 @@ async function onSubmit(refresh) {
       <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
       <UButton type="submit" label="Save" color="black" @click="onSubmit(refresh)"/>
     </div>
-
-
   </UForm>
 </template>
