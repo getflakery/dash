@@ -27,7 +27,7 @@ export default eventHandler(async (event) => {
     domain: z.string().optional(),
     ports: z.array(z.number()).optional(),
     network: z.string().optional(),
-    newNetWork: z.string().optional(),
+    newNetWork: z.boolean().optional(),
   })
   const session = await requireUserSession(event)
   const userID = session.user.id
@@ -70,9 +70,24 @@ export default eventHandler(async (event) => {
     }).execute()
   })
 
+  function generateSubdomain(length: number): string {
+    // Define the characters that can be used in the subdomain
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let subdomain = '';
+  
+    // Generate a subdomain of the desired length
+    for (let i = 0; i < length; i++) {
+      // Pick a random character from the chars string
+      const randomIndex = Math.floor(Math.random() * chars.length);
+      subdomain += chars.charAt(randomIndex);
+    }
+  
+    return subdomain;
+  }
+
   if (newNetWork) {
     const net = await db.insert(networks).values({
-      domain: "todo",
+      domain: generateSubdomain(6),
       id: uuidv4(),
       userID,
       templateID: template.id,

@@ -54,7 +54,7 @@ async function onSubmit(refresh: Function | undefined) {
       ...state,
       ports: selectedPorts.value,
       network: networkSelected.value,
-      newNetWork,
+      newNetWork: !newNetWork.value, 
     })
   })
   

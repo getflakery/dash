@@ -5,50 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1708929142475,
-      "tag": "0000_low_vapor",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1709003293660,
-      "tag": "0001_steep_madrox",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1709050449795,
-      "tag": "0002_lame_wallow",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1709084104638,
-      "tag": "0003_premium_sprite",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1709096552420,
-      "tag": "0004_curly_multiple_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "5",
-      "when": 1709097130261,
-      "tag": "0005_equal_ultimates",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "5",
-      "when": 1709097181773,
-      "tag": "0006_fixed_old_lace",
+      "when": 1709186445907,
+      "tag": "0000_fluffy_killraven",
       "breakpoints": true
     }
   ]
