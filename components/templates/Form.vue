@@ -69,7 +69,7 @@ function startEdit(file) {
 function cancelEdit(file, index) {
   editing.value[file.id] = false;
   if (file.notInDb) {
-    files.splice(index, 1);
+    state.files.splice(index, 1);
   } else {
     Object.assign(files[index], prevState.value[file.id]);
   }
@@ -82,7 +82,7 @@ function saveEdit(file) {
 }
 
 function deleteFile(index) {
-  files.splice(index, 1);
+  state.files.splice(index, 1);
   // Optionally, handle backend deletion here
 }
 
