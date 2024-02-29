@@ -12,7 +12,7 @@ const emit = defineEmits(['close'])
 
 
 const confirmDelete = async (id: string, deleteFiles: boolean, deleteNetwork: boolean, refresh: () => void) => {
-  await $fetch(`/api/templates/${id}`, {
+  await $fetch(`/api/templates/delete/${id}`, {
     method: 'POST',
     body: JSON.stringify({
       deleteFiles,

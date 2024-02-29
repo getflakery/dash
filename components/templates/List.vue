@@ -67,6 +67,6 @@ const templateToDelete = ref()
   </ul>
   <UDashboardModal v-model="deleteModal" title="Confirm Delete" description="Delete template"
     :ui="{ width: 'sm:max-w-md' }">
-    <TemplatesDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :template="template"></TemplatesDeleteConfirmModal>
+    <TemplatesDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :template="templateToDelete"></TemplatesDeleteConfirmModal>
   </UDashboardModal>
 </template>
