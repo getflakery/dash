@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer} from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
 // Template table definition
 export const templates = sqliteTable('templates', {
@@ -21,8 +21,8 @@ export const files = sqliteTable('files', {
 // Junction table to represent the many-to-many relationship
 export const templateFiles = sqliteTable('template_files', {
   id: text('id').primaryKey(),
-  fileId: text('file_id').notNull().references(() => files.id, {onDelete: 'no action'}).notNull(),
-  templateId: text('template_id').notNull().references(() => templates.id, {onDelete: 'no action'}).notNull(),
+  fileId: text('file_id').notNull().references(() => files.id, { onDelete: 'no action' }).notNull(),
+  templateId: text('template_id').notNull().references(() => templates.id, { onDelete: 'no action' }).notNull(),
 });
 
 // instances table definition
@@ -30,23 +30,24 @@ export const templateFiles = sqliteTable('template_files', {
 export const instances = sqliteTable('instances', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
-  templateID: text('template_id').notNull().references(() => templates.id, {onDelete: 'no action'}).notNull(),
+  templateID: text('template_id').notNull().references(() => templates.id, { onDelete: 'no action' }).notNull(),
   flakeComputeID: text('flake_compute_id'),
   awsInstanceID: text('aws_instance_id'),
   userID: text('user_id').notNull(),
 });
 
 // networks 
-export const networks  = sqliteTable('networks', {
+export const networks = sqliteTable('networks', {
   id: text('id').primaryKey(),
   domain: text('domain').notNull(),
   userID: text('user_id').notNull(),
+  templateID: text('template_id').references(() => templates.id, { onDelete: 'no action' }),
 })
 
 
 //
-export const ports =  sqliteTable('ports', {
+export const ports = sqliteTable('ports', {
   id: text('id').primaryKey(),
   number: integer('number').notNull(),
-  network: text('network_id').notNull().references(() => networks.id, {onDelete: 'no action'}).notNull(),
+  network: text('network_id').notNull().references(() => networks.id, { onDelete: 'no action' }).notNull(),
 })

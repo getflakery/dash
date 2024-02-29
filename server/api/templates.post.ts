@@ -1,12 +1,21 @@
 import { useDB } from "../utils/db"
-import {  useValidatedBody, z, } from 'h3-zod'
-import { templates, files as schemaFiles, templateFiles } from '~/server/database/schema'
+import { useValidatedBody, z, } from 'h3-zod'
+import { templates, files as schemaFiles, templateFiles, networks, ports as portsSchema } from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
-import { eq } from 'drizzle-orm'
+import { eq, and} from 'drizzle-orm'
 
 
 export default eventHandler(async (event) => {
-  const { name, flakeURL, awsInstanceType, files } = await useValidatedBody(event, {
+  const {
+    name,
+    flakeURL,
+    awsInstanceType,
+    files,
+    domain,
+    ports,
+    network,
+    newNetWork,
+  } = await useValidatedBody(event, {
     name: z.string().optional(),
     flakeURL: z.string(),
     awsInstanceType: z.string().optional(),
@@ -14,7 +23,11 @@ export default eventHandler(async (event) => {
       id: z.string(),
       path: z.string(),
       content: z.string(),
-    })).optional(),    
+    })).optional(),
+    domain: z.string().optional(),
+    ports: z.array(z.number()).optional(),
+    network: z.string().optional(),
+    newNetWork: z.string().optional(),
   })
   const session = await requireUserSession(event)
   const userID = session.user.id
@@ -56,6 +69,68 @@ export default eventHandler(async (event) => {
       id: uuidv4(),
     }).execute()
   })
+
+  if (newNetWork) {
+    const net = await db.insert(networks).values({
+      domain: "todo",
+      id: uuidv4(),
+      userID,
+      templateID: template.id,
+    }).returning().get()
+    ports?.forEach(port => {
+      db.insert(portsSchema).values({
+        number: port,
+        network: net.id,
+        id: uuidv4(),
+      }).execute()
+    })
+    return template
+  }
+
+  if (network) {
+    const net = await db.select().from(networks).where(and(
+      eq(networks.domain, network),
+      eq(networks.userID, userID),
+    )).get()
+
+    if (!net) {
+      throw new Error("Network not found")
+    }
+
+    // set this network tempalte id 
+    await db.update(networks).set({
+      templateID: template.id,
+    }).where(eq(networks.id, net.id)).execute()
+
+    ports?.forEach(port => {
+      db.insert(portsSchema).values({
+        number: port,
+        network: net.id,
+        id: uuidv4(),
+      }).execute()
+    })
+    return template
+  }
+
+  if (!domain) {
+    throw new Error("Domain is required")
+  }
+
+  const net = await db.insert(networks).values({
+    domain,
+    id: uuidv4(),
+    userID,
+    templateID: template.id,
+  }).returning().get()
+
+  ports?.forEach(port => {
+    db.insert(portsSchema).values({
+      number: port,
+      network: net.id,
+      id: uuidv4(),
+    }).execute()
+  })
+  
 
   return template
 })

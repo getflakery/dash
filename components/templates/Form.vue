@@ -43,16 +43,24 @@ const validate = (state: any): FormError[] => {
   return errors
 }
 
-async function onSubmit(event: FormSubmitEvent<any>, refresh) {
+async function onSubmit(refresh: Function | undefined) {
   // post state too /api/templates
   await $fetch('/api/templates', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(state)
+    body: JSON.stringify({
+      ...state,
+      ports: selectedPorts.value,
+      network: networkSelected.value,
+      newNetWork,
+    })
   })
-  refresh()
+  
+  if (refresh) {
+    refresh()
+  }
 
   emit('close')
 }
@@ -244,7 +252,7 @@ function toggleNetwork() {
 
     <div class="flex justify-end gap-3">
       <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
-      <UButton type="submit" label="Save" color="black" @click="onSubmit(event, refresh)" />
+      <UButton type="submit" label="Save" color="black" @click="onSubmit(refresh)" />
     </div>
 
 
