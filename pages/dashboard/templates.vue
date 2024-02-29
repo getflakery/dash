@@ -41,8 +41,8 @@ const { isNotificationsSlideoverOpen } = useDashboard()
           <!-- ~/components/settings/MembersList.vue -->
           <TemplatesList :templates="templates" :refresh="refresh"/>
         </UCard>
-        <UDashboardModal v-model="isInviteModalOpen" title="Invite people"
-          description="Invite new members by email address" :ui="{ width: 'sm:max-w-md' }">
+        <UDashboardModal v-model="isInviteModalOpen" title="Create a Template"
+          description="Create a template from a flake url, optionally add files and network configuration" :ui="{ width: 'sm:max-w-md' }">
           <!-- ~/components/settings/MembersForm.vue -->
           <TemplatesForm @close="isInviteModalOpen = false" :refresh="refresh" />
         </UDashboardModal>

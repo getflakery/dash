@@ -54,10 +54,10 @@ async function onSubmit(refresh: Function | undefined) {
       ...state,
       ports: selectedPorts.value,
       network: networkSelected.value,
-      newNetWork: !newNetWork.value, 
+      newNetWork: !newNetWork.value,
     })
   })
-  
+
   if (refresh) {
     refresh()
   }
@@ -122,7 +122,7 @@ const boxSelected = ref(true)
 const networkLoading = ref(false)
 const networkSelected = ref()
 
-function clearNetworkSelected(){
+function clearNetworkSelected() {
   networkSelected.value = undefined
 }
 
@@ -167,15 +167,10 @@ function toggleNetwork() {
     </UFormGroup>
 
     <UFormGroup label="Files" name="files">
-
-
       <div class="flex items-center justify-between">
-
         <USelectMenu v-model="selected" :loading="loading" :searchable="search" placeholder="Search for a file by path"
           option-attribute="path" multiple trailing by="id" />
-
         <UButton @click="addFile" icon="i-heroicons-plus" variant="secondary">Add New File</UButton>
-
       </div>
 
 
@@ -224,19 +219,23 @@ function toggleNetwork() {
 
         <USelectMenu :searchable="networkSearch" v-model="networkSelected" :loading="networkLoading" class="py-4"
           placeholder="Search for a Network..." option-attribute="domain" trailing by="domain" :disabled="boxSelected" />
-          <UButton v-if="networkSelected" @click="clearNetworkSelected" icon="i-heroicons-x-mark" variant="secondary" :disabled="boxSelected">
-            Clear Selection
+        <UButton v-if="networkSelected" @click="clearNetworkSelected" icon="i-heroicons-x-mark" variant="secondary"
+          :disabled="boxSelected">
+          Clear Selection
         </UButton>
-          <UButton v-else-if="!newNetWork" @click="toggleNetwork" icon="i-heroicons-plus" variant="secondary" :disabled="boxSelected">Add New Network
+        <UButton v-else-if="!newNetWork" @click="toggleNetwork" icon="i-heroicons-plus" variant="secondary"
+          :disabled="boxSelected">Add New Network
         </UButton>
-        <UButton v-else @click="toggleNetwork" icon="i-heroicons-x-mark" variant="secondary" :disabled="boxSelected">Cancel Add New Network
+        <UButton v-else @click="toggleNetwork" icon="i-heroicons-x-mark" variant="secondary" :disabled="boxSelected">
+          Cancel Add New Network
         </UButton>
       </div>
 
     </UFormGroup>
 
-    <UFormGroup v-if="newNetWork && !networkSelected" label="Domain Name" name="domainName" description="If you do not provide a domain name, one will be generated for you.">
-      <UInput  v-model="state.domain">
+    <UFormGroup v-if="newNetWork && !networkSelected" label="Domain Name" name="domainName"
+      description="If you do not provide a domain name, one will be generated for you.">
+      <UInput v-model="state.domain">
         <template #trailing>
           <span class="text-gray-500 dark:text-gray-400 text-xs">.app.flakery.xyz</span>
         </template>
@@ -270,5 +269,4 @@ function toggleNetwork() {
 .file-list-leave-to {
   opacity: 0;
   transform: translateX(30px);
-}
-</style>
+}</style>
