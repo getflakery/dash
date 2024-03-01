@@ -1,5 +1,5 @@
-import { instances } from '~/server/database/schema'
-import { eq } from 'drizzle-orm'
+import { instances, networks } from '~/server/database/schema'
+import { eq, and } from 'drizzle-orm'
 import config from '~/config';
 
 
@@ -16,9 +16,18 @@ export default eventHandler(async (event) => {
       },
     })
     let jsonResponse = await r.json()
+
+    const network = await db.select().from(networks).where(
+      and(
+        eq(networks.templateID, instance.templateID),
+        eq(networks.userID, userID)
+      )
+    ).get()
+
     return {
       ...instance,
       ...jsonResponse,
+      network: network ?? {},
     }
   }))
 

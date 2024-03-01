@@ -1,4 +1,4 @@
-import { instances } from '~/server/database/schema'
+import { instances, networks} from '~/server/database/schema'
 import { useValidatedParams, z, } from 'h3-zod'
 import config from '~/config';
 
@@ -24,8 +24,17 @@ export default eventHandler(async (event) => {
     },
   })
   let jsonResponse = await r.json()
+
+  const network = await db.select().from(networks).where(
+    and(
+      eq(networks.templateID, inst.templateID),
+      eq(networks.userID, userID)
+    )
+  ).get()
+
   return {
     ...inst,
     ...jsonResponse,
+    network: network ?? {},
   }
 })

@@ -16,7 +16,8 @@ export interface Instance {
     items: {
       content: string
     }[]
-  }
+  },
+  network: Network
 };
 
 export interface File {

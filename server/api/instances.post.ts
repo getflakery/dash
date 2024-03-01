@@ -1,9 +1,10 @@
 import { useDB } from "../utils/db"
 import {  useValidatedBody, z, } from 'h3-zod'
-import { templates, files as schemaFiles, templateFiles as schemaTemplateFiles, instances } from '~/server/database/schema'
+import { templates, files as schemaFiles, templateFiles as schemaTemplateFiles, instances, networks } from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
 import config from '~/config';
+import petname from 'node-petname'
 
 export default eventHandler(async (event) => {
   const { templateID } = await useValidatedBody(event, {
@@ -32,6 +33,14 @@ export default eventHandler(async (event) => {
     ).get()
   ))
 
+  const network = await db.select().from(networks).where(
+    eq(networks.templateID, templateID)
+  ).get()
+
+  if (!network) {
+    throw new Error("network not found")
+  }
+
   let r = await fetch(`${config.BACKEND_URL}/flake`, {
     method: "POST",
     headers: {
@@ -42,6 +51,7 @@ export default eventHandler(async (event) => {
       instanceType: awsInstanceType,
       flakeURL,
       files,
+      subdomainPrefix: network.domain,
     }),
   })
   // {
@@ -58,6 +68,7 @@ export default eventHandler(async (event) => {
   const jsonResponse = await r.json()
   const awsInstanceID = jsonResponse.flakeCompute.instanceID
   const flakeComputeID = jsonResponse.flakeCompute.id
+  const name = petname(2, "-")
 
   return await db.insert(instances).values({
     id: uuidv4(),
@@ -65,7 +76,7 @@ export default eventHandler(async (event) => {
     templateID,
     flakeComputeID,
     awsInstanceID,
-    name: `todo`,
+    name,
   })
 
 

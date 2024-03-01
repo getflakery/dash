@@ -47,6 +47,9 @@ dependencies:
   h3-zod:
     specifier: ^0.5.3
     version: 0.5.3(h3@1.10.2)(zod@3.22.4)
+  node-petname:
+    specifier: ^1.0.1
+    version: 1.0.1
   nuxt:
     specifier: ^3.10.3
     version: 3.10.3(eslint@8.56.0)(typescript@5.3.3)(vite@5.1.4)(vue-tsc@1.8.27)
@@ -8035,6 +8038,10 @@ packages:
       which: 4.0.0
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /node-petname@1.0.1:
+    resolution: {integrity: sha512-/PCCKdrPwYYm0rdBRR0AtezwoxeeBcKb7nn98rz3JPvifpmIx7YzyRSksl/AmSwmZQq4m2XsE1eM2QFbG4N8MQ==}
     dev: false
 
   /node-releases@2.0.14:
