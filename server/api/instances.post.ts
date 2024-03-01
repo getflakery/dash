@@ -77,6 +77,7 @@ export default eventHandler(async (event) => {
     flakeComputeID,
     awsInstanceID,
     name,
+    network: network.id
   })
 
 

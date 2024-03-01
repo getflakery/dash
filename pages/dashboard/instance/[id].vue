@@ -5,7 +5,6 @@ import type { Instance } from '~/types'
 const route = useRoute()
 const { data: instance, refresh } = await useFetch<Instance>(`/api/instance/${route.params.id}`)
 
-console.log(instance?.value.network)
 
 const refreshing = ref(false)
 const refreshAll = async () => {
@@ -36,7 +35,7 @@ const refreshAll = async () => {
           </UDashboardSection>
 
           <UCard>
-            <h1>{{ instance?.network.domain }}</h1>
+            <NuxtLink :to="`https://${instance?.network.domain}.app.flakery.xyz`" target="_blank">https://{{ instance?.network.domain }}.app.flakery.xyz</NuxtLink>
           </UCard>
           <UCard :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }" class="min-w-0">
 

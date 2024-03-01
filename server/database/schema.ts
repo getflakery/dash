@@ -34,6 +34,7 @@ export const instances = sqliteTable('instances', {
   flakeComputeID: text('flake_compute_id'),
   awsInstanceID: text('aws_instance_id'),
   userID: text('user_id').notNull(),
+  network: text('network_id').notNull().references(() => networks.id, { onDelete: 'no action' }).notNull(),
 });
 
 // networks 

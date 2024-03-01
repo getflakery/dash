@@ -19,7 +19,7 @@ export default eventHandler(async (event) => {
 
     const network = await db.select().from(networks).where(
       and(
-        eq(networks.templateID, instance.templateID),
+        eq(networks.id, instance.network),
         eq(networks.userID, userID)
       )
     ).get()
