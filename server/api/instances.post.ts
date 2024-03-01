@@ -1,14 +1,18 @@
 import { useDB } from "../utils/db"
 import {  useValidatedBody, z, } from 'h3-zod'
-import { templates, files as schemaFiles, templateFiles as schemaTemplateFiles, instances, networks } from '~/server/database/schema'
+import { templates, files as schemaFiles, templateFiles as schemaTemplateFiles, instances, networks, ports as portsSchema } from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
 import config from '~/config';
 import petname from 'node-petname'
 
 export default eventHandler(async (event) => {
-  const { templateID } = await useValidatedBody(event, {
+  const { templateID, domain, ports, network,newNetWork } = await useValidatedBody(event, {
     templateID: z.string().uuid(),  
+    domain: z.string().optional(),
+    ports: z.array(z.number()).optional(),
+    network: z.string().optional(),
+    newNetWork: z.boolean().optional(),
   })
   const session = await requireUserSession(event)
   const userID = session.user.id
@@ -33,13 +37,14 @@ export default eventHandler(async (event) => {
     ).get()
   ))
 
-  const network = await db.select().from(networks).where(
-    eq(networks.templateID, templateID)
-  ).get()
 
-  if (!network) {
-    throw new Error("network not found")
-  }
+  const net = await createNetwork(
+    db, 
+    userID,
+    templateID,
+    domain, ports, network,newNetWork
+  )
+
 
   let r = await fetch(`${config.BACKEND_URL}/flake`, {
     method: "POST",
@@ -51,7 +56,7 @@ export default eventHandler(async (event) => {
       instanceType: awsInstanceType,
       flakeURL,
       files,
-      subdomainPrefix: network.domain,
+      subdomainPrefix: net?.domain,
     }),
   })
   // {
@@ -77,10 +82,92 @@ export default eventHandler(async (event) => {
     flakeComputeID,
     awsInstanceID,
     name,
-    network: network.id
-  })
-
-
-
-
+    network: net.id
+  }).returning().get()
 })
+
+
+function generateSubdomain(length: number): string {
+  // Define the characters that can be used in the subdomain
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let subdomain = '';
+
+  // Generate a subdomain of the desired length
+  for (let i = 0; i < length; i++) {
+    // Pick a random character from the chars string
+    const randomIndex = Math.floor(Math.random() * chars.length);
+    subdomain += chars.charAt(randomIndex);
+  }
+
+  return subdomain;
+}
+
+async function createNetwork(
+  db, 
+  userID,
+  templateID,
+  domain, ports, network,newNetWork
+) {
+  let net;
+
+  if (newNetWork) {
+    net = await db.insert(networks).values({
+      domain: generateSubdomain(6),
+      id: uuidv4(),
+      userID,
+      templateID: templateID,
+    }).returning().get()
+    ports?.forEach(port => {
+      db.insert(portsSchema).values({
+        number: port,
+        network: net.id,
+        id: uuidv4(),
+      }).execute()
+    })
+    return net
+  }
+
+  if (network) {
+    net = await db.select().from(networks).where(and(
+      eq(networks.domain, network),
+      eq(networks.userID, userID),
+    )).get()
+
+    if (!net) {
+      throw new Error("Network not found")
+    }
+
+    // set this network tempalte id 
+    await db.update(networks).set({
+      templateID: template.id,
+    }).where(eq(networks.id, net.id)).execute()
+
+    ports?.forEach(port => {
+      db.insert(portsSchema).values({
+        number: port,
+        network: net.id,
+        id: uuidv4(),
+      }).execute()
+    })
+    return net
+  }
+
+  if (domain) {
+     net = await db.insert(networks).values({
+      domain,
+      id: uuidv4(),
+      userID,
+      templateID: template.id,
+    }).returning().get()
+  
+    ports?.forEach(port => {
+      db.insert(portsSchema).values({
+        number: port,
+        network: net.id,
+        id: uuidv4(),
+      }).execute()
+    })
+  }
+  return net
+
+}

@@ -24,10 +24,6 @@ export default eventHandler(async (event) => {
       path: z.string(),
       content: z.string(),
     })).optional(),
-    domain: z.string().optional(),
-    ports: z.array(z.number()).optional(),
-    network: z.string().optional(),
-    newNetWork: z.boolean().optional(),
   })
   const session = await requireUserSession(event)
   const userID = session.user.id
@@ -70,82 +66,8 @@ export default eventHandler(async (event) => {
     }).execute()
   })
 
-  function generateSubdomain(length: number): string {
-    // Define the characters that can be used in the subdomain
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    let subdomain = '';
-  
-    // Generate a subdomain of the desired length
-    for (let i = 0; i < length; i++) {
-      // Pick a random character from the chars string
-      const randomIndex = Math.floor(Math.random() * chars.length);
-      subdomain += chars.charAt(randomIndex);
-    }
-  
-    return subdomain;
-  }
 
-  if (newNetWork) {
-    const net = await db.insert(networks).values({
-      domain: generateSubdomain(6),
-      id: uuidv4(),
-      userID,
-      templateID: template.id,
-    }).returning().get()
-    ports?.forEach(port => {
-      db.insert(portsSchema).values({
-        number: port,
-        network: net.id,
-        id: uuidv4(),
-      }).execute()
-    })
-    return template
-  }
 
-  if (network) {
-    const net = await db.select().from(networks).where(and(
-      eq(networks.domain, network),
-      eq(networks.userID, userID),
-    )).get()
-
-    if (!net) {
-      throw new Error("Network not found")
-    }
-
-    // set this network tempalte id 
-    await db.update(networks).set({
-      templateID: template.id,
-    }).where(eq(networks.id, net.id)).execute()
-
-    ports?.forEach(port => {
-      db.insert(portsSchema).values({
-        number: port,
-        network: net.id,
-        id: uuidv4(),
-      }).execute()
-    })
-    return template
-  }
-
-  if (!domain) {
-    throw new Error("Domain is required")
-  }
-
-  const net = await db.insert(networks).values({
-    domain,
-    id: uuidv4(),
-    userID,
-    templateID: template.id,
-  }).returning().get()
-
-  ports?.forEach(port => {
-    db.insert(portsSchema).values({
-      number: port,
-      network: net.id,
-      id: uuidv4(),
-    }).execute()
-  })
-  
 
   return template
 })
