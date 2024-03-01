@@ -8,7 +8,11 @@ defineProps({
   },
   refresh: Function,
 })
+const deleteModal = ref(false)
+const templateToDelete = ref()
 
+const deployInstance = ref(false)
+const templateToDeploy = ref()
 function getItems(template: Template, refresh: Function | undefined) {
 
   return [
@@ -16,13 +20,9 @@ function getItems(template: Template, refresh: Function | undefined) {
       label: 'Deploy Instance',
       icon: 'i-heroicons-server',
       click: async () => {
-        await $fetch(`/api/instances`, {
-          method: 'POST',
-          body: JSON.stringify({
-            "templateID": template.id
-          })
-        }
-        )
+        deployInstance.value = true
+        templateToDeploy.value = template
+
       }
     }],
     [
@@ -37,8 +37,7 @@ function getItems(template: Template, refresh: Function | undefined) {
       }]]
 }
 
-const deleteModal = ref(false)
-const templateToDelete = ref()
+
 
 </script>
 
@@ -68,5 +67,9 @@ const templateToDelete = ref()
   <UDashboardModal v-model="deleteModal" title="Confirm Delete" description="Delete template"
     :ui="{ width: 'sm:max-w-md' }">
     <TemplatesDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :template="templateToDelete"></TemplatesDeleteConfirmModal>
+  </UDashboardModal>
+  <UDashboardModal v-model="deployInstance" title="Deploy Template" description=""
+    :ui="{ width: 'sm:max-w-md' }">
+    <TemplatesDeployModal @close="deployInstance = false" :refresh="refresh" :template="templateToDeploy" />
   </UDashboardModal>
 </template>
