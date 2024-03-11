@@ -36,9 +36,6 @@ function getItems(template: Template, refresh: Function | undefined) {
         }
       }]]
 }
-
-
-
 </script>
 
 <template>
@@ -52,8 +49,6 @@ function getItems(template: Template, refresh: Function | undefined) {
             {{ template.name }}
           </p>
           {{ template.flakeURL }}
-
-
         </div>
       </div>
 
@@ -66,10 +61,10 @@ function getItems(template: Template, refresh: Function | undefined) {
   </ul>
   <UDashboardModal v-model="deleteModal" title="Confirm Delete" description="Delete template"
     :ui="{ width: 'sm:max-w-md' }">
-    <TemplatesDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :template="templateToDelete"></TemplatesDeleteConfirmModal>
+    <TemplatesDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :template="templateToDelete">
+    </TemplatesDeleteConfirmModal>
   </UDashboardModal>
-  <UDashboardModal v-model="deployInstance" title="Deploy Template" description=""
-    :ui="{ width: 'sm:max-w-md' }">
+  <UDashboardModal v-model="deployInstance" title="Deploy Template" description="" :ui="{ width: 'sm:max-w-md' }">
     <TemplatesDeployModal @close="deployInstance = false" :refresh="refresh" :template="templateToDeploy" />
   </UDashboardModal>
 </template>

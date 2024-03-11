@@ -31,7 +31,7 @@ const isInviteModalOpen = ref(false)
           <template #header>
             <div class="flex items-center justify-between gap-2">
 
-              <UInput v-model="q" icon="i-heroicons-magnifying-glass" placeholder="Search members" autofocus />
+              <UInput v-model="q" icon="i-heroicons-magnifying-glass" placeholder="Search Networks" />
               <UButton label="Create New Network" color="black" @click="isInviteModalOpen = true" />
             </div>
           </template>

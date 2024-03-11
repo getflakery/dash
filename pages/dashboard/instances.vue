@@ -31,17 +31,16 @@ const isInviteModalOpen = ref(false)
           <template #header>
             <div class="flex items-center justify-between gap-2">
 
-              <UInput v-model="q" icon="i-heroicons-magnifying-glass" placeholder="Search Instances" autofocus />
+              <UInput v-model="q" icon="i-heroicons-magnifying-glass" placeholder="Search Instances"  />
               <UButton label="Create New Instance" color="black" @click="isInviteModalOpen = true" />
             </div>
           </template>
 
           <InstancesList :instances="instances" :refresh="refresh" />
         </UCard>
-        <UDashboardModal v-model="isInviteModalOpen" title="Invite people"
-          description="Invite new members by email address" :ui="{ width: 'sm:max-w-md' }">
-          <!-- ~/components/settings/MembersForm.vue -->
-          <EncryptedFilesForm @close="isInviteModalOpen = false" />
+        <UDashboardModal v-model="isInviteModalOpen" title="Create Instance"
+          :ui="{ width: 'sm:max-w-md' }">
+          <InstancesForm @close="isInviteModalOpen = false" :refresh="refresh"/>
         </UDashboardModal>
       </UDashboardPanelContent>
 

@@ -28,7 +28,7 @@ async function onSubmit (event: FormSubmitEvent<any>) {
 <template>
   <UForm :validate="validate" :validate-on="['submit']" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormGroup label="Name" name="name">
-      <UInput v-model="state.name" placeholder="John Doe" autofocus />
+      <UInput v-model="state.name" placeholder="John Doe" />
     </UFormGroup>
 
     <UFormGroup label="Email" name="email">

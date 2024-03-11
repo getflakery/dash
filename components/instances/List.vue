@@ -6,21 +6,27 @@ defineProps({
     type: Array as PropType<Instance[]>,
     default: () => []
   },
-  refresh: Function,
+  refresh: {
+    type: Function,
+    default: () => {}
+  },
 })
 
 function getItems(instance: Instance, refresh: Function) {
-  return [
-    [{
-      label: 'Delete Template',
+  return [[{
+      label: 'Delete Instance',
       icon: 'i-heroicons-trash-20-solid',
       labelClass: 'text-red-500 dark:text-red-400',
       click: async () => {
-        await $fetch(`/api/instances/${instance.id}`, { method: 'DELETE' })
-        refresh()
+        instanceToDelete.value = instance
+        deleteModal.value = true
       }
     }]]
 }
+
+const deleteModal = ref(false)
+const instanceToDelete = ref()
+
 
 </script>
 
@@ -28,16 +34,12 @@ function getItems(instance: Instance, refresh: Function) {
   <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-800">
     <li v-for="(i, index) in instances" :key="index" class="flex items-center justify-between gap-3 py-3 px-4 sm:px-6">
       <NuxtLink :to="`/dashboard/instance/${i.id}`">
-
         <div class="flex items-center gap-3 min-w-0">
-
           <div class="text-sm min-w-0">
             <p class="text-gray-900 dark:text-white font-medium truncate">
               {{ i.name }}
             </p>
-
           </div>
-
         </div>
       </NuxtLink>
 
@@ -49,4 +51,10 @@ function getItems(instance: Instance, refresh: Function) {
       </div>
     </li>
   </ul>
+  <UDashboardModal v-model="deleteModal" title="Confirm Delete" description="Delete Instance"
+    :ui="{ width: 'sm:max-w-md' }">
+    <InstancesDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :instance="instanceToDelete" />
+  </UDashboardModal>
+  
+
 </template>

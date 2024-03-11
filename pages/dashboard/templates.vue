@@ -33,7 +33,7 @@ const { isNotificationsSlideoverOpen } = useDashboard()
           <template #header>
             <div class="flex items-center justify-between gap-2">
 
-              <UInput v-model="q" icon="i-heroicons-magnifying-glass" placeholder="Search members" autofocus />
+              <UInput v-model="q" icon="i-heroicons-magnifying-glass" placeholder="Search Templates" />
               <UButton label="Create New Template" color="black" @click="isInviteModalOpen = true" />
             </div>
           </template>
