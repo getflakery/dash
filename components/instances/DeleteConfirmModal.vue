@@ -4,13 +4,13 @@ import type { Instance } from '~/types';
 
 // Define props with types
 const props = defineProps<{
-  refresh: () => void;
+  refresh: () => void | undefined;
   instance: Instance;
 }>();
 
 const emit = defineEmits(['close'])
 
-const confirmDelete = async (id: string, deleteFiles: boolean, deleteNetwork: boolean, refresh: () => void) => {
+const confirmDelete = async (id: string, deleteFiles: boolean, deleteNetwork: boolean, refresh: () => void | undefined) => {
   await $fetch(`/api/instances/delete/${id}`, {
     method: 'POST',
     body: JSON.stringify({
@@ -18,7 +18,9 @@ const confirmDelete = async (id: string, deleteFiles: boolean, deleteNetwork: bo
       deleteNetwork,
     })
   })
-  refresh()
+  if (refresh !== undefined) {
+    refresh()
+  }
   emit('close')
 
 }

@@ -4,7 +4,7 @@ import type { Template, Network } from '~/types';
 
 // Define props with types
 const props = defineProps<{
-  refresh: () => void;
+  refresh: () => void | undefined;
   template: Template;
 }>();
 
@@ -13,7 +13,7 @@ const emit = defineEmits(['close'])
 
 const deploying = ref(false)
 
-const deployInstance = async (refresh: () => void) => {
+const deployInstance = async (refresh: () => void  | undefined) => {
   deploying.value = true
 
   let inst = await $fetch(`/api/instances`, {
@@ -38,7 +38,9 @@ const deployInstance = async (refresh: () => void) => {
     }
   })
 
-  refresh()
+  if (refresh !== undefined) {
+    refresh()
+  }
   emit('close')
 
 }
