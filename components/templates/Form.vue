@@ -63,6 +63,19 @@ async function onSubmit(refresh: Function | undefined) {
 }
 
 
+const loading = ref(false);
+const selected = ref([])
+async function search(q: string) {
+  loading.value = true
+  let files = await $fetch('/api/files');
+  loading.value = false
+  return files.filter((file) => {
+    return file.path.toLowerCase().includes(q.toLowerCase())
+  })
+}
+const boxSelected = ref(true)
+
+
 const editing = ref({});
 const prevState = ref({});
 

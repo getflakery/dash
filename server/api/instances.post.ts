@@ -41,7 +41,6 @@ export default eventHandler(async (event) => {
   const net = await createNetwork(
     db, 
     userID,
-    templateID,
     domain, ports, network,newNetWork
   )
 
@@ -75,15 +74,21 @@ export default eventHandler(async (event) => {
   const flakeComputeID = jsonResponse.flakeCompute.id
   const name = petname(2, "-")
 
-  return await db.insert(instances).values({
+  let instance =  await db.insert(instances).values({
     id: uuidv4(),
     userID,
     templateID,
     flakeComputeID,
     awsInstanceID,
     name,
-    network: net.id
   }).returning().get()
+
+  // update network with instance id
+  await db.update(networks).set({
+    instanceID: instance.id
+  }).where(eq(networks.id, net.id)).execute()
+
+  return instance
 })
 
 
@@ -105,7 +110,6 @@ function generateSubdomain(length: number): string {
 async function createNetwork(
   db, 
   userID,
-  templateID,
   domain, ports, network,newNetWork
 ) {
   let net;
@@ -115,7 +119,6 @@ async function createNetwork(
       domain: generateSubdomain(6),
       id: uuidv4(),
       userID,
-      templateID: templateID,
     }).returning().get()
     ports?.forEach(port => {
       db.insert(portsSchema).values({
@@ -137,11 +140,6 @@ async function createNetwork(
       throw new Error("Network not found")
     }
 
-    // set this network tempalte id 
-    await db.update(networks).set({
-      templateID: template.id,
-    }).where(eq(networks.id, net.id)).execute()
-
     ports?.forEach(port => {
       db.insert(portsSchema).values({
         number: port,
@@ -157,7 +155,6 @@ async function createNetwork(
       domain,
       id: uuidv4(),
       userID,
-      templateID: template.id,
     }).returning().get()
   
     ports?.forEach(port => {

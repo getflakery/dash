@@ -10,11 +10,15 @@ const props = defineProps<{
 
 const emit = defineEmits(['close'])
 
-const confirmDelete = async (id: string, deleteFiles: boolean, deleteNetwork: boolean, refresh: () => void | undefined) => {
+const confirmDelete = async (id: string, 
+// deleteFiles: boolean,
+ deleteNetwork: boolean, 
+ refresh: () => void | undefined
+ ) => {
   await $fetch(`/api/instances/delete/${id}`, {
     method: 'POST',
     body: JSON.stringify({
-      deleteFiles,
+      // deleteFiles,
       deleteNetwork,
     })
   })
@@ -25,7 +29,7 @@ const confirmDelete = async (id: string, deleteFiles: boolean, deleteNetwork: bo
 
 }
 
-const deleteFiles = ref(false)
+// const deleteFiles = ref(false)
 const deleteNetworks = ref(true)
 
 
@@ -35,7 +39,7 @@ const deleteNetworks = ref(true)
 <template>
     <UCheckbox v-model="deleteNetworks" label="Delete Network"  />
 
-  <UCheckbox v-model="deleteFiles" label="Delete Files" />
+  <!-- <UCheckbox v-model="deleteFiles" label="Delete Files" /> -->
 
 
   <div class="flex justify-end gap-3">
@@ -43,7 +47,7 @@ const deleteNetworks = ref(true)
     <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
     <UButton type="submit" label="Confirm Delete" color="black" @click="confirmDelete(
       props.instance.id,
-      deleteFiles,
+      // deleteFiles,
       deleteNetworks,
       props.refresh
     )" />

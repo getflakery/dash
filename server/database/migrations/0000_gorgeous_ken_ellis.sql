@@ -19,15 +19,15 @@ CREATE TABLE `networks` (
 	`id` text PRIMARY KEY NOT NULL,
 	`domain` text NOT NULL,
 	`user_id` text NOT NULL,
-	`template_id` text,
-	FOREIGN KEY (`template_id`) REFERENCES `templates`(`id`) ON UPDATE no action ON DELETE no action
+	`instance_id` text,
+	FOREIGN KEY (`instance_id`) REFERENCES `instances`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `ports` (
 	`id` text PRIMARY KEY NOT NULL,
 	`number` integer NOT NULL,
 	`network_id` text NOT NULL,
-	FOREIGN KEY (`network_id`) REFERENCES `networks`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`network_id`) REFERENCES `networks`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `template_files` (

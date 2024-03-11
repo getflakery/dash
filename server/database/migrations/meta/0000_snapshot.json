@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "16096cee-f766-4733-9315-d1ffd03cd85b",
+  "id": "8c9187fa-5a67-4193-8dbe-a85b3c0b5a86",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "files": {
@@ -130,8 +130,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "template_id": {
-          "name": "template_id",
+        "instance_id": {
+          "name": "instance_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -140,12 +140,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "networks_template_id_templates_id_fk": {
-          "name": "networks_template_id_templates_id_fk",
+        "networks_instance_id_instances_id_fk": {
+          "name": "networks_instance_id_instances_id_fk",
           "tableFrom": "networks",
-          "tableTo": "templates",
+          "tableTo": "instances",
           "columnsFrom": [
-            "template_id"
+            "instance_id"
           ],
           "columnsTo": [
             "id"
@@ -194,7 +194,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
