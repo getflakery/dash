@@ -100,3 +100,8 @@ pnpm run migrate
 nix-shell -p sqlite --command "sqlite3 db.sqlite < server/database/migrations/0000_gorgeous_ken_ellis.sql"
 ```
 
+## db web view 
+
+```
+nix-shell -p sqlite-web --run "sqlite_web db.sqlite"
+```

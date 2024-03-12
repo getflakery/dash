@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.2.0",
+    "@types/uuid": "^9.0.8",
     "drizzle-kit": "^0.20.14",
     "eslint": "^8.56.0",
     "nuxt-auth-utils": "^0.0.19",

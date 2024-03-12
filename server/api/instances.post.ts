@@ -1,14 +1,22 @@
 import { useDB } from "../utils/db"
-import {  useValidatedBody, z, } from 'h3-zod'
-import { templates, files as schemaFiles, templateFiles as schemaTemplateFiles, instances, networks, ports as portsSchema } from '~/server/database/schema'
+import { useValidatedBody, z, } from 'h3-zod'
+import {
+  templates,
+  files as schemaFiles,
+  templateFiles as schemaTemplateFiles,
+  instances,
+  networks,
+  ports as portsSchema,
+  instanceDeployment,
+} from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
 import config from '~/config';
 import petname from 'node-petname'
 
 export default eventHandler(async (event) => {
-  const { templateID, domain, ports, network,newNetWork } = await useValidatedBody(event, {
-    templateID: z.string().uuid(),  
+  const { templateID, domain, ports, network, newNetWork } = await useValidatedBody(event, {
+    templateID: z.string().uuid(),
     domain: z.string().optional(),
     ports: z.array(z.number()).optional(),
     network: z.string().optional(),
@@ -19,11 +27,11 @@ export default eventHandler(async (event) => {
 
   const db = useDB()
 
-  const {flakeURL, awsInstanceType } = await db.select().from(templates).where(
+  const { flakeURL, awsInstanceType } = await db.select().from(templates).where(
     and(
       eq(templates.id, templateID),
-      eq(templates.userID, userID) 
-  )).get();
+      eq(templates.userID, userID)
+    )).get();
 
 
 
@@ -31,7 +39,7 @@ export default eventHandler(async (event) => {
     eq(schemaTemplateFiles.templateId, templateID)
   ).all();
 
-  const files = await Promise.all(templateFiles?.map(async (templateFile) => 
+  const files = await Promise.all(templateFiles?.map(async (templateFile) =>
     await db.select().from(schemaFiles).where(
       eq(schemaFiles.id, templateFile.fileId)
     ).get()
@@ -39,9 +47,9 @@ export default eventHandler(async (event) => {
 
 
   const net = await createNetwork(
-    db, 
+    db,
     userID,
-    domain, ports, network,newNetWork
+    domain, ports, network, newNetWork
   )
 
 
@@ -74,12 +82,10 @@ export default eventHandler(async (event) => {
   const flakeComputeID = jsonResponse.flakeCompute.id
   const name = petname(2, "-")
 
-  let instance =  await db.insert(instances).values({
+  let instance = await db.insert(instances).values({
     id: uuidv4(),
     userID,
     templateID,
-    flakeComputeID,
-    awsInstanceID,
     name,
   }).returning().get()
 
@@ -87,6 +93,17 @@ export default eventHandler(async (event) => {
   await db.update(networks).set({
     instanceID: instance.id
   }).where(eq(networks.id, net.id)).execute()
+
+
+  // create instance deployments 
+  await db.insert(instanceDeployment).values({
+    id: uuidv4(),
+    flakeComputeID,
+    awsInstanceID,
+    createdAt: new Date().toISOString(),
+    active: 1,
+    instanceID: instance.id,
+  }).execute()
 
   return instance
 })
@@ -108,9 +125,9 @@ function generateSubdomain(length: number): string {
 }
 
 async function createNetwork(
-  db, 
+  db,
   userID,
-  domain, ports, network,newNetWork
+  domain, ports, network, newNetWork
 ) {
   let net;
 
@@ -151,12 +168,12 @@ async function createNetwork(
   }
 
   if (domain) {
-     net = await db.insert(networks).values({
+    net = await db.insert(networks).values({
       domain,
       id: uuidv4(),
       userID,
     }).returning().get()
-  
+
     ports?.forEach(port => {
       db.insert(portsSchema).values({
         number: port,

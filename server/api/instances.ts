@@ -14,13 +14,12 @@ export default eventHandler(async (event) => {
         "Content-Type": "application/json",
         'X-Token': process.env.AUTH_TOKEN ?? "b355b95e-1933-4103-8f7e-156687fa0a1f",
       },
-    })
+  })
     let jsonResponse = await r.json()
 
     const network = await db.select().from(networks).where(
       and(
-        eq(networks.id, instance.network),
-        eq(networks.userID, userID)
+        eq(networks.instanceID, instance.id),
       )
     ).get()
 

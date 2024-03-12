@@ -13,8 +13,17 @@ defineProps({
 })
 
 function getItems(instance: Instance, refresh: Function) {
-  return [[{
-      label: 'Delete Instance',
+  return [
+  [{
+      label: 'Redeploy',
+      icon: 'i-heroicons-paper-airplane',
+      click: async () => {
+        instanceToRedeploy.value = instance
+        redeployModal.value = true
+      }
+    }],  
+  [{
+      label: 'Delete',
       icon: 'i-heroicons-trash-20-solid',
       labelClass: 'text-red-500 dark:text-red-400',
       click: async () => {
@@ -25,7 +34,10 @@ function getItems(instance: Instance, refresh: Function) {
 }
 
 const deleteModal = ref(false)
+const redeployModal = ref(false)
 const instanceToDelete = ref()
+const instanceToRedeploy = ref()
+
 
 
 </script>
@@ -55,6 +67,11 @@ const instanceToDelete = ref()
     :ui="{ width: 'sm:max-w-md' }">
     <InstancesDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :instance="instanceToDelete" />
   </UDashboardModal>
-  
+  <UDashboardModal 
+    v-model="redeployModal" 
+    title="Confirm Redeploy" 
+    :ui="{ width: 'sm:max-w-md' }">
+    <InstancesRedeployModal @close="redeployModal = false" :refresh="refresh" :instance="instanceToRedeploy" />
+  </UDashboardModal>
 
 </template>

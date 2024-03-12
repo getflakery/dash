@@ -31,9 +31,17 @@ export const instances = sqliteTable('instances', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   templateID: text('template_id').notNull().references(() => templates.id, { onDelete: 'no action' }).notNull(),
+  userID: text('user_id').notNull(),
+});
+
+// instanceDeployment
+export const instanceDeployment = sqliteTable('instance_deployment', {
+  id: text('id').primaryKey(),
   flakeComputeID: text('flake_compute_id'),
   awsInstanceID: text('aws_instance_id'),
-  userID: text('user_id').notNull(),
+  createdAt: text('created_at').notNull(),
+  active: integer('active').notNull(),
+  instanceID: text('instance_id').notNull().references(() => instances.id, { onDelete: 'cascade' }).notNull(),
 });
 
 // networks 
@@ -50,5 +58,4 @@ export const ports = sqliteTable('ports', {
   id: text('id').primaryKey(),
   number: integer('number').notNull(),
   network: text('network_id').notNull().references(() => networks.id, { onDelete: 'cascade' }).notNull(),
-
 })

@@ -35,10 +35,12 @@ const refreshAll = async () => {
           </UDashboardSection>
 
           <UCard>
-            <NuxtLink :to="`https://${instance?.network.domain}.app.flakery.xyz`" target="_blank">https://{{ instance?.network.domain }}.app.flakery.xyz</NuxtLink>
-          </UCard>
-          <UCard :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }" class="min-w-0">
+            <NuxtLink :to="`https://${instance?.network.domain}.app.flakery.xyz`" target="_blank">
+              https://{{ instance?.network.domain }}.app.flakery.xyz      
+            </NuxtLink>
 
+            <!-- Logs: -->
+            <h2 class="text-lg font-semibold mt-4">Logs</h2>
             <Accordion :items="instance?.logs.items" class="py-4">
               <template #item="{ item }">
 

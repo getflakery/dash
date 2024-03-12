@@ -1,4 +1,4 @@
-import { instances, networks} from '~/server/database/schema'
+import { instances, networks, instanceDeployment } from '~/server/database/schema'
 import { useValidatedParams, z, } from 'h3-zod'
 import config from '~/config';
 
@@ -17,7 +17,14 @@ export default eventHandler(async (event) => {
       eq(instances.id, id))
   ).get();
 
-  let r = await fetch(`${config.BACKEND_URL}/flake/${inst?.flakeComputeID}`, {
+  let flakeComputeID = (await db.select().from(instanceDeployment).where(
+    and(
+      eq(instanceDeployment.instanceID, id),
+      eq(instanceDeployment.active, 1)
+    )
+  ).get())?.flakeComputeID
+
+  let r = await fetch(`${config.BACKEND_URL}/flake/${flakeComputeID}`, {
     headers: {
       "Content-Type": "application/json",
       'X-Token': process.env.AUTH_TOKEN ?? "b355b95e-1933-4103-8f7e-156687fa0a1f",
@@ -27,7 +34,7 @@ export default eventHandler(async (event) => {
 
   const network = await db.select().from(networks).where(
     and(
-      eq(networks.id, inst?.network),
+      eq(networks.instanceID, id),
       eq(networks.userID, userID)
     )
   ).get()
