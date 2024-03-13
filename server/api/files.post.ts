@@ -11,13 +11,18 @@ export default eventHandler(async (event) => {
   const session = await requireUserSession(event)
   const userID = session.user.id
 
+  const cs = useCryptoString()
+
+  const {encryptedData, iv} = cs.encrypt(content)
+
   const db = useDB()
 
   const file = await db.insert(files).values({
     path,
-    content,
+    content: encryptedData,
     userID,
     id: uuidv4(),
+    iv,
   }).returning().get()
   return file
 })

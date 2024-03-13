@@ -16,6 +16,7 @@ export const files = sqliteTable('files', {
   path: text('path').notNull(),
   content: text('content').notNull(),
   userID: text('user_id').notNull(),
+  iv: text('initialization_vector').notNull(),
 });
 
 // Junction table to represent the many-to-many relationship

@@ -39,11 +39,27 @@ export default eventHandler(async (event) => {
     eq(schemaTemplateFiles.templateId, templateID)
   ).all();
 
-  const files = await Promise.all(templateFiles?.map(async (templateFile) =>
+  const cs = useCryptoString()
+
+  const files = (await Promise.all(templateFiles?.map(async (templateFile) =>
     await db.select().from(schemaFiles).where(
       eq(schemaFiles.id, templateFile.fileId)
     ).get()
-  ))
+  )))?.map((file) => {
+    if (!file) {
+     return file
+    }
+    return {
+      ...file, 
+      // todo, leave encrypted and decrypt on 
+      // the receiver side
+      content: cs.decrypt({
+        iv: file.iv,
+        encryptedData: file.content
+      })
+    }
+  })
+
 
 
   const net = await createNetwork(
