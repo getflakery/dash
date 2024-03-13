@@ -22,8 +22,8 @@ export const files = sqliteTable('files', {
 // Junction table to represent the many-to-many relationship
 export const templateFiles = sqliteTable('template_files', {
   id: text('id').primaryKey(),
-  fileId: text('file_id').notNull().references(() => files.id, { onDelete: 'no action' }).notNull(),
-  templateId: text('template_id').notNull().references(() => templates.id, { onDelete: 'no action' }).notNull(),
+  fileId: text('file_id').notNull().references(() => files.id, { onDelete: 'cascade' }).notNull(),
+  templateId: text('template_id').notNull().references(() => templates.id, { onDelete: 'cascade' }).notNull(),
 });
 
 // instances table definition

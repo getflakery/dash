@@ -1,1 +1,0 @@
-ALTER TABLE files ADD `initialization_vector` text NOT NULL;

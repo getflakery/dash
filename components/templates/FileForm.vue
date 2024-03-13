@@ -23,8 +23,6 @@ async function search(q: string) {
         return file.path.toLowerCase().includes(q.toLowerCase())
     })
 }
-const boxSelected = ref(true)
-
 
 const editing = ref({});
 const prevState = ref({});
@@ -60,9 +58,15 @@ async function saveEdit(file) {
     refreshFiles()
 }
 
-function deleteFile(index) {
+async function deleteFile(index) {
+    await $fetch(`/api/files/${files.value[index].id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
     files.value?.splice(index, 1);
-    // Optionally, handle backend deletion here
+    refreshFiles()
 }
 
 function addFile() {

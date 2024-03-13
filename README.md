@@ -97,8 +97,21 @@ pnpm run migrate
 ```
 
 ```
-nix-shell -p sqlite --command "sqlite3 db.sqlite < server/database/migrations/0000_gorgeous_ken_ellis.sql"
+nix-shell -p sqlite --command "sqlite3 db.sqlite < server/database/migrations/0000_previous_mephisto.sql"
 ```
+
+<!-- server/database/migrations/0001_peaceful_ego.sql 
+server/database/migrations/0002_confused_shocker.sql 
+server/database/migrations/0003_pink_shockwave.sql 
+server/database/migrations/0004_cooing_next_avengers.sql -->
+```
+nix-shell -p sqlite --command "sqlite3 db.sqlite < server/database/migrations/0000_gorgeous_ken_ellis.sql"
+nix-shell -p sqlite --command "sqlite3 db.sqlite < server/database/migrations/0001_peaceful_ego.sql"
+nix-shell -p sqlite --command "sqlite3 db.sqlite < server/database/migrations/0002_confused_shocker.sql"
+nix-shell -p sqlite --command "sqlite3 db.sqlite < server/database/migrations/0003_pink_shockwave.sql"
+nix-shell -p sqlite --command "sqlite3 db.sqlite < server/database/migrations/0004_cooing_next_avengers.sql"
+```
+
 
 ## db web view 
 

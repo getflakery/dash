@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1710197857518,
-      "tag": "0000_gorgeous_ken_ellis",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1710212094972,
-      "tag": "0001_peaceful_ego",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1710282831451,
-      "tag": "0002_confused_shocker",
+      "when": 1710299611739,
+      "tag": "0000_previous_mephisto",
       "breakpoints": true
     }
   ]
