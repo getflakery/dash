@@ -1,4 +1,4 @@
-import { instances, networks, instanceDeployment } from '~/server/database/schema'
+import { instances, networks, deployment } from '~/server/database/schema'
 import { useValidatedParams, z, } from 'h3-zod'
 import config from '~/config';
 
@@ -17,10 +17,10 @@ export default eventHandler(async (event) => {
       eq(instances.id, id))
   ).get();
 
-  let flakeComputeID = (await db.select().from(instanceDeployment).where(
+  let flakeComputeID = (await db.select().from(deployment).where(
     and(
-      eq(instanceDeployment.instanceID, id),
-      eq(instanceDeployment.active, 1)
+      eq(deployment.instanceID, id),
+      eq(deployment.active, 1)
     )
   ).get())?.flakeComputeID
 

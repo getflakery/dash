@@ -7,7 +7,7 @@ import {
   instances,
   networks,
   ports as portsSchema,
-  instanceDeployment,
+  deployment,
 } from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
@@ -112,7 +112,7 @@ export default eventHandler(async (event) => {
 
 
   // create instance deployments 
-  await db.insert(instanceDeployment).values({
+  await db.insert(deployment).values({
     id: uuidv4(),
     flakeComputeID,
     awsInstanceID,

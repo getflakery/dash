@@ -4,7 +4,7 @@ import {
   templateFiles as schemaTemplateFiles,
   networks,
   instances,
-  instanceDeployment,
+  deployment,
   templates
 } from '~/server/database/schema'
 import { eq, and } from 'drizzle-orm'
@@ -40,10 +40,10 @@ export default eventHandler(async (event) => {
   }
 
 
-  let activeDeployment = (await db.select().from(instanceDeployment).where(
+  let activeDeployment = (await db.select().from(deployment).where(
     and(
-      eq(instanceDeployment.instanceID, id),
-      eq(instanceDeployment.active, 1)
+      eq(deployment.instanceID, id),
+      eq(deployment.active, 1)
     )
   ).get())
 
@@ -104,7 +104,7 @@ export default eventHandler(async (event) => {
 
 
   // create instance deployments 
-  await db.insert(instanceDeployment).values({
+  await db.insert(deployment).values({
     id: uuidv4(),
     flakeComputeID,
     awsInstanceID,
@@ -128,9 +128,9 @@ export default eventHandler(async (event) => {
   }
 
   // set active deployment to false
-  await db.update(instanceDeployment).set({
+  await db.update(deployment).set({
     active: 0
-  }).where(eq(instanceDeployment.id, activeDeployment.id)).execute()
+  }).where(eq(deployment.id, activeDeployment.id)).execute()
 
   return instance
 })

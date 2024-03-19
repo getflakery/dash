@@ -26,23 +26,23 @@ export const templateFiles = sqliteTable('template_files', {
   templateId: text('template_id').notNull().references(() => templates.id, { onDelete: 'cascade' }).notNull(),
 });
 
-// instances table definition
-// id, name, and reference to template
-export const instances = sqliteTable('instances', {
+// Junction table to represent the many-to-many relationship
+export const deploymentFiles = sqliteTable('deployment_files', {
+  id: text('id').primaryKey(),
+  fileId: text('file_id').notNull().references(() => files.id, { onDelete: 'cascade' }).notNull(),
+  instanceID: text('instance_id').notNull().references(() => templates.id, { onDelete: 'cascade' }).notNull(),
+});
+
+
+// instanceDeployment
+export const deployment = sqliteTable('deployments', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   templateID: text('template_id').notNull().references(() => templates.id, { onDelete: 'no action' }).notNull(),
   userID: text('user_id').notNull(),
-});
-
-// instanceDeployment
-export const instanceDeployment = sqliteTable('instance_deployment', {
-  id: text('id').primaryKey(),
   flakeComputeID: text('flake_compute_id'),
   awsInstanceID: text('aws_instance_id'),
   createdAt: text('created_at').notNull(),
-  active: integer('active').notNull(),
-  instanceID: text('instance_id').notNull().references(() => instances.id, { onDelete: 'cascade' }).notNull(),
 });
 
 // networks 
@@ -50,7 +50,7 @@ export const networks = sqliteTable('networks', {
   id: text('id').primaryKey(),
   domain: text('domain').notNull(),
   userID: text('user_id').notNull(),
-  instanceID: text('instance_id').references(() => instances.id, { onDelete: 'no action' }),
+  deploymentID: text('deployment_id').references(() => deployment.id, { onDelete: 'no action' }),
 })
 
 
