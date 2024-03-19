@@ -37,14 +37,15 @@ export default eventHandler(async (event) => {
 
 
     // create templateFile entry to link back to template
-    await db.insert(templateFiles).values({
-        fileId: f.id,
-        templateId: id,
-        id: uuidv4(),
-    }).execute()
-
-
-
-
+    try {
+        await db.insert(templateFiles).values({
+            fileId: f.id,
+            templateId: id,
+            id: uuidv4(),
+        }).execute()
+    } catch (e) {
+        console.log('error creating template file for file', e)
+    }
+    
     return f
 })
