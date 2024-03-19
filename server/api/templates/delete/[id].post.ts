@@ -38,15 +38,5 @@ export default eventHandler(async (event) => {
     // remove the association from templateFiles but do not delete the files
     await db.delete(schemaTemplateFiles).where(eq(schemaTemplateFiles.templateId, id)).execute()
   }
-  if (deleteNetwork) {
-    // delete the network 
-    await db.delete(networks).where(eq(networks.templateID, id)).execute()
-  } else {
-    // set the fk to the template to null on the template's network
-    await db.update(networks).set({
-      templateID: null
-    }).where(eq(networks.templateID, id)).execute()
-  }
   return db.delete(templates).where(eq(templates.id, id))
-
 })
