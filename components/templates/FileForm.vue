@@ -3,9 +3,15 @@ import type { Instance, File } from '~/types'
 import { v4 as uuidv4 } from 'uuid';
 
 
-const props = defineProps({
-    templateID: Function,
-})
+const props = defineProps<{
+    templateID: string | undefined
+}>()
+
+// 3.3+: alternative, more succinct syntax
+const emit = defineEmits<{
+    saveEdit: [file: any] // named tuple syntax
+}>()
+
 
 
 const { data: files, refresh: refreshFiles, pending: pendingFiles } = await useFetch<File[]>(`/api/files/template/${props.templateID}`)
@@ -46,16 +52,19 @@ async function saveEdit(file) {
     file.notInDb = false;
     // todo Implement saving logic here, e.g., API call
     // // post to /api/files
-    await $fetch(`/api/files/template/${templateID}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "file": file
+    if (props.templateID !== undefined) {
+        await $fetch(`/api/files/template/${props.templateID}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "file": file
+            })
         })
-    })
-    refreshFiles()
+        refreshFiles()
+    }
+    emit('saveEdit', file)
 }
 
 async function deleteFile(index) {
@@ -83,8 +92,8 @@ function addFile() {
 <template>
     <UFormGroup label="Files" name="files">
         <div class="flex items-center justify-between">
-            <USelectMenu v-model="selected" :loading="loading" :searchable="search" placeholder="Search for a file by path"
-                option-attribute="path" multiple trailing by="id" />
+            <USelectMenu v-model="selected" :loading="loading" :searchable="search"
+                placeholder="Search for a file by path" option-attribute="path" multiple trailing by="id" />
             <UButton @click="addFile" icon="i-heroicons-plus" variant="secondary">Add New File</UButton>
         </div>
 
@@ -96,12 +105,14 @@ function addFile() {
         </div>
 
         <transition-group name="file-list" tag="div" class="space-y-4 my-4">
-            <div v-for="(file, index) in files?.concat(selected)" :key="file.id" class="rounded-lg file-list-enter-active">
+            <div v-for="(file, index) in files?.concat(selected)" :key="file.id"
+                class="rounded-lg file-list-enter-active">
                 <div v-if="editing[file.id]">
                     <UTextarea :rows="1" v-model="file.path" placeholder="File System Path" class="my-4 w-full" />
                     <UTextarea resize v-model="file.content" placeholder="File Content" class="w-full my-4" />
                     <div class="flex justify-between  my-4">
-                        <UButton @click="cancelEdit(file, index)" icon="i-heroicons-arrow-left" variant="secondary">Cancel
+                        <UButton @click="cancelEdit(file, index)" icon="i-heroicons-arrow-left" variant="secondary">
+                            Cancel
                             Editing</UButton>
                         <div>
                             <UButton @click="deleteFile(index)" icon="i-heroicons-x-mark" variant="secondary">Delete
@@ -117,8 +128,8 @@ function addFile() {
                         <div>
                             <UButton class="mr-2" variant="soft" size="2xs" icon="i-heroicons-pencil-square"
                                 @click="startEdit(file)" />
-                            <UButton class="mr-2" color="red" variant="soft" size="2xs" icon="i-heroicons-x-mark-20-solid"
-                                @click="deleteFile(index)" />
+                            <UButton class="mr-2" color="red" variant="soft" size="2xs"
+                                icon="i-heroicons-x-mark-20-solid" @click="deleteFile(index)" />
                         </div>
 
 

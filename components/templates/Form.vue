@@ -62,6 +62,10 @@ async function onSubmit(refresh: Function | undefined) {
   emit('close')
 }
 
+function saveEdit(file: any){
+  state.files.push(file)
+}
+
 </script>
 
 
@@ -82,7 +86,7 @@ async function onSubmit(refresh: Function | undefined) {
       <UInput v-model="state.awsInstanceType" type="text" placeholder="t3.small" />
     </UFormGroup>
 
-    <TemplatesFileForm  />
+    <TemplatesFileForm  @save-edit="saveEdit"/>
 
     <div class="flex justify-end gap-3">
       <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />

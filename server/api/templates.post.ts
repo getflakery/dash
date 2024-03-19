@@ -43,16 +43,22 @@ export default eventHandler(async (event) => {
   files?.forEach(async (file) => {
     const existingFile = await db.select().from(schemaFiles).where(eq(schemaFiles.id, file.id)).get()
     if (existingFile) {
+      const cs = useCryptoString()
+      const {encryptedData, iv} = cs.encrypt(file.content)
       await db.update(schemaFiles).set({
         path: file.path,
-        content: file.content,
+        content: encryptedData,
+        iv,
       }).where(eq(schemaFiles.id, file.id)).execute()
     } else {
+      const cs = useCryptoString()
+      const {encryptedData, iv} = cs.encrypt(file.content)
       await db.insert(schemaFiles).values({
         path: file.path,
-        content: file.content,
+        content: encryptedData,
         userID,
         id: file.id,
+        iv,
       }).execute()
     }
   })
