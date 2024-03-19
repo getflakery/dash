@@ -10,17 +10,11 @@ const links = [{
   to: '/dashboard/templates',
 
 }, {
-  id: 'instances',
-  label: 'Instances',
-  icon: 'i-heroicons-server',
-  to: '/dashboard/instances',
-  badge: '4',
-}, {
-  id: 'clusters',
-  label: 'Clusters (coming soon!)',
+  id: 'deployments',
+  label: 'Deployments',
+  to: '/dashboard/deployments',
   icon: 'i-heroicons-server-stack',
-  // to: '/clusters',
-  disabled: true,
+  badge: '4',
 }, {
   id: 'network',
   label: 'Networks',
