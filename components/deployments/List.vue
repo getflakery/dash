@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Instance } from '~/types'
+import type { Deployment } from '~/types'
 
 defineProps({
-  instances: {
-    type: Array as PropType<Instance[]>,
+  deployments: {
+    type: Array as PropType<Deployment[]>,
     default: () => []
   },
   refresh: {
@@ -12,13 +12,13 @@ defineProps({
   },
 })
 
-function getItems(instance: Instance, refresh: Function) {
+function getItems(deployment: Deployment, refresh: Function) {
   return [
   [{
       label: 'Redeploy',
       icon: 'i-heroicons-paper-airplane',
       click: async () => {
-        instanceToRedeploy.value = instance
+        deploymentToRedeploy.value = deployment
         redeployModal.value = true
       }
     }],  
@@ -27,7 +27,7 @@ function getItems(instance: Instance, refresh: Function) {
       icon: 'i-heroicons-trash-20-solid',
       labelClass: 'text-red-500 dark:text-red-400',
       click: async () => {
-        instanceToDelete.value = instance
+        deploymentToDelete.value = deployment
         deleteModal.value = true
       }
     }]]
@@ -35,8 +35,8 @@ function getItems(instance: Instance, refresh: Function) {
 
 const deleteModal = ref(false)
 const redeployModal = ref(false)
-const instanceToDelete = ref()
-const instanceToRedeploy = ref()
+const deploymentToDelete = ref()
+const deploymentToRedeploy = ref()
 
 
 
@@ -44,8 +44,8 @@ const instanceToRedeploy = ref()
 
 <template>
   <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-800">
-    <li v-for="(i, index) in instances" :key="index" class="flex items-center justify-between gap-3 py-3 px-4 sm:px-6">
-      <NuxtLink :to="`/dashboard/instance/${i.id}`">
+    <li v-for="(i, index) in deployments" :key="index" class="flex items-center justify-between gap-3 py-3 px-4 sm:px-6">
+      <NuxtLink :to="`/dashboard/deployment/${i.id}`">
         <div class="flex items-center gap-3 min-w-0">
           <div class="text-sm min-w-0">
             <p class="text-gray-900 dark:text-white font-medium truncate">
@@ -63,15 +63,15 @@ const instanceToRedeploy = ref()
       </div>
     </li>
   </ul>
-  <UDashboardModal v-model="deleteModal" title="Confirm Delete" description="Delete Instance"
+  <UDashboardModal v-model="deleteModal" title="Confirm Delete" description="Delete Deployment"
     :ui="{ width: 'sm:max-w-md' }">
-    <InstancesDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :instance="instanceToDelete" />
+    <DeploymentsDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :deployment="deploymentToDelete" />
   </UDashboardModal>
   <UDashboardModal 
     v-model="redeployModal" 
     title="Confirm Redeploy" 
     :ui="{ width: 'sm:max-w-md' }">
-    <InstancesRedeployModal @close="redeployModal = false" :refresh="refresh" :instance="instanceToRedeploy" />
+    <DeploymentsRedeployModal @close="redeployModal = false" :refresh="refresh" :deployment="deploymentToRedeploy" />
   </UDashboardModal>
 
 </template>

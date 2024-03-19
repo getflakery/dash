@@ -17,7 +17,7 @@ function getItems(template: Template, refresh: Function | undefined) {
 
   return [
     [{
-      label: 'Deploy Instance',
+      label: 'Deploy',
       icon: 'i-heroicons-server',
       click: async () => {
         deployInstance.value = true
@@ -27,7 +27,7 @@ function getItems(template: Template, refresh: Function | undefined) {
     }],
     [
       {
-        label: 'Delete Template',
+        label: 'Delete',
         icon: 'i-heroicons-trash-20-solid',
         labelClass: 'text-red-500 dark:text-red-400',
         click: () => {
@@ -64,7 +64,7 @@ function getItems(template: Template, refresh: Function | undefined) {
     <TemplatesDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :template="templateToDelete">
     </TemplatesDeleteConfirmModal>
   </UDashboardModal>
-  <UDashboardModal v-model="deployInstance" title="Deploy Template" description="" :ui="{ width: 'sm:max-w-md' }">
+  <UDashboardModal v-model="deployInstance" :title="`Deploy Template: ${templateToDeploy?.name ? templateToDeploy?.name : templateToDeploy?.flakeURL  }`" description="" :ui="{ width: 'sm:max-w-md' }">
     <TemplatesDeployModal @close="deployInstance = false" :refresh="refresh" :template="templateToDeploy" />
   </UDashboardModal>
 </template>

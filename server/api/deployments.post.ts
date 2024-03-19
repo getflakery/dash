@@ -4,10 +4,9 @@ import {
   templates,
   files as schemaFiles,
   templateFiles as schemaTemplateFiles,
-  instances,
   networks,
   ports as portsSchema,
-  deployment,
+  deployments,
 } from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
@@ -98,30 +97,22 @@ export default eventHandler(async (event) => {
   const flakeComputeID = jsonResponse.flakeCompute.id
   const name = petname(2, "-")
 
-  let instance = await db.insert(instances).values({
+  let deployment = await db.insert(deployments).values({
     id: uuidv4(),
     userID,
     templateID,
     name,
+    flakeComputeID,
+    awsInstanceID,
+    createdAt: new Date().valueOf(),
   }).returning().get()
 
   // update network with instance id
   await db.update(networks).set({
-    instanceID: instance.id
+    deploymentID: deployment.id
   }).where(eq(networks.id, net.id)).execute()
 
-
-  // create instance deployments 
-  await db.insert(deployment).values({
-    id: uuidv4(),
-    flakeComputeID,
-    awsInstanceID,
-    createdAt: new Date().toISOString(),
-    active: 1,
-    instanceID: instance.id,
-  }).execute()
-
-  return instance
+  return deployment
 })
 
 

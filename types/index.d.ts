@@ -8,7 +8,7 @@ export interface Template {
   flakeURL: string
 };
 
-export interface Instance {
+export interface Deployment {
   id: string
   templateID: string
   name?: string

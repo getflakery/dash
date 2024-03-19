@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { Instance, File } from '~/types'
+import type { Deployment, File } from '~/types'
 import { v4 as uuidv4 } from 'uuid';
 
 
 const route = useRoute()
 
-const { data: instance, refresh } = await useFetch<Instance>(`/api/instance/${route.params.id}`)
+const { data: deployment, refresh } = await useFetch<Deployment>(`/api/deployment/${route.params.id}`)
 
 
 function cancelEdit(file, index) {
@@ -23,7 +23,7 @@ function cancelEdit(file, index) {
   <template>
     <UDashboardPage>
       <UDashboardPanel grow>
-        <UDashboardNavbar title="Instance Details">
+        <UDashboardNavbar title="Deployment Details">
           <template #right>
             <!-- link to documentation -->
             <ULink href="" target="_blank" class="flex items-center gap-2">
@@ -33,18 +33,18 @@ function cancelEdit(file, index) {
           </template>
         </UDashboardNavbar>
         <UDashboardPanelContent class="pb-24">
-          <UDashboardSection :title="`${instance?.name} details`" orientation="horizontal"
+          <UDashboardSection :title="`${deployment?.name} details`" orientation="horizontal"
             :ui="{ container: 'lg:sticky top-2' }">
           </UDashboardSection>
 
           <UCard>
-            <NuxtLink :to="`https://${instance?.network.domain}.app.flakery.xyz`" target="_blank">
-              https://{{ instance?.network.domain }}.app.flakery.xyz      
+            <NuxtLink :to="`https://${deployment?.network.domain}.app.flakery.xyz`" target="_blank">
+              https://{{ deployment?.network.domain }}.app.flakery.xyz      
             </NuxtLink>
 
             <!-- Logs: -->
             <h2 class="text-lg font-semibold mt-4">Logs</h2>
-            <Accordion :items="instance?.logs.items" class="py-4">
+            <Accordion :items="deployment?.logs.items" class="py-4">
               <template #item="{ item }">
 
       <pre class="code-block custom-scroll">
@@ -54,7 +54,7 @@ function cancelEdit(file, index) {
 
               </template>
             </Accordion>
-            <TemplatesFileForm :templateID="instance?.templateID" />
+            <TemplatesFileForm :templateID="deployment?.templateID" />
           </UCard>
           <!-- <UDashboardModal v-model="isInviteModalOpen" title="Invite people"
           description="Invite new members by email address" :ui="{ width: 'sm:max-w-md' }">

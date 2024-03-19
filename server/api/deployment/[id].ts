@@ -1,4 +1,4 @@
-import { instances, networks, deployment } from '~/server/database/schema'
+import { networks, deployments } from '~/server/database/schema'
 import { useValidatedParams, z, } from 'h3-zod'
 import config from '~/config';
 
@@ -11,16 +11,15 @@ export default eventHandler(async (event) => {
   const db = useDB()
   const session = await requireUserSession(event)
   const userID = session.user.id
-  let inst = await db.select().from(instances).where(
+  let inst = await db.select().from(deployments).where(
     and(
-      eq(instances.userID, userID),
-      eq(instances.id, id))
+      eq(deployments.userID, userID),
+      eq(deployments.id, id))
   ).get();
 
-  let flakeComputeID = (await db.select().from(deployment).where(
+  let flakeComputeID = (await db.select().from(deployments).where(
     and(
-      eq(deployment.instanceID, id),
-      eq(deployment.active, 1)
+      eq(deployments.id, id),
     )
   ).get())?.flakeComputeID
 
@@ -34,7 +33,7 @@ export default eventHandler(async (event) => {
 
   const network = await db.select().from(networks).where(
     and(
-      eq(networks.instanceID, id),
+      eq(networks.deploymentID, id),
       eq(networks.userID, userID)
     )
   ).get()

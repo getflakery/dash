@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Instance, File } from '~/types'
+import type { Deployment, File } from '~/types'
 import { v4 as uuidv4 } from 'uuid';
 
 

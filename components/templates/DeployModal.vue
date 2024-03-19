@@ -16,7 +16,7 @@ const deploying = ref(false)
 const deployInstance = async (id: string, refresh: () => void) => {
   deploying.value = true
 
-  let inst = await $fetch(`/api/instances`, {
+  let inst = await $fetch(`/api/deployments`, {
     method: 'POST',
     body: JSON.stringify({
       "templateID": id,
@@ -30,11 +30,11 @@ const deployInstance = async (id: string, refresh: () => void) => {
   deploying.value = false
 
   useToast().add({
-    title: 'Instance Deployed',
-    description: `Your instance ${inst.name} has been deployed.`,
+    title: 'Template Deployed',
+    description: `Your template ${props.template.name}  has been deployed as ${inst.name}.`,
     timeout: 5000,
     click: () => {
-      window.open(`/dashboard/instance/${inst.id}`)
+      window.open(`/dashboard/deployment/${inst.id}`)
     }
   })
 
@@ -140,7 +140,7 @@ function toggleNetwork() {
   <div class="flex justify-end gap-4">
 
     <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
-    <UButton icon="i-heroicons-paper-airplane" :loading="deploying" type="submit" label="Deploy Instance From Template"
+    <UButton icon="i-heroicons-paper-airplane" :loading="deploying" type="submit" label="Deploy From Template"
       color="black" @click="deployInstance(
         props.template.id,
         props.refresh

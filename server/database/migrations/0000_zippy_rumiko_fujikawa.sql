@@ -1,3 +1,11 @@
+CREATE TABLE `deployment_files` (
+	`id` text PRIMARY KEY NOT NULL,
+	`file_id` text NOT NULL,
+	`deployment_id` text NOT NULL,
+	FOREIGN KEY (`file_id`) REFERENCES `files`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`deployment_id`) REFERENCES `deployments`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
 CREATE TABLE `deployments` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
@@ -5,16 +13,8 @@ CREATE TABLE `deployments` (
 	`user_id` text NOT NULL,
 	`flake_compute_id` text,
 	`aws_instance_id` text,
-	`created_at` text NOT NULL,
+	`created_at` integer NOT NULL,
 	FOREIGN KEY (`template_id`) REFERENCES `templates`(`id`) ON UPDATE no action ON DELETE no action
-);
---> statement-breakpoint
-CREATE TABLE `deployment_files` (
-	`id` text PRIMARY KEY NOT NULL,
-	`file_id` text NOT NULL,
-	`instance_id` text NOT NULL,
-	FOREIGN KEY (`file_id`) REFERENCES `files`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`instance_id`) REFERENCES `templates`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `files` (

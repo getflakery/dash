@@ -122,6 +122,6 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
   </UDashboardLayout>
   <UDashboardModal v-model="createInstanceOpen" title="Create Instance" :ui="{ width: 'sm:max-w-md' }">
     <!-- ~/components/settings/MembersForm.vue -->
-    <InstancesForm @close="createInstanceOpen = false" />
+    <DeploymentsForm @close="createInstanceOpen = false" />
   </UDashboardModal>
 </template>

@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type {  Instance } from '~/types'
+import type {  Deployment } from '~/types'
 
-const { data: instances, refresh } = await useFetch<Instance[]>('/api/instances', { default: () => [] })
-console.log(instances)
+const { data: deployments, refresh } = await useFetch<Deployment[]>('/api/deployments', { default: () => [] })
 const loading = ref(false)
 
 const q = ref('')
@@ -14,7 +13,7 @@ const isInviteModalOpen = ref(false)
 <template>
   <UDashboardPage>
     <UDashboardPanel grow>
-      <UDashboardNavbar title="Instances">
+      <UDashboardNavbar title="Deployments">
         <template #right>
           <!-- link to documentation -->
           <ULink href="" target="_blank" class="flex items-center gap-2">
@@ -24,23 +23,23 @@ const isInviteModalOpen = ref(false)
         </template>
       </UDashboardNavbar>
       <UDashboardPanelContent class="pb-24">
-        <UDashboardSection title="Manage Instances" description="Instances are a single running virtual machine with your template applied. Create, manage and view logs for your instance."
+        <UDashboardSection title="Manage Deployments" description="Deployments are a single running virtual machine with your template applied. Create, manage and view logs for your deployment."
           orientation="horizontal" :ui="{ container: 'lg:sticky top-2' }">
         </UDashboardSection>
         <UCard :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }" class="min-w-0">
           <template #header>
             <div class="flex items-center justify-between gap-2">
 
-              <UInput v-model="q" icon="i-heroicons-magnifying-glass" placeholder="Search Instances"  />
-              <UButton label="Create New Instance" color="black" @click="isInviteModalOpen = true" />
+              <UInput v-model="q" icon="i-heroicons-magnifying-glass" placeholder="Search Deployments"  />
+              <UButton label="Create New Deployment" color="black" @click="isInviteModalOpen = true" />
             </div>
           </template>
 
-          <InstancesList :instances="instances" :refresh="refresh" />
+          <DeploymentsList :deployments="deployments" :refresh="refresh" />
         </UCard>
-        <UDashboardModal v-model="isInviteModalOpen" title="Create Instance"
+        <UDashboardModal v-model="isInviteModalOpen" title="Create Deployment"
           :ui="{ width: 'sm:max-w-md' }">
-          <InstancesForm @close="isInviteModalOpen = false" :refresh="refresh"/>
+          <DeploymentsForm @close="isInviteModalOpen = false" :refresh="refresh"/>
         </UDashboardModal>
       </UDashboardPanelContent>
 

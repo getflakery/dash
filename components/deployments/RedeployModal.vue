@@ -1,11 +1,11 @@
 
 <script setup lang="ts">
-import type { Instance } from '~/types';
+import type { Deployment } from '~/types';
 
 // Define props with types
 const props = defineProps<{
   refresh: () => void | undefined;
-  instance: Instance;
+  instance: Deployment;
 }>();
 
 const emit = defineEmits(['close'])

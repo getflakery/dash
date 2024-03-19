@@ -1,11 +1,11 @@
 
 <script setup lang="ts">
-import type { Instance } from '~/types';
+import type { Deployment } from '~/types';
 
 // Define props with types
 const props = defineProps<{
   refresh: () => void | undefined;
-  instance: Instance;
+  deployment: Deployment;
 }>();
 
 const emit = defineEmits(['close'])
@@ -15,7 +15,7 @@ const confirmDelete = async (id: string,
  deleteNetwork: boolean, 
  refresh: () => void | undefined
  ) => {
-  await $fetch(`/api/instances/delete/${id}`, {
+  await $fetch(`/api/deployments/delete/${id}`, {
     method: 'POST',
     body: JSON.stringify({
       // deleteFiles,
@@ -46,7 +46,7 @@ const deleteNetworks = ref(true)
 
     <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
     <UButton type="submit" label="Confirm Delete" color="black" @click="confirmDelete(
-      props.instance.id,
+      props.deployment.id,
       // deleteFiles,
       deleteNetworks,
       props.refresh

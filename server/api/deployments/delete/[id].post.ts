@@ -1,5 +1,5 @@
 import { useValidatedParams, useValidatedBody, z, } from 'h3-zod'
-import { templateFiles as schemaTemplateFiles, files, networks, instances} from '~/server/database/schema'
+import { templateFiles as schemaTemplateFiles, files, networks, deployments} from '~/server/database/schema'
 import { eq, and } from 'drizzle-orm'
 import { useEC2Client } from '~/server/utils/aws'
 import {
@@ -46,18 +46,18 @@ export default eventHandler(async (event) => {
     console.log(id)
     // delete the network 
     await db.delete(networks).where(
-      eq(networks.instanceID, id)
+      eq(networks.deploymentID, id)
       ).execute()
   } else {
     // set the fk to the template to null on the template's network
     await db.update(networks).set({
-      instanceID: null
-    }).where(eq(networks.instanceID, id)).execute()
+      deploymentID: null
+    }).where(eq(networks.deploymentID, id)).execute()
   }
-  let instance = await db.select().from(instances).where(
+  let instance = await db.select().from(deployments).where(
     and(
-      eq(instances.id, id),
-      eq(instances.userID, userID)
+      eq(deployments.id, id),
+      eq(deployments.userID, userID)
     )
   ).get();
 
@@ -72,13 +72,13 @@ export default eventHandler(async (event) => {
   try {
     await client.send(
       new TerminateInstancesCommand({
-        InstanceIds: [instance.awsInstanceID],
+        InstanceIds: [deployments.awsInstanceID],
       })
     )
   } catch (err) {
     console.error(err);
   }
 
-  return db.delete(instances).where(eq(instances.id, id))
+  return db.delete(deployments).where(eq(deployments.id, id))
 
 })
