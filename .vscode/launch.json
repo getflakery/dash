@@ -20,7 +20,7 @@
           "dev"
         ],
         "runtimeExecutable": "/nix/store/3k43a25ijnmfpkkyg94npv85ksc8nhly-nodejs-20.11.1/bin/node",
-      }
+      },
     ],
     "compounds": [
       {

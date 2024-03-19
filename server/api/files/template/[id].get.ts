@@ -10,9 +10,9 @@ export default eventHandler(async (event) => {
 
     const tf = await db.select().from(templateFiles).where(eq(templateFiles.templateId, id)).all()
 
-    const fs = await db.select().from(files).where(or(
-        ...tf.map((f) => eq(files.id, f.fileId))
-    )).all()
+    const fs = await Promise.all(tf.map(async (f) => {
+        return await db.select().from(files).where(eq(files.id, f.fileId)).get()
+    }))
 
     return fs
 })
