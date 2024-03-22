@@ -26,6 +26,7 @@
 
           app = pkgs.stdenv.mkDerivation {
             name = "app";
+            src = ./.;
             buildInputs = with pkgs; [ 
               yrnpkg
               nodePackages.yarn
@@ -41,6 +42,7 @@
               mkdir -p $out/dist
               mv .output/* $out/dist
             '';
+            dontUnpack = true;
           };
 
         in
