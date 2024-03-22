@@ -19,31 +19,20 @@
             ];
           };
           # Example of how to use mkPnpmPackage to package a Node.js project using pnpm
-          yrnpkg = pkgs.mkYarnPackage rec {
+          app = pkgs.mkYarnPackage rec {
             name = "app";
             src = ./.;
-          };
-
-          app = pkgs.stdenv.mkDerivation {
-            name = "app";
-            src = ./.;
-            buildInputs = with pkgs; [ 
-              yrnpkg
-              nodePackages.yarn
-              nodejs
-            ];
             buildPhase = ''
-              cp -r  ${yrnpkg}/libexec/app/deps/app app
-              cd app
-              yarn --offline run build
+                yarn --offline run build
             '';
 
             installPhase = ''
               mkdir -p $out/dist
               mv .output/* $out/dist
             '';
-            dontUnpack = true;
           };
+
+
 
         in
         {
