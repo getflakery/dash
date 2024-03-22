@@ -21,6 +21,7 @@ const confirmDelete = async (id: string, deleteFiles: boolean, deleteNetwork: bo
   })
   refresh()
   emit('close')
+  await navigateTo('/dashboard/templates')
 
 }
 
@@ -32,12 +33,7 @@ const deleteNetworks = ref(false)
 
 
 <template>
-  <UCheckbox v-model="deleteFiles" label="Delete Files" />
-
-  <UCheckbox v-model="deleteNetworks" label="Delete Network" />
-
   <div class="flex justify-end gap-3">
-
     <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
     <UButton type="submit" label="Confirm Delete" color="black" @click="confirmDelete(
       props.template.id,
