@@ -35,6 +35,7 @@
             buildPhase = ''
               # symlink the node_modules to the app
               ln -s ${yrnpkg}/libexec/node_modules node_modules
+              cat  ${yrnpkg}/libexec/app/deps/app/package.json > package.json
               yarn run build
             '';
 
