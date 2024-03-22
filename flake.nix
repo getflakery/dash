@@ -33,7 +33,8 @@
               nodejs
             ];
             buildPhase = ''
-              cd  ${yrnpkg}/libexec/app/deps/app
+              cp -r  ${yrnpkg}/libexec/app/deps/app app
+              cd app
               # symlink the node_modules to the app
               ln -s ${yrnpkg}/libexec/node_modules node_modules
               yarn --offline run build
