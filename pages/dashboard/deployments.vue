@@ -14,13 +14,6 @@ const isInviteModalOpen = ref(false)
   <UDashboardPage>
     <UDashboardPanel grow>
       <UDashboardNavbar title="Deployments">
-        <template #right>
-          <!-- link to documentation -->
-          <ULink href="" target="_blank" class="flex items-center gap-2">
-            <UIcon name="i-heroicons-book-open" />
-            <span>Documentation</span>
-          </ULink>
-        </template>
       </UDashboardNavbar>
       <UDashboardPanelContent class="pb-24">
         <UDashboardSection title="Manage Deployments" description="Deployments are a single running virtual machine with your template applied. Create, manage and view logs for your deployment."
