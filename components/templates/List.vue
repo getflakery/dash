@@ -40,20 +40,20 @@ function getItems(template: Template, refresh: Function | undefined) {
 
 <template>
   <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-800">
-    <li v-for="(template, index) in templates" :key="index"
-      class="flex items-center justify-between gap-3 py-3 px-4 sm:px-6">
+    <li v-for="(t, index) in templates" :key="index" class="flex items-center justify-between gap-3 py-3 px-4 sm:px-6">
       <div class="flex items-center gap-3 min-w-0">
-
-        <div class="text-sm min-w-0">
-          <p class="text-gray-900 dark:text-white font-medium truncate">
-            {{ template.name }}
-          </p>
-          {{ template.flakeURL }}
-        </div>
+        <NuxtLink :to="`/dashboard/template/${ t.id }`">
+          <div class="text-sm min-w-0">
+            <p class="text-gray-900 dark:text-white font-medium truncate">
+              {{ t.name }}
+            </p>
+            {{ t.flakeURL }}
+          </div>
+        </NuxtLink>
       </div>
 
       <div class="flex items-center gap-3">
-        <UDropdown :items="getItems(template, refresh)" position="bottom-end">
+        <UDropdown :items="getItems(t, refresh)" position="bottom-end">
           <UButton color="white" label="Actions" trailing-icon="i-heroicons-chevron-down-20-solid" />
         </UDropdown>
       </div>
@@ -64,7 +64,9 @@ function getItems(template: Template, refresh: Function | undefined) {
     <TemplatesDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :template="templateToDelete">
     </TemplatesDeleteConfirmModal>
   </UDashboardModal>
-  <UDashboardModal v-model="deployInstance" :title="`Deploy Template: ${templateToDeploy?.name ? templateToDeploy?.name : templateToDeploy?.flakeURL  }`" description="" :ui="{ width: 'sm:max-w-md' }">
+  <UDashboardModal v-model="deployInstance"
+    :title="`Deploy Template: ${templateToDeploy?.name ? templateToDeploy?.name : templateToDeploy?.flakeURL}`"
+    description="" :ui="{ width: 'sm:max-w-md' }">
     <TemplatesDeployModal @close="deployInstance = false" :refresh="refresh" :template="templateToDeploy" />
   </UDashboardModal>
 </template>

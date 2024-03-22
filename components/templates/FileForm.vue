@@ -90,13 +90,7 @@ function addFile() {
 
 </script>
 <template>
-    <UFormGroup label="Files" name="files">
-        <div class="flex items-center justify-between">
-            <USelectMenu v-model="selected" :loading="loading" :searchable="search"
-                placeholder="Search for a file by path" option-attribute="path" multiple trailing by="id" />
-            <UButton @click="addFile" icon="i-heroicons-plus" variant="secondary">Add New File</UButton>
-        </div>
-
+    <UFormGroup name="files">
 
         <!-- loading icon if pendingFiles -->
 
@@ -138,5 +132,9 @@ function addFile() {
                 </div>
             </div>
         </transition-group>
+        <div class="flex items-center justify-between">
+            <UButton @click="addFile" icon="i-heroicons-plus" variant="secondary">Add New File</UButton>
+        </div>
+
     </UFormGroup>
 </template>

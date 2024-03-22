@@ -15,16 +15,6 @@ const links = [{
   to: '/dashboard/deployments',
   icon: 'i-heroicons-server-stack',
   badge: '4',
-}, {
-  id: 'network',
-  label: 'Networks',
-  icon: 'i-heroicons-globe-alt',
-  to: '/dashboard/network',
-}, {
-  id: 'encrypted-files',
-  label: 'Encrypted Files',
-  icon: 'i-heroicons-lock-closed',
-  to: '/dashboard/encrypted-files',
 }]
 
 const footerLinks = [{
