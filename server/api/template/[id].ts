@@ -1,6 +1,5 @@
-import { networks, templates, deployments, } from '~/server/database/schema'
+import { templates, deployments, } from '~/server/database/schema'
 import { useValidatedParams, z, } from 'h3-zod'
-import config from '~/config';
 
 import { eq, and } from 'drizzle-orm'
 

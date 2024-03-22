@@ -24,7 +24,7 @@ const deployInstance = ref(false)
 const templateToDeploy = ref()
 
 const saveEdit = async function () {
-  await fetch(`/api/todos/${template.value?.id}`, {
+  await fetch(`/api/template/${template.value?.id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
@@ -36,6 +36,7 @@ const saveEdit = async function () {
   });
   // todo toast
   await refresh();
+  toggleEditMode();
 }
 
 function getItems(template: Template, refresh: Function | undefined) {

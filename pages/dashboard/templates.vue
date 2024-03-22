@@ -17,13 +17,6 @@ const { isNotificationsSlideoverOpen } = useDashboard()
   <UDashboardPage>
     <UDashboardPanel grow>
       <UDashboardNavbar title="Templates">
-        <template #right>
-          <!-- link to documentation -->
-          <ULink href="" target="_blank" class="flex items-center gap-2">
-            <UIcon name="i-heroicons-book-open" />
-            <span>Documentation</span>
-          </ULink>
-        </template>
       </UDashboardNavbar>
       <UDashboardPanelContent class="pb-24">
         <UDashboardSection title="Create Templates" description="Create a template to deploy your nix flake"
