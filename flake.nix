@@ -3,36 +3,50 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
-  inputs.pnpm2nix.url = "github:nzbr/pnpm2nix-nzbr";
 
 
-  outputs = { self, nixpkgs, flake-utils, pnpm2nix, ... }:
+  outputs = { self, nixpkgs, flake-utils, ... }:
     (flake-utils.lib.eachDefaultSystem
       (system:
         let
           pkgs = import nixpkgs {
             inherit system;
-            overlays = [
-              pnpm2nix.overlays.default # Add the pnpm2nix overlay to provide mkPnpmPackage
-            ];
           };
           devshell = pkgs.mkShell {
             buildInputs = with pkgs; [
-              nodePackages_latest.pnpm
+              nodePackages.yarn
               nodejs
             ];
           };
           # Example of how to use mkPnpmPackage to package a Node.js project using pnpm
-          myNodeProject = pkgs.mkPnpmPackage {
-            src = ./.; # Adjust this to the location of your Node.js project if it's not in the root
-            extraBuildInputs = [
-              pkgs.nodePackages.node-gyp
-            ];
+          yrnpkg = pkgs.mkYarnPackage rec {
+            name = "app";
+            src = ./.;
           };
+
+          app = pkgs.stdenv.mkDerivation {
+            name = "app";
+            buildInputs = with pkgs; [ 
+              yrnpkg
+              nodePackages.yarn
+              nodejs
+            ];
+            buildPhase = ''
+              # symlink the node_modules to the app
+              ln -s ${yrnpkg}/libexec/node_modules node_modules
+              yarn run build
+            '';
+
+            installPhase = ''
+              mkdir -p $out/dist
+              mv .output/* $out/dist
+            '';
+          };
+
         in
         {
           devShells.default = devshell;
-          packages.default = myNodeProject;
+          packages.default = app;
         })
     );
 }
