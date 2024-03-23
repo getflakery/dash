@@ -14,6 +14,7 @@
           };
           devshell = pkgs.mkShell {
             buildInputs = with pkgs; [
+              nodePackages.pnpm
               nodePackages.yarn
               nodejs
             ];

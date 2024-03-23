@@ -1,38 +1,58 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  extends: [process.env.NUXT_UI_PRO_PATH || '@nuxt/ui-pro'],
+  extends: [process.env.NUXT_UI_PRO_PATH || "@nuxt/ui-pro"],
   modules: [
-    '@nuxt/ui',
-    '@nuxtjs/fontaine',
-    '@nuxtjs/google-fonts',
-    '@vueuse/nuxt',
-    'nuxt-auth-utils'
+    "@nuxt/ui",
+    "@nuxtjs/fontaine",
+    "@nuxtjs/google-fonts",
+    "@vueuse/nuxt",
+    "nuxt-auth-utils",
+    "@nuxt/content",
   ],
   ui: {
-    icons: ['heroicons', 'simple-icons'],
-    safelistColors: ['primary', 'red', 'orange', 'green']
+    icons: ["heroicons", "simple-icons"],
+    safelistColors: ["primary", "red", "orange", "green"],
   },
-  components: [{
-    path: '~/components'
-  }, {
-    path: '~/components/common',
-    pathPrefix: false
-  }],
+  components: [
+    {
+      path: "~/components",
+    },
+    {
+      path: "~/components/common",
+      pathPrefix: false,
+    },
+  ],
   // Fonts
   fontMetrics: {
-    fonts: ['DM Sans']
+    fonts: ["DM Sans"],
   },
   googleFonts: {
-    display: 'swap',
+    display: "swap",
     download: true,
     families: {
-      'DM+Sans': [300, 400, 500, 600, 700]
-    }
+      "DM+Sans": [300, 400, 500, 600, 700],
+    },
   },
   devtools: {
-    enabled: true
-
+    enabled: true,
   },
   sourcemap: true,
-  telemetry: false
-})
+  telemetry: false,
+  content: {
+    // highlight: false,
+    highlight: {
+      // Theme used in all color schemes.
+      // OR
+      // theme: {
+      //   // Default theme (same as single string)
+      //   default: "github-light",
+      //   // Theme used if `html.dark`
+      //   dark: "github-dark",
+      //   // Theme used if `html.sepia`
+      // },
+
+      langs: ["c", "cpp", "nix"],
+    },
+
+  },
+});
