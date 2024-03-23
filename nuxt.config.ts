@@ -34,4 +34,5 @@ export default defineNuxtConfig({
 
   },
   sourcemap: true,
+  telemetry: false
 })

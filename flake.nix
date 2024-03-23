@@ -30,6 +30,8 @@
               mkdir -p $out/dist
               mv .output/* $out/dist
             '';
+            NUXT_SESSION_PASSWORD="83e27ccd-b463-477a-a49f-8196184af1ac";
+            NUXT_UI_PRO_LICENSE="99D57DD6-BD0D-4E27-9924-D2306E9FDFBC";
           };
 
 
