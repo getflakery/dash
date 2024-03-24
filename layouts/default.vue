@@ -37,7 +37,7 @@ const groups = [{
     icon: 'i-heroicons-server',
     click: () => createInstanceOpen.value = true
   },
- ]
+  ]
 }
   //  {
   //   key: 'code',
@@ -74,17 +74,28 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
         <UDivider />
 
         <UDashboardSidebarLinks :links="[
-          {
-            id: 'documentation',
-            label: 'Documentation',
-            icon: 'i-heroicons-book-open',
-            to: '/documentation',
-            tooltip: {
-              text: 'Documentation',
-              shortcuts: ['G', 'D']
-            }
-          }
-        ]" />
+      {
+        id: 'documentation',
+        label: 'Documentation',
+        icon: 'i-heroicons-book-open',
+        to: '/documentation',
+        tooltip: {
+          text: 'Documentation',
+          shortcuts: ['G', 'D']
+        },
+        children: [{
+          label: 'Quick Start',
+          to: '/documentation/quick-start',
+          exact: true
+        }, {
+          label: 'Add Flakery to existing NixOS configuration',
+          to: '/documentation/add-flakery-to-existing-nixos-configuration'
+        }, {
+          label: 'Notifications',
+          to: '/settings/notifications'
+        }],
+      }
+    ]" />
 
         <div class="flex-1" />
 
