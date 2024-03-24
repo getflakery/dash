@@ -37,7 +37,7 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
-  sourcemap: true,
+  sourcemap: false,
   telemetry: false,
   content: {
     // highlight: false,
