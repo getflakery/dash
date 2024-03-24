@@ -48,10 +48,10 @@ first, lets add an input to this flake that will import the `flakery` nixos modu
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    flakery.url = "github:getflakery/flakes";  // [!code highlight]
+    flakery.url = "github:getflakery/flakes";  # [!code highlight]
   };
 
-  outputs = { self, nixpkgs, flakery }: { // [!code highlight]
+  outputs = { self, nixpkgs, flakery }: { # [!code highlight]
 
     packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
 

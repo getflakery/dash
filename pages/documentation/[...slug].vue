@@ -70,4 +70,12 @@ const links = computed(() => [toc?.bottom?.edit && {
   </UDashboardPage>
 </template>
 <style>
+.highlighted {
+    background-color: rgba(142, 150, 170, .14) !important;
+    transition: background-color .5s;
+    margin: 0 -24px;
+    padding: 0 24px;
+    width: calc(100% + 48px);
+    display: inline-block;
+}
 </style>
