@@ -20,7 +20,6 @@
               turso-cli
             ];
           };
-
         in
         {
           devShells.default = devshell;
