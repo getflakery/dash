@@ -24,7 +24,7 @@ const links = [{
   to: 'https://github.com/nuxt/ui-pro',
   target: '_blank'
 }, {
-  label: 'Buy Nuxt UI Pro',
+  label: 'Buy Flakery',
   icon: 'i-heroicons-credit-card',
   to: 'https://ui.nuxt.com/pro/purchase',
   target: '_blank'

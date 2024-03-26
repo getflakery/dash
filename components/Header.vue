@@ -13,7 +13,7 @@ const { header } = useAppConfig()
         <UColorModeImage v-bind="{ class: 'h-6 w-auto', ...header?.logo }" />
       </template>
       <template v-else>
-        Nuxt UI Pro <UBadge label="Docs" variant="subtle" class="mb-0.5" />
+        Flakery
       </template>
     </template>
 
@@ -33,6 +33,9 @@ const { header } = useAppConfig()
           v-bind="{ color: 'gray', variant: 'ghost', ...link }"
         />
       </template>
+
+      <UButton  to="/api/auth/github" icon="i-simple-icons-github" label="Login with GitHub" color="black"
+        external />
     </template>
 
     <template #panel>

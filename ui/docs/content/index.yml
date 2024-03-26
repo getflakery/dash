@@ -76,8 +76,8 @@ sections:
 cta:
   title: Trusted and supported by our<br class="hidden lg:block"> amazing community
 pro:
-  title: Upgrade to <span class="text-primary">Nuxt UI Pro</span>
-  description: 'Nuxt UI Pro is a collection of premium Vue components built on top of Nuxt UI to create beautiful & responsive Nuxt applications in minutes.<br>It includes all primitives to build landing pages, documentations, blogs, dashboards or entire SaaS products.'
+  title: Upgrade to <span class="text-primary">Flakery</span>
+  description: 'Flakery is a collection of premium Vue components built on top of Nuxt UI to create beautiful & responsive Nuxt applications in minutes.<br>It includes all primitives to build landing pages, documentations, blogs, dashboards or entire SaaS products.'
   links:
     - label: View plans
       to: /pro/pricing
@@ -91,7 +91,7 @@ pro:
       size: lg
   sections:
     - title: The freedom to build anything
-      description: Nuxt UI Pro ships with an extensive set of advanced components that cover a wide range of use-cases. Carefully crafted to reduce boilerplate code without sacrificing flexibility.
+      description: Flakery ships with an extensive set of advanced components that cover a wide range of use-cases. Carefully crafted to reduce boilerplate code without sacrificing flexibility.
       id: features
       align: left
       features:
@@ -102,7 +102,7 @@ pro:
           description: Each component leverages the power of Vue's slots to give you the flexibility to build anything.
           icon: i-heroicons-square-3-stack-3d
         - name: Responsive by design
-          description: Nuxt UI Pro components aims to structure your content, they are responsive by design and will adapt to any screen size.
+          description: Flakery components aims to structure your content, they are responsive by design and will adapt to any screen size.
           icon: i-heroicons-device-phone-mobile
       links:
         - label: Explore components
@@ -141,17 +141,17 @@ pro:
         </template>
         ```
     - title: The flexibility to control your data
-      description: Although you can use any data source you want, Nuxt UI Pro is fully integrated with Nuxt Content and provides additional features when the module is detected.
+      description: Although you can use any data source you want, Flakery is fully integrated with Nuxt Content and provides additional features when the module is detected.
       align: right
       features:
         - name: 'Write Markdown with ease'
-          description: Nuxt UI Pro overrides Nuxt Content prose components to make them awesome but also adds new ones like Callout, CodeGroup, Field, etc.
+          description: Flakery overrides Nuxt Content prose components to make them awesome but also adds new ones like Callout, CodeGroup, Field, etc.
           icon: i-simple-icons-markdown
         - name: 'Beautiful Typography styles'
           description: Tailwind CSS typography plugin is pre-configured and styled to match Nuxt UI components and colors.
           icon: i-heroicons-paint-brush
         - name: Full-Text Search out of the box
-          description: 'Nuxt UI Pro ships with a ready to use command palette component. No need to setup Algolia DocSearch anymore.'
+          description: 'Flakery ships with a ready to use command palette component. No need to setup Algolia DocSearch anymore.'
           icon: i-heroicons-magnifying-glass
       links:
         - label: Nuxt Content integration
@@ -185,7 +185,7 @@ pro:
         ```
   landing:
     title: Start with a landing page
-    description: Stop wasting time building another landing page, Nuxt UI Pro flexible components will allow you to focus on your content.
+    description: Stop wasting time building another landing page, Flakery flexible components will allow you to focus on your content.
   docs:
     title: Build your docs in seconds
-    description: Whether you're creating documentation for your open source project or explaining your product, Nuxt UI Pro has you covered.
+    description: Whether you're creating documentation for your open source project or explaining your product, Flakery has you covered.

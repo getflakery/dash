@@ -7,7 +7,7 @@
     <UColorModeImage
       light="/illustrations/pro-light.svg"
       dark="/illustrations/pro-dark.svg"
-      alt="Nuxt UI Pro"
+      alt="Flakery"
       loading="lazy"
       class="w-full"
     />

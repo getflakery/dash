@@ -1,0 +1,13 @@
+title: Flakery
+description: Flakery is a simple no frills solution to deploying your NixOS flakes
+navigation: false
+hero:
+  title: Flakery
+  description: Flakery is a simple no frills solution to deploying your NixOS flakes
+  links:
+    - label: Get started
+      to: '/dashboard/templates'
+      size: xl
+      color: black
+      icon: i-heroicons-arrow-right-20-solid
+      trailing: true

@@ -7,7 +7,7 @@
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
-Nuxt UI provides everything related to UI when building Nuxt applications: components, icons, colors, dark mode and also keyboard shortcuts.
+Flakeryvides everything related to UI when building Nuxt applications: components, icons, colors, dark mode and also keyboard shortcuts.
 
 Is has been developed by [NuxtLabs](https://nuxtlabs.com/) for [Volta](https://volta.net), [Nuxt Studio](https://nuxt.studio/) and the Nuxt community.
 
