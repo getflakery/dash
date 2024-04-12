@@ -103,10 +103,7 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
 
         <UDivider class="sticky bottom-0" />
 
-        <template #footer>
-          <!-- ~/components/UserDropdown.vue -->
-          <UserDropdown />
-        </template>
+
       </UDashboardSidebar>
     </UDashboardPanel>
 

@@ -22,18 +22,7 @@ const { header } = useAppConfig()
     </template>
 
     <template #right>
-      <UContentSearchButton v-if="header?.search" :label="null" class="lg:hidden" />
-
-      <UColorModeButton v-if="header?.colorMode" />
-
-      <template v-if="header?.links">
-        <UButton
-          v-for="(link, index) of header.links"
-          :key="index"
-          v-bind="{ color: 'gray', variant: 'ghost', ...link }"
-        />
-      </template>
-
+      <UButton  to="/documentation/quick-start"  icon="i-heroicons-book-open"  label="Documentation" />
       <UButton  to="/api/auth/github" icon="i-simple-icons-github" label="Login with GitHub" color="black"
         external />
     </template>
