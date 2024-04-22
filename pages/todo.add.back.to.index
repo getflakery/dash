@@ -1,0 +1,18 @@
+      <template #links>
+
+        <!--  -->
+        <Popover v-model:open="open" :ui="{ wrapper: 'flex-1' }"  class="flex-1">
+        <UInput  ref="newTodoInput" v-model="newTodo" name="todo" :disabled="loading" 
+          placeholder="github:r33drichards/hello-flake#default" autocomplete="off" autofocus :ui="{ wrapper: 'flex-1' }"
+          @paste="toggleOpen" />
+
+        <template #panel>
+          <div class="p-4" @click.stop="updateInput">
+            click here to format to {{ flakeURL }}
+          </div>
+        </template>
+      </Popover>
+
+
+        <UButton :to="submitUrl()"  icon="i-heroicons-paper-airplane" label="Deploy" />
+        </template>

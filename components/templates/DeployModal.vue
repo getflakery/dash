@@ -100,41 +100,10 @@ function toggleNetwork() {
 
 
 <template>
-  <UFormGroup label="Network" name="network">
 
-    <UCheckbox v-model="boxSelected" name="createNetwork" label="Create Network using default settings" class="py-4" />
 
-    <div class="flex items-center justify-between">
 
-      <USelectMenu :searchable="networkSearch" v-model="networkSelected" :loading="networkLoading" class="py-4"
-        placeholder="Search for a Network..." option-attribute="domain" trailing by="domain" :disabled="boxSelected" />
-      <UButton v-if="networkSelected" @click="clearNetworkSelected" icon="i-heroicons-x-mark" variant="secondary"
-        :disabled="boxSelected">
-        Clear Selection
-      </UButton>
-      <UButton v-else-if="!newNetWork" @click="toggleNetwork" icon="i-heroicons-plus" variant="secondary"
-        :disabled="boxSelected">Add New Network
-      </UButton>
-      <UButton v-else @click="toggleNetwork" icon="i-heroicons-x-mark" variant="secondary" :disabled="boxSelected">
-        Cancel Add New Network
-      </UButton>
-    </div>
 
-  </UFormGroup>
-
-  <UFormGroup v-if="newNetWork && !networkSelected" label="Domain Name" name="domainName"
-    description="If you do not provide a domain name, one will be generated for you.">
-    <UInput v-model="state.domain">
-      <template #trailing>
-        <span class="text-gray-500 dark:text-gray-400 text-xs">.app.flakery.xyz</span>
-      </template>
-    </UInput>
-  </UFormGroup>
-
-  <UFormGroup v-if="newNetWork && !networkSelected" label="Ports" name="ports" de>
-    <USelectMenu v-model="selected" :options="ports" multiple searchable searchable-placeholder="Select Ports..."
-      creatable />
-  </UFormGroup>
 
 
   <div class="flex justify-end gap-4">

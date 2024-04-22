@@ -14,7 +14,7 @@ const links = [{
   label: 'Deployments',
   to: '/dashboard/deployments',
   icon: 'i-heroicons-server-stack',
-  badge: '4',
+  // badge: '4',
 }]
 
 const footerLinks = [{

@@ -15,13 +15,13 @@ const redeployModal = ref(false)
 
 function getItems(deployment: Deployment, refresh: Function) {
   return [
-  [{
-      label: 'Redeploy',
-      icon: 'i-heroicons-paper-airplane',
-      click: async () => {
-        redeployModal.value = true
-      }
-    }],  
+  // [{
+  //     label: 'Redeploy',
+  //     icon: 'i-heroicons-paper-airplane',
+  //     click: async () => {
+  //       redeployModal.value = true
+  //     }
+  //   }],  
   [{
       label: 'Delete',
       icon: 'i-heroicons-trash-20-solid',
