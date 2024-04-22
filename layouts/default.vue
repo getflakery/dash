@@ -90,10 +90,8 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
         }, {
           label: 'Add Flakery to existing NixOS configuration',
           to: '/documentation/add-flakery-to-existing-nixos-configuration'
-        }, {
-          label: 'Notifications',
-          to: '/settings/notifications'
-        }],
+        }
+      ],
       }
     ]" />
 

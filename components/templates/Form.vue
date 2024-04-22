@@ -81,10 +81,7 @@ function saveEdit(file: any){
       <UInput v-model="state.name" type="text" placeholder="Name" />
     </UFormGroup>
 
-    <!-- awsInstanceType -->
-    <UFormGroup label="AWS Instance Type" name="awsInstanceType">
-      <UInput v-model="state.awsInstanceType" type="text" placeholder="t3.small" />
-    </UFormGroup>
+
 
     <TemplatesFileForm  @save-edit="saveEdit"/>
 

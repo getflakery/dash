@@ -40,11 +40,6 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       <UInput v-model="state.name" type="text" placeholder="Name" />
     </UFormGroup>
 
-    <!-- awsInstanceType -->
-    <UFormGroup label="AWS Instance Type" name="awsInstanceType">
-      <UInput v-model="state.awsInstanceType" type="text" placeholder="t3.small" />
-    </UFormGroup>
-
     <UFormGroup label="Files" name="files">
 
       <FileMenu />
