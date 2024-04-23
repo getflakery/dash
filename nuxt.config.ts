@@ -14,6 +14,9 @@ export default defineNuxtConfig({
     icons: ["heroicons", "simple-icons"],
     safelistColors: ["primary", "red", "orange", "green"],
   },
+  content: {
+    icons: ["heroicons", "simple-icons"],
+  },
   components: [
     {
       path: "~/components",

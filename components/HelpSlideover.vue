@@ -17,7 +17,7 @@ const links = [{
 {
   label: 'Chat with us on Matrix',
   icon: 'i-heroicons-chat-bubble-left',
-  to: 'https://matrix.to/#/!MqWboFgtGwzvwcVIJB:matrix.org?via=matrix.org',
+  to: 'https://matrix.to/#/!KxdcMHIvPFKgmwcOsi:matrix.org?via=matrix.org',
   target: '_blank'
 },
 
