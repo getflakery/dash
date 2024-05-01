@@ -38,6 +38,18 @@ dependencies:
   '@unovis/vue':
     specifier: ^1.3.3
     version: 1.3.3(@unovis/ts@1.3.3)(vue@3.4.19)
+  '@vue-flow/background':
+    specifier: ^1.3.0
+    version: 1.3.0(@vue-flow/core@1.33.6)(vue@3.4.19)
+  '@vue-flow/controls':
+    specifier: ^1.1.1
+    version: 1.1.1(@vue-flow/core@1.33.6)(vue@3.4.19)
+  '@vue-flow/core':
+    specifier: ^1.33.6
+    version: 1.33.6(vue@3.4.19)
+  '@vue-flow/minimap':
+    specifier: ^1.4.0
+    version: 1.4.0(@vue-flow/core@1.33.6)(vue@3.4.19)
   '@vueuse/nuxt':
     specifier: ^10.8.0
     version: 10.8.0(nuxt@3.10.3)(vue@3.4.19)
@@ -4397,6 +4409,52 @@ packages:
     dependencies:
       '@volar/language-core': 1.11.1
       path-browserify: 1.0.1
+
+  /@vue-flow/background@1.3.0(@vue-flow/core@1.33.6)(vue@3.4.19):
+    resolution: {integrity: sha512-fu/8s9wzSOQIitnSTI10XT3bzTtagh4h8EF2SWwtlDklOZjAaKy75lqv4htHa3wigy/r4LGCOGwLw3Pk88/AxA==}
+    peerDependencies:
+      '@vue-flow/core': ^1.23.0
+      vue: ^3.3.0
+    dependencies:
+      '@vue-flow/core': 1.33.6(vue@3.4.19)
+      vue: 3.4.19(typescript@5.3.3)
+    dev: false
+
+  /@vue-flow/controls@1.1.1(@vue-flow/core@1.33.6)(vue@3.4.19):
+    resolution: {integrity: sha512-TCoRD5aYZQsM/N7QlPJcIILg1Gxm0O/zoUikxaeadcom1OlKFHutY72agsySJEWM6fTlyb7w8DYCbB4T8YbFoQ==}
+    peerDependencies:
+      '@vue-flow/core': ^1.23.0
+      vue: ^3.3.0
+    dependencies:
+      '@vue-flow/core': 1.33.6(vue@3.4.19)
+      vue: 3.4.19(typescript@5.3.3)
+    dev: false
+
+  /@vue-flow/core@1.33.6(vue@3.4.19):
+    resolution: {integrity: sha512-AfDXA5aTKxNjTeSP2zn1uox5vUCTOO8ZMllWMsPE7T7FJD7iHwLoLyxhjNMDRTaRAOPu4MohZaNr4wuEm6c6Qg==}
+    peerDependencies:
+      vue: ^3.3.0
+    dependencies:
+      '@vueuse/core': 10.9.0(vue@3.4.19)
+      d3-drag: 3.0.0
+      d3-selection: 3.0.0
+      d3-zoom: 3.0.0
+      vue: 3.4.19(typescript@5.3.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+    dev: false
+
+  /@vue-flow/minimap@1.4.0(@vue-flow/core@1.33.6)(vue@3.4.19):
+    resolution: {integrity: sha512-GetmN8uOQxIx4ja85VDnIwpZO5SnGIOfYSqUw8MRMbc8CdACun2M2e3FRaMZRaWapclU2ssXms4xHMWrA3YWpw==}
+    peerDependencies:
+      '@vue-flow/core': ^1.23.0
+      vue: ^3.3.0
+    dependencies:
+      '@vue-flow/core': 1.33.6(vue@3.4.19)
+      d3-selection: 3.0.0
+      d3-zoom: 3.0.0
+      vue: 3.4.19(typescript@5.3.3)
+    dev: false
 
   /@vue-macros/common@1.10.1(vue@3.4.19):
     resolution: {integrity: sha512-uftSpfwdwitcQT2lM8aVxcfe5rKQBzC9jMrtJM5sG4hEuFyfIvnJihpPpnaWxY+X4p64k+YYXtBFv+1O5Bq3dg==}

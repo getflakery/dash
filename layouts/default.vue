@@ -4,10 +4,10 @@ const appConfig = useAppConfig()
 const { isHelpSlideoverOpen } = useDashboard()
 
 const links = [{
-  id: 'templates',
+  id: 'pipelines',
   label: 'Templates',
   icon: 'i-heroicons-squares-2x2',
-  to: '/dashboard/templates',
+  to: '/dashboard/pipelines',
 
 }, {
   id: 'deployments',
