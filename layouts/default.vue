@@ -5,16 +5,10 @@ const { isHelpSlideoverOpen } = useDashboard()
 
 const links = [{
   id: 'pipelines',
-  label: 'Templates',
+  label: 'Pipelines',
   icon: 'i-heroicons-squares-2x2',
   to: '/dashboard/pipelines',
 
-}, {
-  id: 'deployments',
-  label: 'Deployments',
-  to: '/dashboard/deployments',
-  icon: 'i-heroicons-server-stack',
-  // badge: '4',
 }]
 
 const footerLinks = [{

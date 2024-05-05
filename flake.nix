@@ -18,6 +18,8 @@
               nodePackages.yarn
               nodejs
               turso-cli
+              terraform
+              ngrok
             ];
           };
         in

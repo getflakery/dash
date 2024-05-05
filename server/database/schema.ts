@@ -13,8 +13,12 @@ export const templates = sqliteTable('templates', {
 export const pipelines = sqliteTable('pipelines', {
   id: text('id').primaryKey(),
   name: text('name'),
-  flakes: text('text', { mode: 'json' }).$type<{ flakes: string[] }>(),
+  data: text('text', { mode: 'json' }).$type<{
+    flakes: string[],
+    targets: string[],
+  }>(),
   userID: text('user_id').notNull(),
+
 });
 
 // File table definition

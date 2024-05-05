@@ -58,6 +58,8 @@ async function onSubmit(refresh: Function | undefined) {
 
     <PipelinesFlakesForm  @save-edit="saveEdit"/>
 
+    <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=crossaccountroleexample&templateURL=https://s3.us-west-1.amazonaws.com/pix.cloudformation.template/cloudformation.yaml" class="text-blue-500">Configure Cross Account Access Role</a>
+
     <div class="flex justify-end gap-3">
       <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
       <UButton type="submit" label="Save" color="black" @click="onSubmit(refresh)" />

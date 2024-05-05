@@ -151,8 +151,7 @@ const tabItems = [
                   Files:
                 </h3>
                 <TemplatesFileForm :templateID="template?.id" />
-              </UCard>
-            </div>
+              </UCard>            </div>
           </template>
 
           <template #edit>

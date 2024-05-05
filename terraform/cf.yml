@@ -1,0 +1,35 @@
+Resources:
+# This is the cross-account role that will be created
+  CrossAccountRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: 'sts:AssumeRole'
+          Effect: Allow
+          Principal:
+            AWS: 211981349649 #The Main Account ARN
+          Condition:
+            StringEquals:
+               sts:ExternalId: 12345 # generated Customer External ID unique to this customer
+          Sid: ''
+        Version: '2012-10-17'
+      Path: "/"
+      Policies:
+      # This role should have only the permissions necessary
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - "ec2:Describe*"
+            Effect: Allow
+            Resource: "*"
+          Version: '2012-10-17'
+        PolicyName: CustomerAccountAccess
+    Type: 'AWS::IAM::Role'
+  # This custom resource phones home the cross-account ARN information to your company’s SNS topic
+  PhoneHomeCustomResource:
+    Properties:
+      ServiceToken: arn:aws:sns:us-west-1:150301572911:my-sns-topic # Your Company’s SNS Topic Arn 
+      RoleArn: !GetAtt CrossAccountRole.Arn # The ARN of the IAM cross-account role generated above
+      AccountID: !Ref AWS::AccountId # The customer’s AWS account ID
+    Type: Custom::PhoneHomeCustomResource
+    Version: '1.0'
