@@ -17,7 +17,7 @@ provider "aws" {
 variable "http_subscription_url" {
   type = string
   description = "The URL to subscribe to the SNS topic"
-  default = "https://2d92-54-215-90-61.ngrok-free.app/api/sns"
+  default = "https://1f9f-54-215-90-61.ngrok-free.app/api/sns-subscriber"
   
 }
 
