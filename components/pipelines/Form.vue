@@ -41,6 +41,13 @@ async function onSubmit(refresh: Function | undefined) {
   emit('close')
 }
 
+function randomString(length: number) {
+  const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  let result = ''
+  for (let i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+  return result
+}
+
 
 </script>
 
@@ -56,9 +63,9 @@ async function onSubmit(refresh: Function | undefined) {
 
 
 
-    <PipelinesFlakesForm  @save-edit="saveEdit"/>
+    <!-- <PipelinesFlakesForm  @save-edit="saveEdit"/> -->
 
-    <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=crossaccountroleexample&templateURL=https://s3.us-west-1.amazonaws.com/pix.cloudformation.template/cloudformation.yaml" class="text-blue-500">Configure Cross Account Access Role</a>
+    <a target="_blank" :href="`https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=crossaccountroleexample-${randomString(6)}&templateURL=https://s3.us-west-1.amazonaws.com/pix.cloudformation.template/cloudformation.yaml`" class="text-blue-500">Configure Cross Account Access Role</a>
 
     <div class="flex justify-end gap-3">
       <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
