@@ -4,17 +4,11 @@ const appConfig = useAppConfig()
 const { isHelpSlideoverOpen } = useDashboard()
 
 const links = [{
-  id: 'templates',
-  label: 'Templates',
+  id: 'pipelines',
+  label: 'Pipelines',
   icon: 'i-heroicons-squares-2x2',
-  to: '/dashboard/templates',
+  to: '/dashboard/pipelines',
 
-}, {
-  id: 'deployments',
-  label: 'Deployments',
-  to: '/dashboard/deployments',
-  icon: 'i-heroicons-server-stack',
-  // badge: '4',
 }]
 
 const footerLinks = [{

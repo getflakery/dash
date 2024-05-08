@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, } from 'drizzle-orm/sqlite-core';
 
 // Template table definition
 export const templates = sqliteTable('templates', {
@@ -6,6 +6,17 @@ export const templates = sqliteTable('templates', {
   name: text('name'),
   flakeURL: text('flake_url').notNull(),
   awsInstanceType: text('aws_instance_type'),
+  userID: text('user_id').notNull(),
+
+});
+
+export const pipelines = sqliteTable('pipelines', {
+  id: text('id').primaryKey(),
+  name: text('name'),
+  data: text('text', { mode: 'json' }).$type<{
+    flakes: string[],
+    targets: string[],
+  }>(),
   userID: text('user_id').notNull(),
 
 });

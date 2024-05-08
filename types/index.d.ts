@@ -2,7 +2,7 @@ import type { Avatar } from '#ui/types'
 
 export type UserStatus = 'subscribed' | 'unsubscribed' | 'bounced';
 
-export interface Template {
+export interface Pipeline {
   id: string
   name?: string
   flakeURL: string
