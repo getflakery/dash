@@ -181,7 +181,7 @@ export default eventHandler(async (event) => {
     tags, ec2Client,
   )
 
-  let autoscalingClient = useAutoScalingClient()
+  // let autoscalingClient = useAutoScalingClient()
 
   // Parameters for creating the auto scaling group
   const createAsgParams = {
@@ -198,7 +198,7 @@ export default eventHandler(async (event) => {
     // other parameters can be added here
   };
 
-  await autoscalingClient.createAutoScalingGroup(createAsgParams);
+  // await autoscalingClient.createAutoScalingGroup(createAsgParams);
 
   let sg_id = await createSecurityGroup(tags.deployment_id, ec2Client)
 

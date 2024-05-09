@@ -48,9 +48,10 @@ export default defineNuxtConfig({
   //     minify: false,
   //   },
   // },
-  // nitro: {
-  //   minify: false,
-  // },
+  nitro: {
+    // minify: false,
+    logLevel: 1,
+  },
   telemetry: false,
   content: {
     // highlight: false,

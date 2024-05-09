@@ -3,10 +3,7 @@ EC2Client,
 
 } from "@aws-sdk/client-ec2";
 
-// autoscaling
-import {
-    AutoScaling,
-} from "@aws-sdk/client-auto-scaling";
+
 
 const getConf= () => {
     if (process.env.PROD == '1') {
@@ -34,12 +31,4 @@ export const useEC2Client = () => {
      
 }
 
-// autoscaling
-let _autoScalingClient: AutoScaling | null = null
-export const useAutoScalingClient = () => {
-    if (!_autoScalingClient) {
-        _autoScalingClient = new AutoScaling(getConf())
-    }
-    return _autoScalingClient
-     
-}
+

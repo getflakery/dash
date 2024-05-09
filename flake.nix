@@ -19,6 +19,7 @@
               nodejs
               turso-cli
               awscli2
+              bun
             ];
           };
         in
