@@ -50,7 +50,7 @@ export default defineNuxtConfig({
   // },
   nitro: {
     // minify: false,
-    logLevel: 1,
+    logLevel: 3,
   },
   telemetry: false,
   content: {
