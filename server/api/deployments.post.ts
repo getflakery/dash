@@ -11,6 +11,7 @@ import { eq, and } from 'drizzle-orm'
 import config from '~/config';
 import petname from 'node-petname'
 import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client } from "@aws-sdk/client-ec2";
+import { CreateAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
 
 interface TagData {
   turso_token: string
@@ -25,6 +26,7 @@ async function createLaunchTemplate(
   tags: { [key: string]: string },
   ec2ClientNg: EC2Client
 ) {
+  console.log(tags)
   try {
     const command = new CreateLaunchTemplateCommand({
       LaunchTemplateName: input.deploymentSlug,
@@ -167,8 +169,8 @@ export default eventHandler(async (event) => {
 
   // todo deploy aws create
   let tags = {
-    turso_token: process.env.TURSO_DB_TOKEN,
-    file_encryption_key: process.env.FILE_ENCRYPTION_KEY,
+    turso_token: process.env.TURSO_DB_TOKEN || "",
+    file_encryption_key: process.env.FILE_ENCRYPTION_KEY || "",
     template_id: templateID,
     flake_url: flakeURL,
     deployment_id: uuidv4(),
