@@ -198,7 +198,9 @@ export default eventHandler(async (event) => {
     // other parameters can be added here
   };
 
-  await autoscalingClient.createAutoScalingGroup(createAsgParams);
+  await autoscalingClient.send(
+    new CreateAutoScalingGroupCommand(createAsgParams)
+  );
 
   let sg_id = await createSecurityGroup(tags.deployment_id, ec2Client)
 

@@ -35,9 +35,6 @@ export const useEC2Client = () => {
      
 }
 
-
-
-
 // // // autoscaling
 let _autoScalingClient: AutoScalingClient | null = null
 export const useAutoScalingClient = () => {
