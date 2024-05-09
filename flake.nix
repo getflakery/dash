@@ -1,7 +1,7 @@
 {
   description = "basic flake-utils";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
 
@@ -18,6 +18,7 @@
               nodePackages.yarn
               nodejs
               turso-cli
+              awscli2
             ];
           };
         in

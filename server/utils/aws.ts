@@ -12,7 +12,9 @@ import {
 let _client: EC2Client | null = null
 export const useEC2Client = () => {
     if (!_client) {
-        _client = new EC2Client({})
+        _client = new EC2Client({
+            region: 'us-west-1'
+        })
     }
     return _client
      

@@ -124,15 +124,9 @@ export default eventHandler(async (event) => {
   const { templateID } = await useValidatedBody(event, {
     templateID: z.string().uuid(),
   })
-  try {
+
   const session = await requireUserSession(event)
-  }
-  catch (e) {
-    return {
-      statusCode: 401,
-      body: JSON.stringify({ error: "Unauthorized" })
-    }
-  }
+
   const userID = session.user.id
 
   const db = useDB()
