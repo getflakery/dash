@@ -167,8 +167,8 @@ export default eventHandler(async (event) => {
 
   // todo deploy aws create
   let tags = {
-    turso_token: "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTEzOTY1ODAsImlkIjoiZDcwYzY1YzgtZjIyMS00NWI2LWI5ZTEtZGUwZGMzOTA3MDJiIn0.Msy584R20pe1OV83BOfdkgtYD0QbcJB3HH2EfnGS6scWhmDN1hkQuKik7uDYB9hAwxu5zQ0DiIeFSdvWf0QMCQ",
-    file_encryption_key: "0939865eee0fff95518bb8f0ac64cafe5d9d04429b51d55a82d3a42ea5da5b1f",
+    turso_token: process.env.TURSO_DB_TOKEN,
+    file_encryption_key: process.env.FILE_ENCRYPTION_KEY,
     template_id: templateID,
     flake_url: flakeURL,
     deployment_id: uuidv4(),
