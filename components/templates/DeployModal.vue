@@ -16,30 +16,42 @@ const deploying = ref(false)
 const deployInstance = async (id: string, refresh: () => void) => {
   deploying.value = true
 
-  let inst = await $fetch(`/api/deployments`, {
-    method: 'POST',
-    body: JSON.stringify({
-      "templateID": id,
-      ...state,
-      ports: selectedPorts.value,
-      network: networkSelected.value,
-      newNetWork: !newNetWork.value,
-    })
-  }
-  )
-  deploying.value = false
 
-  useToast().add({
-    title: 'Template Deployed',
-    description: `Your template ${props.template.name}  has been deployed as ${inst.name}.`,
-    timeout: 5000,
-    click: () => {
-      window.open(`/dashboard/deployment/${inst.id}`)
+  try {
+    let inst = await $fetch(`/api/deployments`, {
+      method: 'POST',
+      body: JSON.stringify({
+        "templateID": id,
+      })
     }
-  })
+    )
+    deploying.value = false
 
-  refresh()
-  emit('close')
+    useToast().add({
+      title: 'Template Deployed',
+      description: `Your template ${props.template.name}  has been deployed as ${inst.name}.`,
+      timeout: 5000,
+      click: () => {
+        window.open(`/dashboard/deployment/${inst.id}`)
+      }
+    })
+
+    refresh()
+    emit('close')
+  } catch (e) {
+    console.error(e)
+    deploying.value = false
+    useToast().add({
+      title: 'Error',
+      description: `There was an error deploying your template ${props.template.name}.`,
+      timeout: 5000,
+      click: () => {
+        console.error(e)
+      }
+    })
+    return
+  }
+
 
 }
 
@@ -100,12 +112,6 @@ function toggleNetwork() {
 
 
 <template>
-
-
-
-
-
-
   <div class="flex justify-end gap-4">
 
     <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />

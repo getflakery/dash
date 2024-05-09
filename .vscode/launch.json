@@ -8,7 +8,8 @@
         "request": "launch",
         "name": "client: chrome",
         "url": "http://localhost:3000",
-        "webRoot": "${workspaceFolder}"
+        "webRoot": "${workspaceFolder}",
+
       },
       {
         "type": "node",
@@ -19,7 +20,7 @@
         "args": [
           "dev"
         ],
-        "runtimeExecutable": "/nix/store/3k43a25ijnmfpkkyg94npv85ksc8nhly-nodejs-20.11.1/bin/node",
+        "runtimeExecutable": "/nix/store/xjgg53kjjhwcx4p3dmywjmqjbv82xhyn-nodejs-20.11.1/bin/node",
       },
     ],
     "compounds": [

@@ -4,24 +4,135 @@ import {
   templates,
   files as schemaFiles,
   templateFiles as schemaTemplateFiles,
-  networks,
-  ports as portsSchema,
   deployments,
 } from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
 import config from '~/config';
 import petname from 'node-petname'
+import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client } from "@aws-sdk/client-ec2";
+
+interface TagData {
+  turso_token: string
+  file_encryption_key: string
+  template_id: string
+  flake_url: string
+  deployment_id: string
+}
+
+async function createLaunchTemplate(
+  input: { deploymentSlug: string },
+  tags: { [key: string]: string },
+  ec2ClientNg: EC2Client
+) {
+  try {
+    const command = new CreateLaunchTemplateCommand({
+      LaunchTemplateName: input.deploymentSlug,
+      LaunchTemplateData: {
+        InstanceType: "t3.small",
+        ImageId: "ami-07dba754bbb515299",
+        MetadataOptions: {
+          InstanceMetadataTags: "enabled"
+        },
+        TagSpecifications: [{
+          ResourceType: "instance",
+          Tags: Object.entries(tags).map(([key, value]) => ({ Key: key, Value: value }))
+        }],
+        BlockDeviceMappings: [{
+          DeviceName: "/dev/xvda",
+          Ebs: {
+            VolumeSize: 80,
+            VolumeType: "gp2",
+            DeleteOnTermination: true
+          }
+        }]
+      }
+    });
+
+    const response = await ec2ClientNg.send(command);
+    console.log('Launch Template Created:', response);
+  } catch (error) {
+    console.error('Error creating launch template:', error);
+    throw new Error(`LaunchTemplateCreationFailed: ${error}`);
+  }
+}
+
+
+async function createSecurityGroup(deploymentSlug: string, ec2Client: EC2Client) {
+  const vpcId = "vpc-031c620b47a9ea885";
+  const publicSubnets = [
+    "subnet-040ebc679c54ecf38",
+    "subnet-0e22657a6f50a3235"
+  ];
+
+  // Create security group request
+  const createSGParams = {
+    Description: "Security group for the deployment",
+    GroupName: deploymentSlug,
+    VpcId: vpcId
+  };
+
+  try {
+    // Sending the create security group request
+    const createSGCommand = new CreateSecurityGroupCommand(createSGParams);
+    const response = await ec2Client.send(createSGCommand);
+    console.log("Security group created:", response);
+    return response.GroupId;
+  } catch (e) {
+    console.error("SecurityGroupCreationFailed:", e);
+    throw new Error(`Failed to create security group: ${e}`);
+  }
+}
+
+
+async function authorizeSecurityGroupIngress(
+  sgId: string,
+  input: { targets?: { port: number }[] },
+  ec2ClientNg: EC2Client
+) {
+  const inputTargets = input.targets || [{ port: 8000 }];
+  const additionalTargets = [{ port: 443 }];
+
+  const authorizeSecurityGroupIngressCommands = [...inputTargets, ...additionalTargets].map(target => {
+      return new AuthorizeSecurityGroupIngressCommand({
+          GroupId: sgId,
+          IpPermissions: [{
+              FromPort: target.port,
+              ToPort: target.port,
+              IpProtocol: "TCP",
+              IpRanges: [{
+                  CidrIp: "0.0.0.0/0"
+              }]
+          }]
+      });
+  });
+
+  for (let command of authorizeSecurityGroupIngressCommands) {
+      try {
+          const response = await ec2ClientNg.send(command);
+          console.log('Security group ingress rules added:', response);
+      } catch (error) {
+          console.error('Error adding security group ingress rules:', error);
+          throw new Error(`SecurityGroupIngressRulesAdditionFailed: ${error}`);
+      }
+  }
+}
+
 
 export default eventHandler(async (event) => {
-  const { templateID, domain, ports, network, newNetWork } = await useValidatedBody(event, {
+  console.log("event", event)
+  const { templateID } = await useValidatedBody(event, {
     templateID: z.string().uuid(),
-    domain: z.string().optional(),
-    ports: z.array(z.number()).optional(),
-    network: z.string().optional(),
-    newNetWork: z.boolean().optional(),
   })
+  try {
   const session = await requireUserSession(event)
+  }
+  catch (e) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ error: "Unauthorized" })
+    }
+  }
   const userID = session.user.id
 
   const db = useDB()
@@ -46,10 +157,10 @@ export default eventHandler(async (event) => {
     ).get()
   )))?.map((file) => {
     if (!file) {
-     return file
+      return file
     }
     return {
-      ...file, 
+      ...file,
       // todo, leave encrypted and decrypt on 
       // the receiver side
       content: cs.decrypt({
@@ -60,57 +171,62 @@ export default eventHandler(async (event) => {
   })
 
 
+  // todo deploy aws create
+  let tags = {
+    turso_token: "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTEzOTY1ODAsImlkIjoiZDcwYzY1YzgtZjIyMS00NWI2LWI5ZTEtZGUwZGMzOTA3MDJiIn0.Msy584R20pe1OV83BOfdkgtYD0QbcJB3HH2EfnGS6scWhmDN1hkQuKik7uDYB9hAwxu5zQ0DiIeFSdvWf0QMCQ",
+    file_encryption_key: "0939865eee0fff95518bb8f0ac64cafe5d9d04429b51d55a82d3a42ea5da5b1f",
+    template_id: templateID,
+    flake_url: flakeURL,
+    deployment_id: uuidv4(),
+  }
 
-  const net = await createNetwork(
-    db,
-    userID,
-    domain, ports, network, newNetWork
+  let ec2Client = useEC2Client()
+
+  await createLaunchTemplate(
+    { deploymentSlug: tags.deployment_id },
+    tags, ec2Client,
   )
 
+  let autoscalingClient = useAutoScalingClient()
 
-  let r = await fetch(`${config.BACKEND_URL}/flake`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      'X-Token': process.env.AUTH_TOKEN ?? "b355b95e-1933-4103-8f7e-156687fa0a1f",
+  // Parameters for creating the auto scaling group
+  const createAsgParams = {
+    AutoScalingGroupName: tags.deployment_id,
+    LaunchTemplate: {
+      LaunchTemplateName: tags.deployment_id,
+      // additional parameters can be specified here
     },
-    body: JSON.stringify({
-      instanceType: awsInstanceType,
-      flakeURL,
-      files,
-      subdomainPrefix: net?.domain,
-    }),
-  })
-  // {
-  //   flakeCompute: {
-  //     domain: 'shrgvg.app.flakery.xyz',
-  //     flakeURL: 'something',
-  //     id: '4ecf13b6-f2fa-42ce-a40b-26afaa18cc1b',
-  //     instanceID: 'i-0939b274f6556da26',
-  //     status: 'creating instance\ninstance created\n'
-  //   }
-  // }
-  // console.log(await r.json())
+    MinSize: 1,
+    MaxSize: 1,
+    VPCZoneIdentifier: "subnet-040ebc679c54ecf38",
+    // AvailabilityZones: ["us-west-1a", "us-west-1c"],
+    // DesiredCapacity: 1,
+    // other parameters can be added here
+  };
 
-  const jsonResponse = await r.json()
-  const awsInstanceID = jsonResponse.flakeCompute.instanceID
-  const flakeComputeID = jsonResponse.flakeCompute.id
+  await autoscalingClient.createAutoScalingGroup(createAsgParams);
+
+  let sg_id = await createSecurityGroup(tags.deployment_id, ec2Client)
+
+  // await authorizeSecurityGroupIngress(sg_id??"", { targets: ports??[].map(
+  //   port => ({ port })) }, ec2Client)
+
+
+
+
+
+
   const name = petname(2, "-")
 
   let deployment = await db.insert(deployments).values({
-    id: uuidv4(),
+    id: tags.deployment_id,
     userID,
     templateID,
     name,
-    flakeComputeID,
-    awsInstanceID,
     createdAt: new Date().valueOf(),
   }).returning().get()
 
-  // update network with instance id
-  await db.update(networks).set({
-    deploymentID: deployment.id
-  }).where(eq(networks.id, net.id)).execute()
+
 
   return deployment
 })
@@ -131,64 +247,3 @@ function generateSubdomain(length: number): string {
   return subdomain;
 }
 
-async function createNetwork(
-  db,
-  userID,
-  domain, ports, network, newNetWork
-) {
-  let net;
-
-  if (newNetWork) {
-    net = await db.insert(networks).values({
-      domain: generateSubdomain(6),
-      id: uuidv4(),
-      userID,
-    }).returning().get()
-    ports?.forEach(port => {
-      db.insert(portsSchema).values({
-        number: port,
-        network: net.id,
-        id: uuidv4(),
-      }).execute()
-    })
-    return net
-  }
-
-  if (network) {
-    net = await db.select().from(networks).where(and(
-      eq(networks.domain, network),
-      eq(networks.userID, userID),
-    )).get()
-
-    if (!net) {
-      throw new Error("Network not found")
-    }
-
-    ports?.forEach(port => {
-      db.insert(portsSchema).values({
-        number: port,
-        network: net.id,
-        id: uuidv4(),
-      }).execute()
-    })
-    return net
-  }
-
-  if (domain) {
-    net = await db.insert(networks).values({
-      domain,
-      id: uuidv4(),
-      userID,
-    }).returning().get()
-
-    ports?.forEach(port => {
-      db.insert(portsSchema).values({
-        number: port,
-        network: net.id,
-        id: uuidv4(),
-      }).execute()
-    })
-  }
-  return net
-
-}

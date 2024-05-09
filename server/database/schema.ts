@@ -26,12 +26,6 @@ export const templateFiles = sqliteTable('template_files', {
   templateId: text('template_id').notNull().references(() => templates.id, { onDelete: 'cascade' }).notNull(),
 });
 
-// Junction table to represent the many-to-many relationship
-export const deploymentFiles = sqliteTable('deployment_files', {
-  id: text('id').primaryKey(),
-  fileId: text('file_id').notNull().references(() => files.id, { onDelete: 'cascade' }).notNull(),
-  deploymentID: text('deployment_id').notNull().references(() => deployments.id, { onDelete: 'cascade' }).notNull(),
-});
 
 
 // instanceDeployment
@@ -45,18 +39,3 @@ export const deployments = sqliteTable('deployments', {
   createdAt: integer('created_at').notNull(),
 });
 
-// networks 
-export const networks = sqliteTable('networks', {
-  id: text('id').primaryKey(),
-  domain: text('domain').notNull(),
-  userID: text('user_id').notNull(),
-  deploymentID: text('deployment_id').references(() => deployments.id, { onDelete: 'no action' }),
-})
-
-
-//
-export const ports = sqliteTable('ports', {
-  id: text('id').primaryKey(),
-  number: integer('number').notNull(),
-  network: text('network_id').notNull().references(() => networks.id, { onDelete: 'cascade' }).notNull(),
-})

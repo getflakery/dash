@@ -1,4 +1,4 @@
-import { deployments, networks } from '~/server/database/schema'
+import { deployments } from '~/server/database/schema'
 import { eq, and } from 'drizzle-orm'
 import config from '~/config';
 
@@ -17,16 +17,9 @@ export default eventHandler(async (event) => {
   })
     let jsonResponse = await r.json()
 
-    const network = await db.select().from(networks).where(
-      and(
-        eq(networks.deploymentID, deployment.id),
-      )
-    ).get()
-
     return {
       ...deployment,
       ...jsonResponse,
-      network: network ?? {},
     }
   }))
 

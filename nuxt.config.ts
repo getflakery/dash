@@ -40,7 +40,16 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
-  sourcemap: false,
+  // sourcemap: true,
+  // debug: true,
+  // vite: {
+  //   build: {
+  //     minify: false,
+  //   },
+  // },
+  // nitro: {
+  //   minify: false,
+  // },
   telemetry: false,
   content: {
     // highlight: false,

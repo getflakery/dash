@@ -1,4 +1,4 @@
-import { networks, deployments } from '~/server/database/schema'
+import { deployments } from '~/server/database/schema'
 import { useValidatedParams, z, } from 'h3-zod'
 import config from '~/config';
 
