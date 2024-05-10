@@ -51,22 +51,10 @@ function getItems(deployment: Deployment, refresh: Function) {
         </UDashboardSection>
 
         <UCard>
-          <NuxtLink :to="`https://${deployment?.network.domain}.app.flakery.xyz`" target="_blank">
-            https://{{ deployment?.network.domain }}.app.flakery.xyz
-          </NuxtLink>
+
 
           <!-- Logs: -->
-          <h2 class="text-lg font-semibold mt-4">Logs</h2>
-          <Accordion :items="deployment?.logs.items" class="py-4">
-            <template #item="{ item }">
 
-              <pre class="code-block custom-scroll">
-        <!-- Display item content with proper indentation and clarity -->
-{{ item.content }}
-      </pre>
-
-            </template>
-          </Accordion>
         </UCard>
         <!-- <UDashboardModal v-model="isInviteModalOpen" title="Invite people"
           description="Invite new members by email address" :ui="{ width: 'sm:max-w-md' }">

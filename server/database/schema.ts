@@ -34,8 +34,20 @@ export const deployments = sqliteTable('deployments', {
   name: text('name').notNull(),
   templateID: text('template_id').notNull().references(() => templates.id, { onDelete: 'no action' }).notNull(),
   userID: text('user_id').notNull(),
-  flakeComputeID: text('flake_compute_id'),
   awsInstanceID: text('aws_instance_id'),
   createdAt: integer('created_at').notNull(),
+  data: text('data', { mode: 'json' }).$type<{ 
+    port_mappings: {
+      lb_port: number,
+      instance_port: number,
+    }[],
+    aws_resources: { 
+      security_group_id: string,
+      launch_template_id: string,
+      autoscaling_group_id: string,
+      load_balancer_id: string,
+    },
+    domain: string,
+   }>(),
 });
 

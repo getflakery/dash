@@ -8,6 +8,9 @@ import {
     AutoScalingClient,
 } from "@aws-sdk/client-auto-scaling";
 
+import { ElasticLoadBalancingV2Client } from "@aws-sdk/client-elastic-load-balancing-v2";
+
+
 
 const getConf= () => {
     if (process.env.PROD == '1') {
@@ -42,5 +45,14 @@ export const useAutoScalingClient = () => {
         _autoScalingClient = new AutoScalingClient(getConf())
     }
     return _autoScalingClient
+     
+}
+
+let _elbClient: ElasticLoadBalancingV2Client | null = null
+export const useELBClient = () => {
+    if (!_elbClient) {
+        _elbClient = new ElasticLoadBalancingV2Client(getConf())
+    }
+    return _elbClient
      
 }

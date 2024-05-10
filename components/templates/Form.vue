@@ -83,7 +83,6 @@ function saveEdit(file: any){
 
 
 
-    <TemplatesFileForm  @save-edit="saveEdit"/>
 
     <div class="flex justify-end gap-3">
       <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />

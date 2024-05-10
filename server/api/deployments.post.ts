@@ -12,6 +12,7 @@ import config from '~/config';
 import petname from 'node-petname'
 import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client } from "@aws-sdk/client-ec2";
 import { CreateAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
+import { CreateLoadBalancerCommand, ElasticLoadBalancingV2Client } from "@aws-sdk/client-elastic-load-balancing-v2";
 
 interface TagData {
   turso_token: string
@@ -62,10 +63,7 @@ async function createLaunchTemplate(
 
 async function createSecurityGroup(deploymentSlug: string, ec2Client: EC2Client) {
   const vpcId = "vpc-031c620b47a9ea885";
-  const publicSubnets = [
-    "subnet-040ebc679c54ecf38",
-    "subnet-0e22657a6f50a3235"
-  ];
+
 
   // Create security group request
   const createSGParams = {
@@ -89,37 +87,69 @@ async function createSecurityGroup(deploymentSlug: string, ec2Client: EC2Client)
 
 async function authorizeSecurityGroupIngress(
   sgId: string,
-  input: { targets?: { port: number }[] },
+  input: { lb_port: number, instance_port: number }[],
   ec2ClientNg: EC2Client
 ) {
-  const inputTargets = input.targets || [{ port: 8000 }];
-  const additionalTargets = [{ port: 443 }];
 
-  const authorizeSecurityGroupIngressCommands = [...inputTargets, ...additionalTargets].map(target => {
-      return new AuthorizeSecurityGroupIngressCommand({
-          GroupId: sgId,
-          IpPermissions: [{
-              FromPort: target.port,
-              ToPort: target.port,
-              IpProtocol: "TCP",
-              IpRanges: [{
-                  CidrIp: "0.0.0.0/0"
-              }]
-          }]
-      });
+
+  const authorizeSecurityGroupIngressCommands = input.map(target => {
+    return new AuthorizeSecurityGroupIngressCommand({
+      GroupId: sgId,
+      IpPermissions: [{
+        FromPort: target.lb_port,
+        ToPort: target.instance_port,
+        IpProtocol: "TCP",
+        IpRanges: [{
+          CidrIp: "0.0.0.0/0"
+        }]
+      }]
+    });
   });
 
   for (let command of authorizeSecurityGroupIngressCommands) {
-      try {
-          const response = await ec2ClientNg.send(command);
-          console.log('Security group ingress rules added:', response);
-      } catch (error) {
-          console.error('Error adding security group ingress rules:', error);
-          throw new Error(`SecurityGroupIngressRulesAdditionFailed: ${error}`);
-      }
+    try {
+      const response = await ec2ClientNg.send(command);
+      console.log('Security group ingress rules added:', response);
+    } catch (error) {
+      console.error('Error adding security group ingress rules:', error);
+      throw new Error(`SecurityGroupIngressRulesAdditionFailed: ${error}`);
+    }
   }
 }
 
+async function createLoadBalancer(
+  deploymentSlug: string,
+  securityGroupId: string,
+  elbClient: ElasticLoadBalancingV2Client,
+) {
+  const publicSubnets = [
+    "subnet-040ebc679c54ecf38",
+    "subnet-0e22657a6f50a3235"
+  ];
+  try {
+    // Prepare the CreateLoadBalancerInput
+    const createLbReq = {
+      Name: deploymentSlug,
+      Subnets: publicSubnets,
+      SecurityGroups: [securityGroupId] // assuming securityGroupId is already defined
+    };
+
+    // Create load balancer
+    const command = new CreateLoadBalancerCommand(createLbReq);
+    const response = await elbClient.send(command);
+
+    console.log("Load balancer created:", response);
+    const lbDns = response.LoadBalancers?.[0].DNSName;
+    const loadBalancerArn = response.LoadBalancers?.[0].LoadBalancerArn;
+
+    // Output or further processing here
+    return { lbDns, loadBalancerArn };
+  } catch (error) {
+    // Handle errors
+    console.error("LoadBalancerCreationFailed:", error);
+    throw new Error(`LoadBalancerCreationFailed: ${error}`);
+  }
+}
 
 export default eventHandler(async (event) => {
   console.log("event", event)
@@ -206,13 +236,21 @@ export default eventHandler(async (event) => {
 
   let sg_id = await createSecurityGroup(tags.deployment_id, ec2Client)
 
-  // await authorizeSecurityGroupIngress(sg_id??"", { targets: ports??[].map(
-  //   port => ({ port })) }, ec2Client)
+  await authorizeSecurityGroupIngress(
+    sg_id ?? "",
+    [{
+      lb_port: 443,
+      instance_port: 8000
+    }],
+    ec2Client,
+  )
 
-
-
-
-
+  let elbClient = useELBClient()
+  const { lbDns, loadBalancerArn } = await createLoadBalancer(
+    tags.deployment_id.split("-")[0],
+    sg_id ?? "",
+    elbClient,
+  );
 
   const name = petname(2, "-")
 
@@ -222,6 +260,19 @@ export default eventHandler(async (event) => {
     templateID,
     name,
     createdAt: new Date().valueOf(),
+    data: {
+      port_mappings: [{
+        lb_port: 443,
+        instance_port: 8000
+      }],
+      aws_resources: {
+        security_group_id: sg_id,
+        launch_template_id: tags.deployment_id,
+        autoscaling_group_id: tags.deployment_id.split("-")[0],
+        load_balancer_id: loadBalancerArn,
+      },
+      domain: lbDns,
+    }
   }).returning().get()
 
 
