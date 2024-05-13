@@ -33,7 +33,7 @@ async function createLaunchTemplate(
       LaunchTemplateName: input.deploymentSlug,
       LaunchTemplateData: {
         InstanceType: instanceType as _InstanceType,
-        ImageId: "ami-07dba754bbb515299",
+        ImageId: "ami-0d2a64eb4d08dc419",
         MetadataOptions: {
           InstanceMetadataTags: "enabled"
         },
