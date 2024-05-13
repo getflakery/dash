@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
 import config from '~/config';
 import petname from 'node-petname'
-import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client } from "@aws-sdk/client-ec2";
+import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client, _InstanceType } from "@aws-sdk/client-ec2";
 import { CreateAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
 import { CreateLoadBalancerCommand, ElasticLoadBalancingV2Client } from "@aws-sdk/client-elastic-load-balancing-v2";
 
@@ -25,14 +25,14 @@ interface TagData {
 async function createLaunchTemplate(
   input: { deploymentSlug: string },
   tags: { [key: string]: string },
-  ec2ClientNg: EC2Client
+  ec2ClientNg: EC2Client,
+  instanceType: string
 ) {
-  console.log(tags)
   try {
     const command = new CreateLaunchTemplateCommand({
       LaunchTemplateName: input.deploymentSlug,
       LaunchTemplateData: {
-        InstanceType: "t3.small",
+        InstanceType: instanceType as _InstanceType,
         ImageId: "ami-07dba754bbb515299",
         MetadataOptions: {
           InstanceMetadataTags: "enabled"
@@ -151,11 +151,19 @@ async function createLoadBalancer(
   }
 }
 
+type  instanceType =  string | undefined | null
+
 export default eventHandler(async (event) => {
   console.log("event", event)
-  const { templateID } = await useValidatedBody(event, {
+
+
+  const body = await useValidatedBody(event, {
     templateID: z.string().uuid(),
+    awsInstanceType: z.string().optional(),
   })
+  let templateId = body.templateID
+
+
 
   const session = await requireUserSession(event)
 
@@ -168,6 +176,8 @@ export default eventHandler(async (event) => {
       eq(templates.id, templateID),
       eq(templates.userID, userID)
     )).get();
+
+  let it = body.awsInstanceType ?? awsInstanceType ?? "t3.small"
 
 
 
@@ -210,7 +220,7 @@ export default eventHandler(async (event) => {
 
   await createLaunchTemplate(
     { deploymentSlug: tags.deployment_id },
-    tags, ec2Client,
+    tags, ec2Client, it
   )
 
   let autoscalingClient = useAutoScalingClient()
