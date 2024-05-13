@@ -154,14 +154,13 @@ async function createLoadBalancer(
 type  instanceType =  string | undefined | null
 
 export default eventHandler(async (event) => {
-  console.log("event", event)
 
 
   const body = await useValidatedBody(event, {
     templateID: z.string().uuid(),
     awsInstanceType: z.string().optional(),
   })
-  let templateId = body.templateID
+  let templateID = body.templateID
 
 
 
