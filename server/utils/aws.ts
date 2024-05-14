@@ -15,7 +15,7 @@ import { ElasticLoadBalancingV2Client } from "@aws-sdk/client-elastic-load-balan
 const getConf= () => {
     if (process.env.PROD == '1') {
         return {
-            region: 'us-west-1',
+            region: 'us-west-2',
             credentials: {
                 accessKeyId: process.env.AWS_KEY as string,
                 secretAccessKey: process.env.AWS_SECRET as string,
@@ -24,7 +24,7 @@ const getConf= () => {
         }
     }
     return {
-        region: 'us-west-1',        
+        region: 'us-west-2',        
     }
 }
 
