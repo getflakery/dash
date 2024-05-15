@@ -62,7 +62,7 @@ export default defineNuxtConfig({
       public_subnet_2: 'subnet-061710e423b885a9a', // can be overridden by NUXT_PUBLIC_SUBNET_2 environment variable
       private_subnet_1: 'subnet-001d38fabf0cbc832', // can be overridden by NUXT_PRIVATE_SUBNET_1 environment variable
       private_subnet_2: 'subnet-0c5c6438c404fbf54', // can be overridden by NUXT_PRIVATE_SUBNET_2 environment variable
-      image_id: 'ami-0b476a21311d1a446', // can be overridden by NUXT_IMAGE_ID environment variable
+      image_id: 'ami-05f63bd84f25d9a4e', // can be overridden by NUXT_IMAGE_ID environment variable
     }
   },
   content: {
