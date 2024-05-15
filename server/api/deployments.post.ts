@@ -33,6 +33,7 @@ async function createLaunchTemplate(
     const command = new CreateLaunchTemplateCommand({
       LaunchTemplateName: input.deploymentSlug,
       LaunchTemplateData: {
+        KeyName: "flakery",
         InstanceType: instanceType as _InstanceType,
         ImageId: imageID,
         MetadataOptions: {
@@ -64,9 +65,9 @@ async function createLaunchTemplate(
 
 async function createSecurityGroup(
   deploymentSlug: string,
-   ec2Client: EC2Client,
-   vpcId: string,
-   ) {
+  ec2Client: EC2Client,
+  vpcId: string,
+) {
 
 
   // Create security group request
@@ -153,20 +154,28 @@ async function createLoadBalancer(
   }
 }
 
-type  instanceType =  string | undefined | null
+type instanceType = string | undefined | null
 
 export default eventHandler(async (event) => {
 
-  const config :{
-    public : {
-      vpc_id: string | undefined,
-      public_subnet_1: string | undefined,
-      public_subnet_2: string | undefined,
-      image_id: string | undefined,
+  const config: {
+    turso_token: string,
+    file_encryption_key: string,
+    public: {
+      vpc_id: string,
+      public_subnet_1: string,
+      public_subnet_2: string,
+      image_id: string,
     }
-   } = useRuntimeConfig(event)
+  } = useRuntimeConfig(event)
 
-  const { vpc_id, public_subnet_1, public_subnet_2, image_id} = config.public
+  const {
+    vpc_id,
+    public_subnet_1, public_subnet_2, image_id,
+  } = config.public
+
+  const { turso_token, file_encryption_key } = config
+
 
   const body = await useValidatedBody(event, {
     templateID: z.string().uuid(),
@@ -220,8 +229,8 @@ export default eventHandler(async (event) => {
 
   // todo deploy aws create
   let tags = {
-    turso_token: process.env.TURSO_DB_TOKEN || "",
-    file_encryption_key: process.env.FILE_ENCRYPTION_KEY || "",
+    turso_token,
+    file_encryption_key,
     template_id: templateID,
     flake_url: flakeURL,
     deployment_id: uuidv4(),
@@ -235,8 +244,8 @@ export default eventHandler(async (event) => {
   )
 
   let autoscalingClient = useAutoScalingClient()
-    console.log("Creating autoscaling group");
-    console.log(public_subnet_1);
+  console.log("Creating autoscaling group");
+  console.log(public_subnet_1);
   // Parameters for creating the auto scaling group
   const createAsgParams = {
     AutoScalingGroupName: tags.deployment_id,
