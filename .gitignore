@@ -29,3 +29,6 @@ logs
 .direnv
 result
 db.sqlite
+
+.terraform
+terraform.tfstate*

@@ -10,6 +10,7 @@
     "dev": "nuxt dev",
     "bdev": "bun run nuxt dev",
     "generate": "nuxt generate",
+    "bgenerate": "bun run nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",

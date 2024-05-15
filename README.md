@@ -118,3 +118,20 @@ nix-shell -p sqlite --command "sqlite3 db.sqlite < server/database/migrations/00
 ```
 nix-shell -p sqlite-web --run "sqlite_web db.sqlite"
 ```
+
+
+# cloud resources
+
+```
+Outputs:
+
+private_subnets = [
+  "subnet-0c5c6438c404fbf54",
+  "subnet-001d38fabf0cbc832",
+]
+public_subnets = [
+  "subnet-061710e423b885a9a",
+  "subnet-08307ac15ba441caf",
+]
+vpc_id = "vpc-0c1c37e1a494e6adf"
+```

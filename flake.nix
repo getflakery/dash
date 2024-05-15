@@ -20,6 +20,7 @@
               turso-cli
               awscli2
               bun
+              terraform
             ];
           };
         in

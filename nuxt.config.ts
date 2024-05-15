@@ -53,6 +53,17 @@ export default defineNuxtConfig({
     logLevel: 1,
   },
   telemetry: false,
+  runtimeConfig: {
+    apiSecret: '', // can be overridden by NUXT_API_SECRET environment variable
+    public: {
+      vpc_id: 'vpc-0c1c37e1a494e6adf', // can be overridden by NUXT_PUBLIC_VPC_ID environment variable
+      public_subnet_1: 'subnet-08307ac15ba441caf', // can be overridden by NUXT_PUBLIC_SUBNET_1 environment variable
+      public_subnet_2: 'subnet-061710e423b885a9a', // can be overridden by NUXT_PUBLIC_SUBNET_2 environment variable
+      private_subnet_1: 'subnet-001d38fabf0cbc832', // can be overridden by NUXT_PRIVATE_SUBNET_1 environment variable
+      private_subnet_2: 'subnet-0c5c6438c404fbf54', // can be overridden by NUXT_PRIVATE_SUBNET_2 environment variable
+      image_id: 'ami-02fb5ac1a422f06d5', // can be overridden by NUXT_IMAGE_ID environment variable
+    }
+  },
   content: {
     // highlight: false,
     highlight: {

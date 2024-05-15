@@ -26,14 +26,15 @@ async function createLaunchTemplate(
   input: { deploymentSlug: string },
   tags: { [key: string]: string },
   ec2ClientNg: EC2Client,
-  instanceType: string
+  instanceType: string,
+  imageID: string
 ) {
   try {
     const command = new CreateLaunchTemplateCommand({
       LaunchTemplateName: input.deploymentSlug,
       LaunchTemplateData: {
         InstanceType: instanceType as _InstanceType,
-        ImageId: "ami-0d2a64eb4d08dc419",
+        ImageId: imageID,
         MetadataOptions: {
           InstanceMetadataTags: "enabled"
         },
@@ -61,8 +62,11 @@ async function createLaunchTemplate(
 }
 
 
-async function createSecurityGroup(deploymentSlug: string, ec2Client: EC2Client) {
-  const vpcId = "vpc-031c620b47a9ea885";
+async function createSecurityGroup(
+  deploymentSlug: string,
+   ec2Client: EC2Client,
+   vpcId: string,
+   ) {
 
 
   // Create security group request
@@ -121,11 +125,9 @@ async function createLoadBalancer(
   deploymentSlug: string,
   securityGroupId: string,
   elbClient: ElasticLoadBalancingV2Client,
+  publicSubnets: string[] = []
 ) {
-  const publicSubnets = [
-    "subnet-040ebc679c54ecf38",
-    "subnet-0e22657a6f50a3235"
-  ];
+
   try {
     // Prepare the CreateLoadBalancerInput
     const createLbReq = {
@@ -155,6 +157,16 @@ type  instanceType =  string | undefined | null
 
 export default eventHandler(async (event) => {
 
+  const config :{
+    public : {
+      vpc_id: string | undefined,
+      public_subnet_1: string | undefined,
+      public_subnet_2: string | undefined,
+      image_id: string | undefined,
+    }
+   } = useRuntimeConfig(event)
+
+  const { vpc_id, public_subnet_1, public_subnet_2, image_id} = config.public
 
   const body = await useValidatedBody(event, {
     templateID: z.string().uuid(),
@@ -219,11 +231,12 @@ export default eventHandler(async (event) => {
 
   await createLaunchTemplate(
     { deploymentSlug: tags.deployment_id },
-    tags, ec2Client, it
+    tags, ec2Client, it, image_id,
   )
 
   let autoscalingClient = useAutoScalingClient()
-
+    console.log("Creating autoscaling group");
+    console.log(public_subnet_1);
   // Parameters for creating the auto scaling group
   const createAsgParams = {
     AutoScalingGroupName: tags.deployment_id,
@@ -233,7 +246,7 @@ export default eventHandler(async (event) => {
     },
     MinSize: 1,
     MaxSize: 1,
-    VPCZoneIdentifier: "subnet-040ebc679c54ecf38",
+    VPCZoneIdentifier: public_subnet_1,
     // AvailabilityZones: ["us-west-1a", "us-west-1c"],
     // DesiredCapacity: 1,
     // other parameters can be added here
@@ -243,7 +256,7 @@ export default eventHandler(async (event) => {
     new CreateAutoScalingGroupCommand(createAsgParams)
   );
 
-  let sg_id = await createSecurityGroup(tags.deployment_id, ec2Client)
+  let sg_id = await createSecurityGroup(tags.deployment_id, ec2Client, vpc_id ?? "")
 
   await authorizeSecurityGroupIngress(
     sg_id ?? "",
@@ -259,6 +272,7 @@ export default eventHandler(async (event) => {
     tags.deployment_id.split("-")[0],
     sg_id ?? "",
     elbClient,
+    [public_subnet_1 ?? "", public_subnet_2 ?? ""]
   );
 
   const name = petname(2, "-")
