@@ -14,11 +14,13 @@ export default eventHandler(async (event) => {
 
     const db = useDB()
     const session = await requireUserSession(event)
-    let resp = await db.insert(deploymentLogs).values({
+    await db.insert(deploymentLogs).values({
         id: uuidv4(),
         deploymentID: id,
         logs: bodyJSON,
     }).returning().get()
+
+    
 
 
 });

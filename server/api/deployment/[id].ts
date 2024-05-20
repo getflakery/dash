@@ -9,10 +9,8 @@ export default eventHandler(async (event) => {
   })
   const db = useDB()
   const session = await requireUserSession(event)
-  const userID = session.user.id
   let inst = await db.select().from(deployments).where(
     and(
-      eq(deployments.userID, userID),
       eq(deployments.id, id))
   ).get();
 
