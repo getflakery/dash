@@ -54,6 +54,7 @@ export default defineNuxtConfig({
   },
   telemetry: false,
   runtimeConfig: {
+    db_url: '',
     turso_token: '', // can be overridden by NUXT_TURSO_TOKEN environment variable
     file_encryption_key: '', // can be overridden by NUXT_FILE_ENCRYPTION_KEY environment variable
     public: {
