@@ -1,6 +1,5 @@
 import { deployments } from '~/server/database/schema'
 import { eq, and } from 'drizzle-orm'
-import config from '~/config';
 
 
 export default eventHandler(async (event) => {

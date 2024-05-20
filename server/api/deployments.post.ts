@@ -312,19 +312,3 @@ export default eventHandler(async (event) => {
   return deployment
 })
 
-
-function generateSubdomain(length: number): string {
-  // Define the characters that can be used in the subdomain
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  let subdomain = '';
-
-  // Generate a subdomain of the desired length
-  for (let i = 0; i < length; i++) {
-    // Pick a random character from the chars string
-    const randomIndex = Math.floor(Math.random() * chars.length);
-    subdomain += chars.charAt(randomIndex);
-  }
-
-  return subdomain;
-}
-

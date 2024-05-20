@@ -51,3 +51,14 @@ export const deployments = sqliteTable('deployments', {
    }>(),
 });
 
+// { date: 1716184200.938395,
+//   exec:
+//   //  "warning: error: unable to download 'https://api.github.com/repos/r33drichards/micrograd/commits/HEAD': HTTP error 403" }
+// deployment logs links to the deployment
+//  stores a list of logs
+// with format { date: number, exec: string }
+export const deploymentLogs = sqliteTable('deployment_logs', {
+  id: text('id').primaryKey(),
+  deploymentID: text('deployment_id').notNull().references(() => deployments.id, { onDelete: 'cascade' }).notNull(),
+  logs: text('logs', { mode: 'json' }).$type<{ date: number, exec: string }[]>(),
+});
