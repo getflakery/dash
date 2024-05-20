@@ -4,7 +4,7 @@ import config from '~/config';
 
 class CryptoString {
   constructor(key, salt) {
-    this.key =  crypto.createHash('sha256').update(key).digest(); // Creates a 256-bit key
+    this.key = crypto.scryptSync(key, salt, 32); // Creates a 256-bit key
     this.iv = crypto.randomBytes(16); // Initialization vector
   }
 
