@@ -91,7 +91,7 @@ pnpm run migrate
 ```
 
 ```
-nix-shell -p sqlite --command "sqlite3 db.sqlite < server/database/migrations/0000_previous_mephisto.sql"
+nix-shell -p sqlite --command "sqlite3 db.sqlite < server/database/migrations/0002_safe_archangel.sql"
 ```
 
 <!-- server/database/migrations/0001_peaceful_ego.sql 
