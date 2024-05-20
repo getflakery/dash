@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 const route = useRoute()
 
 const { data: deployment, refresh } = await useFetch<Deployment>(`/api/deployment/${route.params.id}`)
-
 const deleteModal = ref(false)
 const redeployModal = ref(false)
 
@@ -54,6 +53,15 @@ function getItems(deployment: Deployment, refresh: Function) {
 
 
           <!-- Logs: -->
+          <UDashboardSection title="Logs" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
+            <div class="code-block" style="height: 300px;">
+              <pre class="custom-scroll">
+                <code>
+                  {{ deployment?.logs }}
+                </code>
+              </pre>
+            </div>
+          </UDashboardSection>
 
         </UCard>
         <!-- <UDashboardModal v-model="isInviteModalOpen" title="Invite people"
