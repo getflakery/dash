@@ -14,14 +14,14 @@ const redeployModal = ref(false)
 
 function getItems(deployment: Deployment, refresh: Function) {
   return [
-  // [{
-  //     label: 'Redeploy',
-  //     icon: 'i-heroicons-paper-airplane',
-  //     click: async () => {
-  //       redeployModal.value = true
-  //     }
-  //   }],  
-  [{
+    // [{
+    //     label: 'Redeploy',
+    //     icon: 'i-heroicons-paper-airplane',
+    //     click: async () => {
+    //       redeployModal.value = true
+    //     }
+    //   }],  
+    [{
       label: 'Delete',
       icon: 'i-heroicons-trash-20-solid',
       labelClass: 'text-red-500 dark:text-red-400',
@@ -57,7 +57,9 @@ function getItems(deployment: Deployment, refresh: Function) {
             <div class="code-block" style="height: 300px;">
               <pre class="custom-scroll">
                 <code>
-                  {{ deployment?.logs.reduce((acc, log) => acc + log.exec + '\n', '') }}
+                  {{ deployment?.logs.reduce(
+                    (acc, log) => acc + log.exec + '\n',
+                    '') }}
                 </code>
               </pre>
             </div>
@@ -76,10 +78,7 @@ function getItems(deployment: Deployment, refresh: Function) {
     :ui="{ width: 'sm:max-w-md' }">
     <DeploymentsDeleteConfirmModal @close="deleteModal = false" :refresh="refresh" :deployment="deployment" />
   </UDashboardModal>
-  <UDashboardModal 
-    v-model="redeployModal" 
-    title="Confirm Redeploy" 
-    :ui="{ width: 'sm:max-w-md' }">
+  <UDashboardModal v-model="redeployModal" title="Confirm Redeploy" :ui="{ width: 'sm:max-w-md' }">
     <DeploymentsRedeployModal @close="redeployModal = false" :refresh="refresh" :deployment="deployment" />
   </UDashboardModal>
 </template>
