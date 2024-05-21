@@ -14,29 +14,37 @@ export default eventHandler(async (event) => {
       eq(deployments.id, id))
   ).get();
 
-  const logs = await db.select().from(deploymentLogs).where(
+  let  logs = await db.select().from(deploymentLogs).where(
     eq(deploymentLogs.deploymentID, id)
   ).all();
 
-
-  return {
-    ...inst,
-    ...logs.reduce((acc, log) => {
-      if (
-        acc.logs === undefined ||
-        acc.logs === null
-      ) {
-        acc.logs = []
+  switch (logs) {
+    case null:
+      return {
+        ...inst,
+        logs: []
       }
-      if (
-        log.logs === undefined ||
-        log.logs === null
-      ) {
-        log.logs = []
+    default:
+      return {
+        ...inst,
+        ...logs.reduce((acc, log) => {
+          if (
+            acc.logs === undefined ||
+            acc.logs === null
+          ) {
+            acc.logs = []
+          }
+          if (
+            log.logs === undefined ||
+            log.logs === null
+          ) {
+            log.logs = []
+          }
+          acc.logs.push(...log.logs)
+          acc.logs?.sort((a, b) => a.date - b.date)
+          return acc
+        })
       }
-      acc.logs.push(...log.logs)
-      acc.logs?.sort((a, b) => a.date - b.date)
-      return acc
-    })
   }
 })
+
