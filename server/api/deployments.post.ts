@@ -14,13 +14,6 @@ import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, Crea
 import { CreateAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
 import { CreateLoadBalancerCommand, ElasticLoadBalancingV2Client } from "@aws-sdk/client-elastic-load-balancing-v2";
 
-interface TagData {
-  turso_token: string
-  file_encryption_key: string
-  template_id: string
-  flake_url: string
-  deployment_id: string
-}
 
 async function createLaunchTemplate(
   input: { deploymentSlug: string },
@@ -161,6 +154,7 @@ export default eventHandler(async (event) => {
   const config: {
     turso_token: string,
     file_encryption_key: string,
+    github_token: string,
     public: {
       vpc_id: string,
       public_subnet_1: string,
@@ -174,7 +168,7 @@ export default eventHandler(async (event) => {
     public_subnet_1, public_subnet_2, image_id,
   } = config.public
 
-  const { turso_token, file_encryption_key } = config
+  const { turso_token, file_encryption_key, github_token } = config
 
 
   const body = await useValidatedBody(event, {
@@ -234,6 +228,7 @@ export default eventHandler(async (event) => {
     template_id: templateID,
     flake_url: flakeURL,
     deployment_id: uuidv4(),
+    github_token,
   }
 
   let ec2Client = useEC2Client()

@@ -66,10 +66,6 @@ function getItems(deployment: Deployment, refresh: Function) {
           </UDashboardSection>
 
         </UCard>
-        <!-- <UDashboardModal v-model="isInviteModalOpen" title="Invite people"
-          description="Invite new members by email address" :ui="{ width: 'sm:max-w-md' }">
-          <EncryptedFilesForm @close="isInviteModalOpen = false" :refresh="refresh" />
-        </UDashboardModal> -->
       </UDashboardPanelContent>
 
     </UDashboardPanel>

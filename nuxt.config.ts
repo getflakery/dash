@@ -57,6 +57,7 @@ export default defineNuxtConfig({
     db_url: '',
     turso_token: '', // can be overridden by NUXT_TURSO_TOKEN environment variable
     file_encryption_key: '', // can be overridden by NUXT_FILE_ENCRYPTION_KEY environment variable
+    github_token: '', // can be overridden by NUXT_GITHUB_TOKEN environment variable
     public: {
       vpc_id: 'vpc-0c1c37e1a494e6adf', // can be overridden by NUXT_PUBLIC_VPC_ID environment variable
       public_subnet_1: 'subnet-08307ac15ba441caf', // can be overridden by NUXT_PUBLIC_SUBNET_1 environment variable
