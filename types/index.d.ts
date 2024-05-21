@@ -14,23 +14,22 @@ export interface Deployment {
   templateID: string
   name?: string
   logs: {
-    items: {
-      content: string
-    }[]
-  },
+    date: number,
+    exec: string
+  }[],
   network: Network
 };
 
 export interface File {
   id?: string
   path: string
-  content: string 
+  content: string
 }
 
 export interface Network {
   id: string
   domain: string
-  ports: Port[] 
+  ports: Port[]
 }
 
 export interface Port {

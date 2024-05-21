@@ -57,7 +57,7 @@ function getItems(deployment: Deployment, refresh: Function) {
             <div class="code-block" style="height: 300px;">
               <pre class="custom-scroll">
                 <code>
-                  {{ deployment?.logs }}
+                  {{ deployment?.logs.reduce((acc, log) => acc + log.exec + '\n', '') }}
                 </code>
               </pre>
             </div>
