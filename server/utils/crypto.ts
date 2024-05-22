@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import config from '~/config';
 
 
 class CryptoString {
@@ -32,8 +31,10 @@ class CryptoString {
 
 let _crpytoString: CryptoString | null = null;
 export const useCryptoString = () => {
+  const config = useRuntimeConfig()
+
   if (!_crpytoString) {
-    _crpytoString = new CryptoString(config.CRYPTO_STRING_KEY, config.CRYPTO_STRING_SALT);
+    _crpytoString = new CryptoString(config.crypto_string_key, config.crypto_string_salt);
   }
   return _crpytoString;
 };
