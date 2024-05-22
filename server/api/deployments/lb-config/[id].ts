@@ -1,6 +1,5 @@
-import { , deployments } from "~/server/database/schema";
+import { deployments } from "~/server/database/schema";
 import { useValidatedParams, z, } from 'h3-zod'
-import { v4 as uuidv4 } from 'uuid';
 import { eq } from 'drizzle-orm'
 
 
@@ -10,7 +9,7 @@ export default eventHandler(async (event) => {
     })
     const db = useDB()
     let {
-        domain,
+        host,
     } = await db.select().from(deployments).where(
         eq(deployments.id, id)
     ).get();
@@ -26,7 +25,7 @@ export default eventHandler(async (event) => {
                 },
                 "my-secure-router": {
                     "entryPoints": ["websecure"],
-                    "rule": `Host(\`${domain}\`)`,
+                    "rule": `Host(\`${host}\`)`,
                     "service": "my-service",
                     "tls": {
                         "certResolver": "myresolver"
@@ -56,6 +55,4 @@ export default eventHandler(async (event) => {
             }
         }
     }
-
-
 });

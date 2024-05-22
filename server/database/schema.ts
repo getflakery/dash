@@ -36,6 +36,7 @@ export const deployments = sqliteTable('deployments', {
   userID: text('user_id').notNull(),
   awsInstanceID: text('aws_instance_id'),
   createdAt: integer('created_at').notNull(),
+  host: text('host'),
   data: text('data', { mode: 'json' }).$type<{ 
     port_mappings: {
       lb_port: number,
@@ -46,7 +47,6 @@ export const deployments = sqliteTable('deployments', {
       launch_template_id: string,
       autoscaling_group_id: string,
     },
-    domain: string,
    }>(),
 });
 

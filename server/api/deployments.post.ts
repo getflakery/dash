@@ -273,6 +273,7 @@ export default eventHandler(async (event) => {
     templateID,
     name,
     createdAt: new Date().valueOf(),
+    host: lbDns,
     data: {
       port_mappings: [{
         lb_port: 443,
@@ -283,7 +284,6 @@ export default eventHandler(async (event) => {
         launch_template_id: tags.deployment_id,
         autoscaling_group_id: tags.deployment_id.split("-")[0],
       },
-      domain: lbDns,
     }
   }).returning().get()
 
