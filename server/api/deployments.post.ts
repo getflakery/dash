@@ -245,7 +245,7 @@ export default eventHandler(async (event) => {
 
   let lb_tags = {
     ...tags,
-    flake_url: "github:getflakery/bootsrap#lb",
+    flake_url: "github:getflakery/bootstrap#lb",
     bootstrap_args: "--lb",
   }
 
