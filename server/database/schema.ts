@@ -45,7 +45,6 @@ export const deployments = sqliteTable('deployments', {
       security_group_id: string,
       launch_template_id: string,
       autoscaling_group_id: string,
-      load_balancer_id: string,
     },
     domain: string,
    }>(),

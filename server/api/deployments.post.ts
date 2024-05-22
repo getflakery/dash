@@ -8,11 +8,9 @@ import {
 } from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
-import config from '~/config';
 import petname from 'node-petname'
 import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client, _InstanceType } from "@aws-sdk/client-ec2";
 import { CreateAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
-import { CreateLoadBalancerCommand, ElasticLoadBalancingV2Client } from "@aws-sdk/client-elastic-load-balancing-v2";
 
 
 async function createLaunchTemplate(
@@ -115,37 +113,7 @@ async function authorizeSecurityGroupIngress(
   }
 }
 
-async function createLoadBalancer(
-  deploymentSlug: string,
-  securityGroupId: string,
-  elbClient: ElasticLoadBalancingV2Client,
-  publicSubnets: string[] = []
-) {
 
-  try {
-    // Prepare the CreateLoadBalancerInput
-    const createLbReq = {
-      Name: deploymentSlug,
-      Subnets: publicSubnets,
-      SecurityGroups: [securityGroupId] // assuming securityGroupId is already defined
-    };
-
-    // Create load balancer
-    const command = new CreateLoadBalancerCommand(createLbReq);
-    const response = await elbClient.send(command);
-
-    console.log("Load balancer created:", response);
-    const lbDns = response.LoadBalancers?.[0].DNSName;
-    const loadBalancerArn = response.LoadBalancers?.[0].LoadBalancerArn;
-
-    // Output or further processing here
-    return { lbDns, loadBalancerArn };
-  } catch (error) {
-    // Handle errors
-    console.error("LoadBalancerCreationFailed:", error);
-    throw new Error(`LoadBalancerCreationFailed: ${error}`);
-  }
-}
 
 type instanceType = string | undefined | null
 
@@ -271,15 +239,9 @@ export default eventHandler(async (event) => {
     ec2Client,
   )
 
-  let elbClient = useELBClient()
-  const { lbDns, loadBalancerArn } = await createLoadBalancer(
-    tags.deployment_id.split("-")[0],
-    sg_id ?? "",
-    elbClient,
-    [public_subnet_1 ?? "", public_subnet_2 ?? ""]
-  );
-
   const name = petname(2, "-")
+
+  let lbDns = name + ".flakery.app"
 
   let deployment = await db.insert(deployments).values({
     id: tags.deployment_id,
@@ -293,10 +255,9 @@ export default eventHandler(async (event) => {
         instance_port: 8000
       }],
       aws_resources: {
-        security_group_id: sg_id,
+        security_group_id: sg_id ?? "",
         launch_template_id: tags.deployment_id,
         autoscaling_group_id: tags.deployment_id.split("-")[0],
-        load_balancer_id: loadBalancerArn,
       },
       domain: lbDns,
     }
