@@ -243,6 +243,30 @@ export default eventHandler(async (event) => {
 
   let lbDns = name + ".flakery.app"
 
+  let lb_tags = {
+    ...tags,
+    flake_url: "github:getflakery/bootsrap#lb",
+    bootstrap_args: "--lb",
+  }
+
+  let lb_launch_template = 
+    await createLaunchTemplate(
+      { deploymentSlug: tags.deployment_id + "-lb" },
+      lb_tags, ec2Client, "t3.small", image_id,
+    )
+
+  await autoscalingClient.send(
+    new CreateAutoScalingGroupCommand({
+      AutoScalingGroupName: tags.deployment_id + "-lb",
+      LaunchTemplate: {
+        LaunchTemplateName: tags.deployment_id + "-lb",
+      },
+      MinSize: 1,
+      MaxSize: 1,
+      VPCZoneIdentifier: public_subnet_1,
+    })
+  );
+
   let deployment = await db.insert(deployments).values({
     id: tags.deployment_id,
     userID,
@@ -262,6 +286,9 @@ export default eventHandler(async (event) => {
       domain: lbDns,
     }
   }).returning().get()
+
+
+
 
 
 
