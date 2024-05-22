@@ -65,6 +65,9 @@ export default defineNuxtConfig({
   nitro: {
     // minify: false,
     logLevel: 1,
+    experimental: {
+      openAPI: true,
+    },
   },
   telemetry: false,
   runtimeConfig: {
