@@ -28,7 +28,7 @@ export default eventHandler(async (event) => {
                     "rule": `Host(\`${host}\`)`,
                     "service": "my-service",
                     "tls": {
-                        "certResolver": "myresolver"
+                        "certResolver": "letsencrypt"
                     }
                 }
             },
