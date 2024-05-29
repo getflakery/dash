@@ -189,6 +189,9 @@ export default eventHandler(async (event) => {
   })
 
 
+  const name = petname(2, "-")
+
+
   // todo deploy aws create
   let tags = {
     turso_token,
@@ -197,6 +200,7 @@ export default eventHandler(async (event) => {
     flake_url: flakeURL,
     deployment_id: uuidv4(),
     github_token,
+    name,
   }
 
   let ec2Client = useEC2Client()
@@ -239,7 +243,6 @@ export default eventHandler(async (event) => {
     ec2Client,
   )
 
-  const name = petname(2, "-")
 
   let lbDns = name + ".flakery.app"
 
