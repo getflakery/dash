@@ -9,7 +9,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
 import petname from 'node-petname'
-import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client, _InstanceType } from "@aws-sdk/client-ec2";
+import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client, _InstanceType, type LaunchTemplateIamInstanceProfileSpecificationRequest } from "@aws-sdk/client-ec2";
 import { CreateAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
 
 
@@ -18,7 +18,9 @@ async function createLaunchTemplate(
   tags: { [key: string]: string },
   ec2ClientNg: EC2Client,
   instanceType: string,
-  imageID: string
+  imageID: string, 
+  instanceProfile: LaunchTemplateIamInstanceProfileSpecificationRequest | undefined = undefined,
+
 ) {
   try {
     const command = new CreateLaunchTemplateCommand({
@@ -41,7 +43,8 @@ async function createLaunchTemplate(
             VolumeType: "gp2",
             DeleteOnTermination: true
           }
-        }]
+        }],
+        IamInstanceProfile: instanceProfile,
       }
     });
 
@@ -255,7 +258,9 @@ export default eventHandler(async (event) => {
   let lb_launch_template = 
     await createLaunchTemplate(
       { deploymentSlug: tags.deployment_id + "-lb" },
-      lb_tags, ec2Client, "t3.small", image_id,
+      lb_tags, ec2Client, "t3.small", image_id, {
+        Arn: "arn:aws:iam::150301572911:role/ec2" // todo read from config
+      }
     )
 
   await autoscalingClient.send(
