@@ -21,7 +21,8 @@ export default eventHandler(async (event) => {
                 "http-to-https": {
                     "entryPoints": ["web"],
                     "rule": "HostRegexp(`{host:.+}`)",
-                    "middlewares": ["redirect-to-https"]
+                    "middlewares": ["redirect-to-https"],
+                    "service": "my-service" // Add this line to associate a service with the router
                 },
                 "my-secure-router": {
                     "entryPoints": ["websecure"],
