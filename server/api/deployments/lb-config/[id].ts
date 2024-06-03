@@ -45,11 +45,8 @@ export default eventHandler(async (event) => {
                     "loadBalancer": {
                         "servers": [
                             {
-                                "url": "http://localhost:8080"
+                                "url": "http://10.0.2.96:8080"
                             },
-                            {
-                                "url": "http://localhost:8081"
-                            }
                         ]
                     }
                 }
