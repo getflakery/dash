@@ -247,7 +247,7 @@ export default eventHandler(async (event) => {
   )
 
 
-  let lbDns = name + ".flakery.app"
+  let lbDns = `${name}.${tags.deployment_id.substring(0, 6)}.flakery.xyz`
 
   let lb_tags = {
     ...tags,
