@@ -108,6 +108,13 @@ async function authorizeInboundTraffic(securityGroupId: string, client: EC2Clien
           FromPort: 443,
           ToPort: 443,
           IpRanges: [{ CidrIp: "0.0.0.0/0" }]
+        },
+        // 22
+        {
+          IpProtocol: "tcp",
+          FromPort: 22,
+          ToPort: 22,
+          IpRanges: [{ CidrIp: "0.0.0.0/0" }]
         }
       ]
     };
@@ -126,6 +133,12 @@ async function authorizeInboundTraffic(securityGroupId: string, client: EC2Clien
           IpProtocol: "tcp",
           FromPort: 443,
           ToPort: 443,
+          Ipv6Ranges: [{ CidrIpv6: "::/0" }]
+        },
+        {
+          IpProtocol: "tcp",
+          FromPort: 22,
+          ToPort: 22,
           Ipv6Ranges: [{ CidrIpv6: "::/0" }]
         }
       ]
