@@ -373,6 +373,7 @@ export default eventHandler(async (event) => {
     name,
     createdAt: new Date().valueOf(),
     host: lbDns,
+    port: 8080,
     data: {
       port_mappings: [{
         lb_port: 443,
