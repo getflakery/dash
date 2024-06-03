@@ -17,7 +17,13 @@ export default eventHandler(async (event) => {
 
     let targets = (await db.select().from(target).where(
         eq(target.deploymentID, id)
-    ).all()).map(t => t.host).map(h => `${h}:${port}`);
+    ).all()).map(t => t.host).map(h => `${h}:${port}`).map(
+        h => {
+            return {
+                "url": `http://${h}`
+            }
+        }
+    )
 
     // log body
     return {
@@ -48,11 +54,7 @@ export default eventHandler(async (event) => {
             "services": {
                 "my-service": {
                     "loadBalancer": {
-                        "servers": [
-                            {
-                                "url": "http://10.0.2.141:8080"
-                            },
-                        ]
+                        "servers": targets
                     }
                 }
             }
