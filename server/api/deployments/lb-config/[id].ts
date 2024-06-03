@@ -25,7 +25,7 @@ export default eventHandler(async (event) => {
                 },
                 "my-secure-router": {
                     "entryPoints": ["websecure"],
-                    "rule": `Host(\`${host}\`)`,
+                    "rule": `Host(\`${host}.${id.substring(0,6)}\`)`,
                     "service": "my-service",
                     "tls": {
                         "certResolver": "letsencrypt"
