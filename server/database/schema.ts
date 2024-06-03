@@ -37,6 +37,7 @@ export const deployments = sqliteTable('deployments', {
   awsInstanceID: text('aws_instance_id'),
   createdAt: integer('created_at').notNull(),
   host: text('host'),
+  port: integer('port'),
   data: text('data', { mode: 'json' }).$type<{ 
     port_mappings: {
       lb_port: number,
@@ -48,6 +49,12 @@ export const deployments = sqliteTable('deployments', {
       autoscaling_group_id: string,
     },
    }>(),
+});
+
+export const target = sqliteTable('target', {
+  id: text('id').primaryKey(),
+  deploymentID: text('deployment_id').notNull().references(() => deployments.id, { onDelete: 'cascade' }).notNull(),
+  host: text('host').notNull(),
 });
 
 // { date: 1716184200.938395,

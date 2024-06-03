@@ -1,4 +1,4 @@
-import { deployments } from "~/server/database/schema";
+import { deployments, target } from "~/server/database/schema";
 import { useValidatedParams, z, } from 'h3-zod'
 import { eq } from 'drizzle-orm'
 
@@ -10,9 +10,20 @@ export default eventHandler(async (event) => {
     const db = useDB()
     let {
         host,
+        port,
     } = await db.select().from(deployments).where(
         eq(deployments.id, id)
     ).get();
+
+    let targets = (await db.select().from(target).where(
+        eq(target.deploymentID, id)
+    ).all()).map(t => t.host).map(h => `${h}:${port}`).map(
+        h => {
+            return {
+                "url": `http://${h}`
+            }
+        }
+    )
 
     // log body
     return {
@@ -43,11 +54,7 @@ export default eventHandler(async (event) => {
             "services": {
                 "my-service": {
                     "loadBalancer": {
-                        "servers": [
-                            {
-                                "url": "http://10.0.2.141:8080"
-                            },
-                        ]
+                        "servers": targets
                     }
                 }
             }
