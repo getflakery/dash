@@ -259,7 +259,7 @@ export default eventHandler(async (event) => {
     await createLaunchTemplate(
       { deploymentSlug: tags.deployment_id + "-lb" },
       lb_tags, ec2Client, "t3.small", image_id, {
-        Arn: "arn:aws:iam::150301572911:role/ec2" // todo read from config
+        Arn: "arn:aws:iam::150301572911:instance-profile/flakery" // todo read from config
       }
     )
 

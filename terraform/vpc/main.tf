@@ -140,9 +140,13 @@ resource "aws_iam_role_policy_attachment" "ec2" {
   policy_arn = aws_iam_policy.ec2.arn
 }
 
+resource "aws_iam_instance_profile" "flakery" {
+  name = "flakery"
+  role = aws_iam_role.ec2.name
+}
 
-output "iam_role_arn" {
-  value = aws_iam_role.ec2.arn
+output "instance_profile_arn" {
+  value = aws_iam_instance_profile.flakery.arn
 }
 
 output "vpc_id" {
