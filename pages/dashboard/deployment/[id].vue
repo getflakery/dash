@@ -50,6 +50,13 @@ function getItems(deployment: Deployment, refresh: Function) {
         </UDashboardSection>
 
         <UCard>
+          <!-- display deployment.host as a link -->
+          <NuxtLink :to="`https://${deployment?.host}`" class="text-blue-500 dark:text-blue-400"
+            target="_blank">
+            {{ deployment?.host }}
+          </NuxtLink>
+        </UCard>
+        <UCard>
 
 
           <!-- Logs: -->

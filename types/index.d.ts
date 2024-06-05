@@ -18,6 +18,7 @@ export interface Deployment {
     exec: string
   }[],
   network: Network
+  host: string
 };
 
 export interface File {
