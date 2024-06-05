@@ -18,7 +18,6 @@ export default eventHandler(async (event) => {
     eq(deploymentLogs.deploymentID, id)
   ).all();
 
-  console.log('logs', logs)
 
   switch (logs) {
     case null:

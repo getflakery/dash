@@ -48,7 +48,7 @@ function getItems(deployment: Deployment, refresh: Function) {
         <UDashboardSection :title="`${deployment?.name} details`" 
           :ui="{ container: 'Flg:sticky top-2' }">
           <template #links>
-            <UButton type="submit" label="Refresh" onclick="refresh" icon="i-heroicons-arrow-path"/>
+            <UButton type="submit" label="Refresh" :onclick="refresh" icon="i-heroicons-arrow-path"/>
           </template>
         </UDashboardSection>
 
