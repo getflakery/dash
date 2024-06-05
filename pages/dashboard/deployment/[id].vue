@@ -45,14 +45,16 @@ function getItems(deployment: Deployment, refresh: Function) {
         </template>
       </UDashboardNavbar>
       <UDashboardPanelContent class="pb-24">
-        <UDashboardSection :title="`${deployment?.name} details`" orientation="horizontal"
+        <UDashboardSection :title="`${deployment?.name} details`" 
           :ui="{ container: 'Flg:sticky top-2' }">
+          <template #links>
+            <UButton type="submit" label="Refresh" onclick="refresh" icon="i-heroicons-arrow-path"/>
+          </template>
         </UDashboardSection>
 
         <UCard>
           <!-- display deployment.host as a link -->
-          <NuxtLink :to="`https://${deployment?.host}`" class="text-blue-500 dark:text-blue-400"
-            target="_blank">
+          <NuxtLink :to="`https://${deployment?.host}`" class="text-blue-500 dark:text-blue-400" target="_blank">
             {{ deployment?.host }}
           </NuxtLink>
         </UCard>
