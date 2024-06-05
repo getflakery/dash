@@ -18,6 +18,8 @@ export default eventHandler(async (event) => {
     eq(deploymentLogs.deploymentID, id)
   ).all();
 
+  console.log('logs', logs)
+
   switch (logs) {
     case null:
       return {
@@ -43,7 +45,7 @@ export default eventHandler(async (event) => {
           acc.logs.push(...log.logs)
           acc.logs?.sort((a, b) => a.date - b.date)
           return acc
-        })
+        }, {})
       }
   }
 })
