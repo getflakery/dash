@@ -35,8 +35,10 @@ function getItems(deployment: Deployment, refresh: Function) {
 <template>
   <UDashboardPage>
     <UDashboardPanel grow>
-      <UDashboardNavbar title="Deployment Details">
+      <UDashboardNavbar :title="`Deployment Details for ${deployment?.name}`">
         <template #right>
+          <UButton type="submit" label="Refresh" :onclick="refresh" icon="i-heroicons-arrow-path" />
+
           <UDropdown :items="getItems(i, refresh)" position="bottom-end">
             <UButton color="white" label="Actions" trailing-icon="i-heroicons-chevron-down-20-solid" />
           </UDropdown>
@@ -44,37 +46,28 @@ function getItems(deployment: Deployment, refresh: Function) {
 
         </template>
       </UDashboardNavbar>
-      <UDashboardPanelContent class="pb-24">
-        <UDashboardSection :title="`${deployment?.name} details`" 
-          :ui="{ container: 'Flg:sticky top-2' }">
-          <template #links>
-            <UButton type="submit" label="Refresh" :onclick="refresh" icon="i-heroicons-arrow-path"/>
-          </template>
-        </UDashboardSection>
-
-        <UCard>
+      <UDashboardPanelContent>
+        <UDashboardSection title="URL" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
           <!-- display deployment.host as a link -->
           <NuxtLink :to="`https://${deployment?.host}`" class="text-blue-500 dark:text-blue-400" target="_blank">
             {{ deployment?.host }}
           </NuxtLink>
-        </UCard>
-        <UCard>
+        </UDashboardSection>
 
 
-          <!-- Logs: -->
-          <UDashboardSection title="Logs" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
-            <div class="code-block" style="height: 300px;">
-              <pre class="custom-scroll">
+        <!-- Logs: -->
+        <UDashboardSection title="Logs" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
+          <div class="code-block" style="height: 300px;">
+            <pre class="custom-scroll">
                 <code>
                   {{ deployment?.logs?.reduce(
                     (acc, log) => acc + log.exec + '\n',
                     '') }}
                 </code>
               </pre>
-            </div>
-          </UDashboardSection>
+          </div>
+        </UDashboardSection>
 
-        </UCard>
       </UDashboardPanelContent>
 
     </UDashboardPanel>
