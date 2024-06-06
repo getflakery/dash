@@ -26,12 +26,7 @@ interface services {
 export default eventHandler(async (event) => {
 
     const db = useDB()
-    // let {
-    //     host,
-    //     port,
-    // } = await db.select().from(deployments).where(
-    //     eq(deployments.id, id)
-    // ).get();
+
     let allTargets = await db.select().from(target).all();
 
     // index by deployment id
@@ -82,30 +77,12 @@ export default eventHandler(async (event) => {
         return acc;
     }, {});
 
-    // let httpToHttps = deploymentIDs.reduce<routers>((acc, id) => {
-    //     acc[`http-to-https-${id}`] = {
-    //         entryPoints: ["web"],
-    //         rule: "HostRegexp(`{host:.+}`)",
-    //         middlewares: ["redirect-to-https"],
-    //         service: id
-    //     }
-    //     return acc;
-    // }, {})
-
 
     // log body
     return {
         "http": {
             "routers": {
-                // ...httpToHttps,
                 ...routers
-            },
-            "middlewares": {
-                "redirect-to-https": {
-                    "redirectScheme": {
-                        "scheme": "https"
-                    }
-                }
             },
             "services": {
                 ...services
