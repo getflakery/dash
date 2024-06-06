@@ -45,7 +45,7 @@ const validate = (state: any): FormError[] => {
 
 async function onSubmit(refresh: Function | undefined) {
   // post state too /api/templates
-  await $fetch('/api/templates', {
+  let resp = await $fetch('/api/templates', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -59,7 +59,12 @@ async function onSubmit(refresh: Function | undefined) {
     refresh()
   }
 
-  emit('close')
+
+
+  // redirect to dashboard/template/{resp.id}
+  await navigateTo(`/dashboard/template/${resp.id}`)
+
+
 }
 
 function saveEdit(file: any){
