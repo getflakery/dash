@@ -21,6 +21,7 @@
     "@aws-sdk/client-auto-scaling": "^3.572.0",
     "@aws-sdk/client-ec2": "^3.521.0",
     "@aws-sdk/client-elastic-load-balancing-v2": "^3.572.0",
+    "@aws-sdk/client-route-53": "^3.592.0",
     "@iconify-json/heroicons": "^1.1.20",
     "@iconify-json/simple-icons": "^1.1.92",
     "@libsql/client": "^0.5.2",

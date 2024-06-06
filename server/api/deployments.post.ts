@@ -12,6 +12,39 @@ import petname from 'node-petname'
 import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client, _InstanceType, type LaunchTemplateIamInstanceProfileSpecificationRequest } from "@aws-sdk/client-ec2";
 import { CreateAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
 
+import { Route53Client, ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
+
+async function createCNAMERecord(domainName, targetDNS, hostedZoneId, route53Client) {
+  const params = {
+    ChangeBatch: {
+      Changes: [
+        {
+          Action: "UPSERT",
+          ResourceRecordSet: {
+            Name: domainName,
+            Type: "CNAME",
+            TTL: 300,
+            ResourceRecords: [
+              {
+                Value: targetDNS
+              }
+            ]
+          }
+        }
+      ]
+    },
+    HostedZoneId: hostedZoneId
+  };
+
+  try {
+    const command = new ChangeResourceRecordSetsCommand(params);
+    const response = await route53Client.send(command);
+    console.log("CNAME record created:", response);
+  } catch (error) {
+    console.error("Error creating CNAME record:", error);
+    throw new Error(`CNAMERecordCreationFailed: ${error}`);
+  }
+}
 
 
 interface createLaunchTemplateInput {
@@ -398,43 +431,9 @@ export default eventHandler(async (event) => {
   let lbDns = `${name}.${tags.deployment_id.substring(0, 6)}.flakery.xyz`
 
   if (body.loadBalancer) {
-    let lb_tags = {
-      ...tags,
-      flake_url: "github:getflakery/bootstrap#lb",
-      bootstrap_args: "--lb",
-    }
-
-    let lb_sg_id = await createSecurityGroup(tags.deployment_id + "-lb", ec2Client, vpc_id ?? "")
-
-    await authorizeInboundTraffic(lb_sg_id ?? "", ec2Client)
-
-    await createLaunchTemplate(
-      {
-        deploymentSlug: tags.deployment_id + "-lb",
-        tags: lb_tags,
-        ec2ClientNg: ec2Client,
-        instanceType: "t3.small",
-        imageID: image_id,
-        instanceProfile: {
-          Arn: "arn:aws:iam::150301572911:instance-profile/flakery"
-        },
-        securityGroups: [lb_sg_id ?? ""]
-      }
-    )
-
-    await autoscalingClient.send(
-      new CreateAutoScalingGroupCommand({
-        AutoScalingGroupName: tags.deployment_id + "-lb",
-        LaunchTemplate: {
-          LaunchTemplateName: tags.deployment_id + "-lb",
-        },
-        MinSize: 1,
-        MaxSize: 1,
-        VPCZoneIdentifier: public_subnet_1,
-      })
-    );
+    const route53Client = new Route53Client({ region: "us-west-2" }); // Adjust the region as needed
+    await createCNAMERecord(lbDns, "loadb.flakery.xyz", "Z03309493AGZOVY2IU47X", route53Client);
   }
-
 
 
   let deployment = await db.insert(deployments).values({
