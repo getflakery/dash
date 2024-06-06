@@ -9,6 +9,7 @@ const { data: deployment, refresh } = await useFetch<Deployment>(`/api/deploymen
 const deleteModal = ref(false)
 const redeployModal = ref(false)
 
+const isOpen = ref(false)
 
 
 
@@ -57,7 +58,7 @@ function getItems(deployment: Deployment, refresh: Function) {
 
         <!-- Logs: -->
         <UDashboardSection title="Logs" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
-          <div class="code-block" style="height: 300px;">
+          <div class="code-block" style="position: relative; height: 300px;">
             <pre class="custom-scroll">
                 <code>
                   {{ deployment?.logs?.reduce(
@@ -65,7 +66,14 @@ function getItems(deployment: Deployment, refresh: Function) {
                     '') }}
                 </code>
               </pre>
+              <UButton 
+              label="Fullscreen" 
+              @click="isOpen = !isOpen" 
+              class="fullscreen-button"
+              />
+
           </div>
+
         </UDashboardSection>
 
       </UDashboardPanelContent>
@@ -79,6 +87,44 @@ function getItems(deployment: Deployment, refresh: Function) {
   <UDashboardModal v-model="redeployModal" title="Confirm Redeploy" :ui="{ width: 'sm:max-w-md' }">
     <DeploymentsRedeployModal @close="redeployModal = false" :refresh="refresh" :deployment="deployment" />
   </UDashboardModal>
+  <UModal v-model="isOpen" fullscreen>
+      <UCard
+        :ui="{
+          base: 'h-full flex flex-col',
+          rounded: '',
+          divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+          body: {
+            base: 'grow'
+          }
+        }"
+      >
+        <template #header>
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+              Logs for {{ deployment?.name }}
+            </h3>
+            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="isOpen = false" />
+          </div>
+        </template>
+
+
+        <div class="code-block" style="position: relative; height: 300px;">
+            <pre class="custom-scroll">
+                <code>
+                  {{ deployment?.logs?.reduce(
+                    (acc, log) => acc + log.exec + '\n',
+                    '') }}
+                </code>
+              </pre>
+              <UButton 
+              label="Fullscreen" 
+              @click="isOpen = !isOpen" 
+              class="fullscreen-button"
+              />
+
+          </div>
+      </UCard>
+    </UModal>
 </template>
 
 
@@ -96,6 +142,7 @@ function getItems(deployment: Deployment, refresh: Function) {
   font-family: 'Fira Code', monospace;
   /* Monospace font for better code readability */
   overflow-x: scroll;
+  position: relative;
 }
 
 .custom-scroll::-webkit-scrollbar {
@@ -113,5 +160,11 @@ function getItems(deployment: Deployment, refresh: Function) {
   /* Scrollbar thumb color */
   border-radius: 4px;
   /* Rounded corners for the scrollbar thumb */
+}
+
+.fullscreen-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 </style>
