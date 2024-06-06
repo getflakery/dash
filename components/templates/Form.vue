@@ -55,12 +55,6 @@ async function onSubmit(refresh: Function | undefined) {
     })
   })
 
-  if (refresh) {
-    refresh()
-  }
-
-
-
   // redirect to dashboard/template/{resp.id}
   await navigateTo(`/dashboard/template/${resp.id}`)
 
