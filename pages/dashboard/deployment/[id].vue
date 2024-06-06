@@ -108,7 +108,7 @@ function getItems(deployment: Deployment, refresh: Function) {
         </template>
 
 
-        <div class="code-block" style="position: relative; height: 300px;">
+        <div class="code-block" style="position: relative;>
             <pre class="custom-scroll">
                 <code>
                   {{ deployment?.logs?.reduce(
