@@ -82,22 +82,22 @@ export default eventHandler(async (event) => {
         return acc;
     }, {});
 
-    let httpToHttps = deploymentIDs.reduce<routers>((acc, id) => {
-        acc[`http-to-https-${id}`] = {
-            entryPoints: ["web"],
-            rule: "HostRegexp(`{host:.+}`)",
-            middlewares: ["redirect-to-https"],
-            service: id
-        }
-        return acc;
-    }, {})
+    // let httpToHttps = deploymentIDs.reduce<routers>((acc, id) => {
+    //     acc[`http-to-https-${id}`] = {
+    //         entryPoints: ["web"],
+    //         rule: "HostRegexp(`{host:.+}`)",
+    //         middlewares: ["redirect-to-https"],
+    //         service: id
+    //     }
+    //     return acc;
+    // }, {})
 
 
     // log body
     return {
         "http": {
             "routers": {
-                ...httpToHttps,
+                // ...httpToHttps,
                 ...routers
             },
             "middlewares": {
