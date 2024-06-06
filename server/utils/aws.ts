@@ -10,6 +10,7 @@ import {
 
 import { ElasticLoadBalancingV2Client } from "@aws-sdk/client-elastic-load-balancing-v2";
 
+import { Route53Client, ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
 
 
 const getConf= () => {
@@ -54,5 +55,14 @@ export const useELBClient = () => {
         _elbClient = new ElasticLoadBalancingV2Client(getConf())
     }
     return _elbClient
+     
+}
+
+let _route53Client: Route53Client | null = null
+export const useRoute53Client = () => {
+    if (!_route53Client) {
+        _route53Client = new Route53Client(getConf())
+    }
+    return _route53Client
      
 }

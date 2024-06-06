@@ -431,7 +431,7 @@ export default eventHandler(async (event) => {
   let lbDns = `${name}.${tags.deployment_id.substring(0, 6)}.flakery.xyz`
 
   if (body.loadBalancer) {
-    const route53Client = new Route53Client({ region: "us-west-2" }); // Adjust the region as needed
+    const route53Client = useRoute53Client()
     await createCNAMERecord(lbDns, "loadb.flakery.xyz", "Z03309493AGZOVY2IU47X", route53Client);
   }
 
