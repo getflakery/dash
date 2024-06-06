@@ -44,10 +44,13 @@ export const deployments = sqliteTable('deployments', {
       instance_port: number,
     }[],
     aws_resources: { 
-      security_group_id: string,
       launch_template_id: string,
       autoscaling_group_id: string,
     },
+    min_instances: number,
+    max_instances: number,
+    public_ip: boolean,
+    load_balancer: boolean,
    }>(),
 });
 

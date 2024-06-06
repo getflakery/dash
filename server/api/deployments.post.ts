@@ -22,7 +22,7 @@ interface createLaunchTemplateInput {
   imageID: string
   instanceProfile?: LaunchTemplateIamInstanceProfileSpecificationRequest
   securityGroups?: string[]
-} 
+}
 
 
 async function createLaunchTemplate(
@@ -70,7 +70,7 @@ async function createLaunchTemplate(
 
 
 async function createSecurityGroup(
-  deploymentSlug: string,
+  name: string,
   ec2Client: EC2Client,
   vpcId: string,
 ) {
@@ -79,7 +79,7 @@ async function createSecurityGroup(
   // Create security group request
   const createSGParams = {
     Description: "Security group for the deployment",
-    GroupName: deploymentSlug,
+    GroupName: name,
     VpcId: vpcId
   };
 
@@ -160,43 +160,88 @@ async function authorizeInboundTraffic(securityGroupId: string, client: EC2Clien
   }
 }
 
+async function authorizeInboundTrafficForAllPorts(securityGroupId: string, client: EC2Client) {
+  try {
+    // Define the permissions for IPv4
+    const ipv4Params = {
+      GroupId: securityGroupId,
+      IpPermissions: [
+        {
+          IpProtocol: "-1",
+          FromPort: -1,
+          ToPort: -1,
+          IpRanges: [{ CidrIp: "0.0.0.0/0" }]
+        }
+      ]
+    };
 
+    // Define the permissions for IPv6
+    const ipv6Params = {
+      GroupId: securityGroupId,
+      IpPermissions: [
+        {
+          IpProtocol: "-1",
+          FromPort: -1,
+          ToPort: -1,
+          Ipv6Ranges: [{ CidrIpv6: "::/0" }]
+        }
+      ]
+    };
 
-async function authorizeSecurityGroupIngress(
-  sgId: string,
-  input: { lb_port: number, instance_port: number }[],
-  ec2ClientNg: EC2Client
-) {
+    // Authorize IPv4 ingress
+    await client.send(new AuthorizeSecurityGroupIngressCommand(ipv4Params));
+    console.log("IPv4 ingress authorized for all ports.");
 
-
-  const authorizeSecurityGroupIngressCommands = input.map(target => {
-    return new AuthorizeSecurityGroupIngressCommand({
-      GroupId: sgId,
-      IpPermissions: [{
-        FromPort: target.lb_port,
-        ToPort: target.instance_port,
-        IpProtocol: "TCP",
-        IpRanges: [{
-          CidrIp: "0.0.0.0/0"
-        }]
-      }]
-    });
-  });
-
-  for (let command of authorizeSecurityGroupIngressCommands) {
-    try {
-      const response = await ec2ClientNg.send(command);
-      console.log('Security group ingress rules added:', response);
-    } catch (error) {
-      console.error('Error adding security group ingress rules:', error);
-      throw new Error(`SecurityGroupIngressRulesAdditionFailed: ${error}`);
-    }
+    // Authorize IPv6 ingress
+    await client.send(new AuthorizeSecurityGroupIngressCommand(ipv6Params));
+    console.log("IPv6 ingress authorized for all ports.");
+  }
+  catch (error) {
+    console.error("Error authorizing inbound traffic:", error);
   }
 }
 
+// authorize inbound traffic for port 
+async function authorizeInboundTrafficForPort(securityGroupId: string, client: EC2Client, port: number) {
+  try {
+    // Define the permissions for IPv4
+    const ipv4Params = {
+      GroupId: securityGroupId,
+      IpPermissions: [
+        {
+          IpProtocol: "tcp",
+          FromPort: port,
+          ToPort: port,
+          IpRanges: [{ CidrIp: "0.0.0.0/0" }]
+        }
+      ]
+    };
 
+    // Define the permissions for IPv6
+    const ipv6Params = {
+      GroupId: securityGroupId,
+      IpPermissions: [
+        {
+          IpProtocol: "tcp",
+          FromPort: port,
+          ToPort: port,
+          Ipv6Ranges: [{ CidrIpv6: "::/0" }]
+        }
+      ]
+    };
 
-type instanceType = string | undefined | null
+    // Authorize IPv4 ingress
+    await client.send(new AuthorizeSecurityGroupIngressCommand(ipv4Params));
+    console.log(`IPv4 ingress authorized for port ${port}.`);
+    // Authorize IPv6 ingress
+    await client.send(new AuthorizeSecurityGroupIngressCommand(ipv6Params));
+    console.log(`IPv6 ingress authorized for port ${port}.`);
+  }
+
+  catch (error) {
+    console.error("Error authorizing inbound traffic:", error);
+  }
+}
 
 export default eventHandler(async (event) => {
 
@@ -208,6 +253,8 @@ export default eventHandler(async (event) => {
       vpc_id: string,
       public_subnet_1: string,
       public_subnet_2: string,
+      private_subnet_1: string,
+      private_subnet_2: string,
       image_id: string,
     }
   } = useRuntimeConfig(event)
@@ -215,18 +262,31 @@ export default eventHandler(async (event) => {
   const {
     vpc_id,
     public_subnet_1, public_subnet_2, image_id,
+    private_subnet_1, private_subnet_2
   } = config.public
 
+
+
   const { turso_token, file_encryption_key, github_token } = config
+
 
 
   const body = await useValidatedBody(event, {
     templateID: z.string().uuid(),
     awsInstanceType: z.string().optional(),
+    publicIP: z.boolean(),
+    loadBalancer: z.boolean(),
+    minInstances: z.number(),
+    maxInstances: z.number(),
+    targetPort: z.number().optional(),
   })
   let templateID = body.templateID
 
 
+  let subnet = public_subnet_1
+  if (!body.publicIP) {
+    subnet = private_subnet_1
+  }
 
   const session = await requireUserSession(event)
 
@@ -285,7 +345,19 @@ export default eventHandler(async (event) => {
   }
 
   let ec2Client = useEC2Client()
-  
+
+  let sg_id = await createSecurityGroup(tags.deployment_id, ec2Client, vpc_id ?? "")
+
+  if (sg_id == null || sg_id == undefined) {
+    throw new Error("Failed to create security group")
+  }
+
+  if (body.loadBalancer) {
+    await authorizeInboundTrafficForPort(sg_id, ec2Client, body.targetPort ?? 8080)
+  } else {
+    await authorizeInboundTrafficForAllPorts(sg_id, ec2Client)
+  }
+
   await createLaunchTemplate(
     {
       deploymentSlug: tags.deployment_id,
@@ -293,12 +365,14 @@ export default eventHandler(async (event) => {
       ec2ClientNg: ec2Client,
       instanceType: it,
       imageID: image_id,
+      securityGroups: [
+        sg_id
+      ] 
     }
   )
 
   let autoscalingClient = useAutoScalingClient()
   console.log("Creating autoscaling group");
-  console.log(public_subnet_1);
   // Parameters for creating the auto scaling group
   const createAsgParams = {
     AutoScalingGroupName: tags.deployment_id,
@@ -306,67 +380,60 @@ export default eventHandler(async (event) => {
       LaunchTemplateName: tags.deployment_id,
       // additional parameters can be specified here
     },
-    MinSize: 1,
-    MaxSize: 1,
-    VPCZoneIdentifier: public_subnet_1,
+    MinSize: body.minInstances ?? 1,
+    MaxSize: body.maxInstances ?? 1,
+    VPCZoneIdentifier: subnet,
     // AvailabilityZones: ["us-west-1a", "us-west-1c"],
     // DesiredCapacity: 1,
     // other parameters can be added here
+
+    
   };
 
   await autoscalingClient.send(
     new CreateAutoScalingGroupCommand(createAsgParams)
   );
 
-  let sg_id = await createSecurityGroup(tags.deployment_id, ec2Client, vpc_id ?? "")
-
-  await authorizeSecurityGroupIngress(
-    sg_id ?? "",
-    [{
-      lb_port: 443,
-      instance_port: 8000
-    }],
-    ec2Client,
-  )
-
 
   let lbDns = `${name}.${tags.deployment_id.substring(0, 6)}.flakery.xyz`
 
-  let lb_tags = {
-    ...tags,
-    flake_url: "github:getflakery/bootstrap#lb",
-    bootstrap_args: "--lb",
-  }
-
-  let lb_sg_id = await createSecurityGroup(tags.deployment_id + "-lb", ec2Client, vpc_id ?? "")
-
-  await authorizeInboundTraffic(lb_sg_id ?? "", ec2Client)
-
-  await createLaunchTemplate(
-    {
-      deploymentSlug: tags.deployment_id + "-lb",
-      tags: lb_tags,
-      ec2ClientNg: ec2Client,
-      instanceType: "t3.small",
-      imageID: image_id,
-      instanceProfile: {
-        Arn: "arn:aws:iam::150301572911:instance-profile/flakery"
-      },
-      securityGroups: [lb_sg_id ?? ""]
+  if (body.loadBalancer) {
+    let lb_tags = {
+      ...tags,
+      flake_url: "github:getflakery/bootstrap#lb",
+      bootstrap_args: "--lb",
     }
-  )
 
-  await autoscalingClient.send(
-    new CreateAutoScalingGroupCommand({
-      AutoScalingGroupName: tags.deployment_id + "-lb",
-      LaunchTemplate: {
-        LaunchTemplateName: tags.deployment_id + "-lb",
-      },
-      MinSize: 1,
-      MaxSize: 1,
-      VPCZoneIdentifier: public_subnet_1,
-    })
-  );
+    let lb_sg_id = await createSecurityGroup(tags.deployment_id + "-lb", ec2Client, vpc_id ?? "")
+
+    await authorizeInboundTraffic(lb_sg_id ?? "", ec2Client)
+
+    await createLaunchTemplate(
+      {
+        deploymentSlug: tags.deployment_id + "-lb",
+        tags: lb_tags,
+        ec2ClientNg: ec2Client,
+        instanceType: "t3.small",
+        imageID: image_id,
+        instanceProfile: {
+          Arn: "arn:aws:iam::150301572911:instance-profile/flakery"
+        },
+        securityGroups: [lb_sg_id ?? ""]
+      }
+    )
+
+    await autoscalingClient.send(
+      new CreateAutoScalingGroupCommand({
+        AutoScalingGroupName: tags.deployment_id + "-lb",
+        LaunchTemplate: {
+          LaunchTemplateName: tags.deployment_id + "-lb",
+        },
+        MinSize: 1,
+        MaxSize: 1,
+        VPCZoneIdentifier: public_subnet_1,
+      })
+    );
+  }
 
 
 
@@ -377,17 +444,20 @@ export default eventHandler(async (event) => {
     name,
     createdAt: new Date().valueOf(),
     host: lbDns,
-    port: 8080,
+    port: body.targetPort,
     data: {
       port_mappings: [{
         lb_port: 443,
         instance_port: 8000
       }],
       aws_resources: {
-        security_group_id: sg_id ?? "",
         launch_template_id: tags.deployment_id,
         autoscaling_group_id: tags.deployment_id.split("-")[0],
       },
+      min_instances: body.minInstances,
+      max_instances: body.maxInstances,
+      public_ip: body.publicIP,
+      load_balancer: body.loadBalancer,
     }
   }).returning().get()
 
