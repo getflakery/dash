@@ -48,7 +48,6 @@ const links = computed(() => [toc?.bottom?.edit && {
     <UDashboardPanel grow>
       <UDashboardPanelContent>
         <UPage>
-          <UPageHeader :title="page.title" :description="page.description" :links="page.links" :headline="headline" />
           <UPageBody prose>
             <ContentRenderer v-if="page.body" :value="page" />
             <hr v-if="surround?.length">
