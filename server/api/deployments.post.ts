@@ -34,7 +34,7 @@ async function createLaunchTemplate(
       LaunchTemplateName: deploymentSlug,
       LaunchTemplateData: {
         KeyName: "flakery",
-        // InstanceType: instanceType as _InstanceType,
+        InstanceType: instanceType as _InstanceType,
         ImageId: imageID,
         MetadataOptions: {
           InstanceMetadataTags: "enabled"
