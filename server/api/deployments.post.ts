@@ -205,12 +205,13 @@ export default eventHandler(async (event) => {
       public_subnet_1: string,
       public_subnet_2: string,
       image_id: string,
+      load_balancer_dns: string,
     }
   } = useRuntimeConfig(event)
 
   const {
     vpc_id,
-    public_subnet_1, public_subnet_2, image_id,
+    public_subnet_1, public_subnet_2, image_id, load_balancer_dns
   } = config.public
 
   const { turso_token, file_encryption_key, github_token } = config
@@ -314,55 +315,12 @@ export default eventHandler(async (event) => {
     new CreateAutoScalingGroupCommand(createAsgParams)
   );
 
-  let sg_id = await createSecurityGroup(tags.deployment_id, ec2Client, vpc_id ?? "")
-
-  await authorizeSecurityGroupIngress(
-    sg_id ?? "",
-    [{
-      lb_port: 443,
-      instance_port: 8000
-    }],
-    ec2Client,
-  )
-
 
   let lbDns = `${name}.${tags.deployment_id.substring(0, 6)}.flakery.xyz`
 
-  let lb_tags = {
-    ...tags,
-    flake_url: "github:getflakery/bootstrap#lb",
-    bootstrap_args: "--lb",
-  }
 
-  let lb_sg_id = await createSecurityGroup(tags.deployment_id + "-lb", ec2Client, vpc_id ?? "")
+    // create a cname for lbdns -> load_balancer_dns
 
-  await authorizeInboundTraffic(lb_sg_id ?? "", ec2Client)
-
-  await createLaunchTemplate(
-    {
-      deploymentSlug: tags.deployment_id + "-lb",
-      tags: lb_tags,
-      ec2ClientNg: ec2Client,
-      instanceType: "t3.small",
-      imageID: image_id,
-      instanceProfile: {
-        Arn: "arn:aws:iam::150301572911:instance-profile/flakery"
-      },
-      securityGroups: [lb_sg_id ?? ""]
-    }
-  )
-
-  await autoscalingClient.send(
-    new CreateAutoScalingGroupCommand({
-      AutoScalingGroupName: tags.deployment_id + "-lb",
-      LaunchTemplate: {
-        LaunchTemplateName: tags.deployment_id + "-lb",
-      },
-      MinSize: 1,
-      MaxSize: 1,
-      VPCZoneIdentifier: public_subnet_1,
-    })
-  );
 
 
 
