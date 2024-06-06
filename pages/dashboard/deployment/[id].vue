@@ -116,11 +116,6 @@ function getItems(deployment: Deployment, refresh: Function) {
                     '') }}
                 </code>
               </pre>
-              <UButton 
-              label="Fullscreen" 
-              @click="isOpen = !isOpen" 
-              class="fullscreen-button"
-              />
 
           </div>
       </UCard>
