@@ -30,16 +30,8 @@ const deployInstance = async (id: string, refresh: () => void) => {
     )
     deploying.value = false
 
-    useToast().add({
-      title: 'Template Deployed',
-      description: `Your template ${props.template.name}  has been deployed as ${inst.name}.`,
-      timeout: 5000,
-      click: () => {
-        window.open(`/dashboard/deployment/${inst.id}`)
-      }
-    })
-
-    await navigateTo(`/dashboard/deployments/${inst.id}`)
+    await navigateTo(`/dashboard/deployment/${inst.id}`)
+    
   } catch (e) {
     console.error(e)
     deploying.value = false
