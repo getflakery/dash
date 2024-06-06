@@ -34,7 +34,7 @@ async function createLaunchTemplate(
       LaunchTemplateName: deploymentSlug,
       LaunchTemplateData: {
         KeyName: "flakery",
-        InstanceType: instanceType as _InstanceType,
+        // InstanceType: instanceType as _InstanceType,
         ImageId: imageID,
         MetadataOptions: {
           InstanceMetadataTags: "enabled"
@@ -53,6 +53,10 @@ async function createLaunchTemplate(
         }],
         IamInstanceProfile: instanceProfile,
         SecurityGroupIds: createLaunchTemplateInput.securityGroups ?? [],
+        // MaxSpotPriceAsPercentageOfOptimalOnDemandPrice: 99,
+        InstanceMarketOptions: {
+          MarketType: "spot",
+        },
       }
     });
 
