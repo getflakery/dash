@@ -66,12 +66,7 @@ function getItems(deployment: Deployment, refresh: Function) {
                     '') }}
                 </code>
               </pre>
-              <UButton 
-              label="Fullscreen" 
-              @click="isOpen = !isOpen" 
-              class="fullscreen-button"
-              />
-
+              <UButton @click="isOpen = !isOpen" icon="i-heroicons-arrows-pointing-out" class="fullscreen-button" />
           </div>
 
         </UDashboardSection>
@@ -88,28 +83,27 @@ function getItems(deployment: Deployment, refresh: Function) {
     <DeploymentsRedeployModal @close="redeployModal = false" :refresh="refresh" :deployment="deployment" />
   </UDashboardModal>
   <UModal v-model="isOpen" fullscreen>
-      <UCard
-        :ui="{
-          base: 'h-full flex flex-col',
-          rounded: '',
-          divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-          body: {
-            base: 'grow'
-          }
-        }"
-      >
-        <template #header>
-          <div class="flex items-center justify-between">
-            <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
-              Logs for {{ deployment?.name }}
-            </h3>
-            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="isOpen = false" />
-          </div>
-        </template>
+    <UCard :ui="{
+      base: 'h-full flex flex-col',
+      rounded: '',
+      divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+      body: {
+        base: 'grow'
+      }
+    }">
+      <template #header>
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+            Logs for {{ deployment?.name }}
+          </h3>
+          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+            @click="isOpen = false" />
+        </div>
+      </template>
 
 
-        <div class="code-block" style="position: relative;">
-            <pre class="custom-scroll">
+      <div class="code-block" style="position: relative;">
+        <pre class="custom-scroll">
                 <code>
                   {{ deployment?.logs?.reduce(
                     (acc, log) => acc + log.exec + '\n',
@@ -117,9 +111,9 @@ function getItems(deployment: Deployment, refresh: Function) {
                 </code>
               </pre>
 
-          </div>
-      </UCard>
-    </UModal>
+      </div>
+    </UCard>
+  </UModal>
 </template>
 
 
