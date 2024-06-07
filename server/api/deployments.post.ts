@@ -387,6 +387,8 @@ export default eventHandler(async (event) => {
 
   if (body.loadBalancer) {
     await authorizeInboundTrafficForPort(sg_id, ec2Client, body.targetPort ?? 8080)
+    await authorizeInboundTrafficForPort(sg_id, ec2Client, 22)
+
   } else {
     await authorizeInboundTrafficForAllPorts(sg_id, ec2Client)
   }
