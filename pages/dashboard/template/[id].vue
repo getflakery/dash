@@ -138,9 +138,8 @@ function getItems(template: Template, refresh: Function | undefined) {
           </UCard>
           <UCard>
             <h3 class="text-lg font-semibold leading-tight">
-              Files: 
+              Files: 🔒
             </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 pt-4">Files are encrypted at rest and in transit</p>
 
             <TemplatesFileForm :templateID="template?.id" />
           </UCard>
