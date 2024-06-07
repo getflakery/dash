@@ -41,26 +41,26 @@ const saveEdit = async function () {
 
 function getItems(template: Template, refresh: Function | undefined) {
 
-return [
-  [{
-    label: 'Deploy',
-    icon: 'i-heroicons-server',
-    click: async () => {
-      deployInstance.value = true
-      templateToDeploy.value = template
+  return [
+    [{
+      label: 'Deploy',
+      icon: 'i-heroicons-server',
+      click: async () => {
+        deployInstance.value = true
+        templateToDeploy.value = template
 
-    }
-  }],
-  [
-    {
-      label: 'Delete',
-      icon: 'i-heroicons-trash-20-solid',
-      labelClass: 'text-red-500 dark:text-red-400',
-      click: () => {
-        templateToDelete.value = template
-        deleteModal.value = true
       }
-    }]]
+    }],
+    [
+      {
+        label: 'Delete',
+        icon: 'i-heroicons-trash-20-solid',
+        labelClass: 'text-red-500 dark:text-red-400',
+        click: () => {
+          templateToDelete.value = template
+          deleteModal.value = true
+        }
+      }]]
 }
 
 </script>
@@ -72,8 +72,8 @@ return [
       <UDashboardNavbar title="Template Details">
         <template #right>
           <UDropdown :items="getItems(template, refresh)" position="bottom-end">
-          <UButton color="white" label="Template Actions" trailing-icon="i-heroicons-chevron-down-20-solid" />
-        </UDropdown>
+            <UButton color="white" label="Template Actions" trailing-icon="i-heroicons-chevron-down-20-solid" />
+          </UDropdown>
         </template>
       </UDashboardNavbar>
       <UDashboardPanelContent class="">
@@ -84,9 +84,9 @@ return [
 
             <div v-if="editMode" class="flex justify-end mb-4">
               <UButton @click="async () => {
-              toggleEditMode()
-              await refresh()
-            }" icon="i-heroicons-x-mark" variant="ghost" class="mb-2 px-4 py-1">Cancel</UButton>
+                toggleEditMode()
+                await refresh()
+              }" icon="i-heroicons-x-mark" variant="ghost" class="mb-2 px-4 py-1">Cancel</UButton>
               <UButton @click="saveEdit" icon="i-heroicons-check" class="mb-2 px-4 py-1">Save</UButton>
             </div>
 
@@ -132,14 +132,16 @@ return [
           </UCard>
           <UCard>
             <h3 class="text-lg font-semibold leading-tight">
-                  Deployments:
-                </h3>
+              Deployments:
+            </h3>
             <DeploymentsList :deployments="template?.deployments" :refresh="refresh" />
           </UCard>
           <UCard>
             <h3 class="text-lg font-semibold leading-tight">
-                  Files:
-                </h3>
+              Files: 
+            </h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 pt-4">Files are encrypted at rest and in transit</p>
+
             <TemplatesFileForm :templateID="template?.id" />
           </UCard>
 
