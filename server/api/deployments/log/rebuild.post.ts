@@ -2,7 +2,7 @@ import { deploymentLogs } from "~/server/database/schema";
 import { v4 as uuidv4 } from 'uuid';
 
 
-
+    
 export default eventHandler(async (event) => {
     // log body
     let body = await readRawBody(event);

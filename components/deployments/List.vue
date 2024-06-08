@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import type { Deployment, Template } from '~/types'
 
-defineProps({
+const props = defineProps({
   deployments: {
     type: Array as PropType<Deployment[]>,
     default: () => []
   },
-  template : {
-    type: Object as PropType<Template>,
-    default: () => {}
-  },
+
   refresh: {
     type: Function,
     default: () => {}
@@ -43,6 +40,13 @@ const deploymentToDelete = ref()
 const deploymentToRedeploy = ref()
 
 
+// for each deployment, get the template
+const templates = await Promise.all(props.deployments.map(async (d) => {
+  const { data: template } = await useFetch<Template>(`/api/template/${d.templateID}`)
+  return template
+}));
+
+
 
 </script>
 
@@ -58,6 +62,7 @@ const deploymentToRedeploy = ref()
           </div>
         </div>
       </NuxtLink>
+
 
 
       <div class="flex items-center gap-3">
