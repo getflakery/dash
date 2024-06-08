@@ -11,12 +11,30 @@ const templates = await Promise.all(deps.value.map(async (d) => {
 }));
 
 const deployments = deps.value.map((d, i) => {
+  const editMode = ref(false);
+
+  const toggleEditMode = () => {
+    editMode.value = !editMode.value;
+  };
+
   return {
     ...d,
-    template: templates[i].value?.name ? templates[i].value?.name: 'Unnamed Template',
-    flakeURL: templates[i].value?.flakeURL
+    template: templates[i].value?.name ? templates[i].value?.name : 'Unnamed Template',
+    flakeURL: templates[i].value?.flakeURL,
+    editMode,
+    toggleEditMode
   }
 })
+
+const getEditMode = (id: string) => {
+  const index = deployments.findIndex(d => d.id === id)
+  return deployments[index].editMode.value
+}
+
+const toggleEditMode = (id: string) => {
+  const index = deployments.findIndex(d => d.id === id)
+  deployments[index].editMode.value = !deployments[index].editMode.value
+}
 
 
 const defaultColumns = [{
@@ -65,6 +83,28 @@ defineShortcuts({
 })
 
 
+const oldName:{
+  [key: string]: string
+} = ref({})
+
+function saveName(id: string) {
+  // Put to /api/deployment/:id with new name in body
+  let d = deployments.find(d => d.id === id)
+
+  fetch(`/api/deployment/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: d?.name
+    })
+  }).then(() => {
+    refresh()
+    toggleEditMode(id)
+  })
+}
+
 </script>
 
 <template>
@@ -74,7 +114,8 @@ defineShortcuts({
         <template #right>
 
 
-          <UButton label="New Deployment" trailing-icon="i-heroicons-plus" color="gray" @click="isNewUserModalOpen = true" />
+          <UButton label="New Deployment" trailing-icon="i-heroicons-plus" color="gray"
+            @click="isNewUserModalOpen = true" />
         </template>
       </UDashboardNavbar>
 
@@ -92,17 +133,40 @@ defineShortcuts({
 
         <!-- Name links to deployment id -->
         <template #name-data="{ row }">
-          <NuxtLink :to="`/dashboard/deployment/${row.id}`">
-            <!-- <span class="text-blue-500 dark:text-blue-400" >{{ row.name }}</span> -->
-            <!-- also underline when hover -->
-            <span class="text-blue-500 dark:text-blue-400 hover:underline" >{{ row.name }}</span>
-          </NuxtLink>
+          <div class="flex items-center justify-between gap-3 min-w-0 max-w-48">
+
+            <NuxtLink v-if="!getEditMode(row.id)" :to="`/dashboard/deployment/${row.id}`">
+
+              <!-- justify between -->
+
+              <span class="text-blue-500 dark:text-blue-400 hover:underline">{{ row.name }}</span>
+
+            </NuxtLink>
+            <UButton v-if="!getEditMode(row.id)" @click="() => {
+                oldName[row.id] = row.name
+               toggleEditMode(row.id)
+            }" icon="i-heroicons-pencil-square"
+              variant="ghost" size="2xs">
+            </UButton>
+            <UInput v-if="getEditMode(row.id)" v-model="row.name"
+              class="flex-grow mt-1 border-gray-300 text-sm font-normal" />
+            <!-- cancel -->
+            <UButton v-if="getEditMode(row.id)" @click="() => {
+              row.name = oldName[row.id]
+              toggleEditMode(row.id)
+            }
+              " icon="i-heroicons-x-mark-20-solid" variant="ghost" size="2xs" />
+            <!-- save -->
+            <UButton v-if="getEditMode(row.id)" @click="() => saveName(row.id)" icon="i-heroicons-check" size="2xs" />
+          </div>
+
         </template>
+
 
         <!-- Template links to template id -->
         <template #template-data="{ row }">
           <NuxtLink :to="`/dashboard/template/${row.templateID}`">
-            <span class="text-blue-500 dark:text-blue-400 hover:underline" >{{ row.template }}</span>
+            <span class="text-blue-500 dark:text-blue-400 hover:underline">{{ row.template }}</span>
           </NuxtLink>
         </template>
 

@@ -42,6 +42,7 @@ function getItems(deployment: Deployment, refresh: Function) {
 
             <NuxtLink :to="`/dashboard/template/${deployment?.templateID}`" class="text-blue-500 dark:text-blue-400">
               <span>{{ template?.name ? template.name : "Unamed Template" }}</span>
+              
             </NuxtLink>
           </div>  
         </UDashboardSection>
