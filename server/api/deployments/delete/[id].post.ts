@@ -33,12 +33,11 @@ export default eventHandler(async (event) => {
   }
 
 
-  const client = useEC2Client()
 
   const autoscalingGroup = instance.data?.aws_resources?.autoscaling_group_id
 
   if (autoscalingGroup) {
-    const client = new AutoScalingClient({ region: 'your-region' }); // Replace 'your-region' with the appropriate AWS region
+    const client = useAutoScalingClient()
     const command = new DeleteAutoScalingGroupCommand({
       AutoScalingGroupName: autoscalingGroup,
       ForceDelete: true

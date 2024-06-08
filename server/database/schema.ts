@@ -39,7 +39,7 @@ export const deployments = sqliteTable('deployments', {
   host: text('host'),
   port: integer('port'),
   data: text('data', { mode: 'json' }).$type<{ 
-    port_mappings: {
+  port_mappings: {
       lb_port: number,
       instance_port: number,
     }[],
