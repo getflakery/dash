@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type {  Deployment, Template } from '~/types'
+import type {  Deployment } from '~/types'
 
 const { data: deployments, refresh } = await useFetch<Deployment[]>('/api/deployments', { default: () => [] })
 const loading = ref(false)
-const { data: template } = await useFetch<Template>(`/api/template/${deployment.value?.templateID}`)
 
 const q = ref('')
 const isInviteModalOpen = ref(false)
@@ -17,7 +16,7 @@ const isInviteModalOpen = ref(false)
       <UDashboardNavbar title="Deployments">
       </UDashboardNavbar>
       <UDashboardPanelContent class="pb-24">
-        <UDashboardSection title="Manage Deployments" description="Create, manage and view details for your deployment."
+        <UDashboardSection title="Manage Deployments" description="Deployments are a single running virtual machine with your template applied. Create, manage and view logs for your deployment."
           orientation="horizontal" :ui="{ container: 'lg:sticky top-2' }">
         </UDashboardSection>
         <UCard :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }" class="min-w-0">
@@ -29,7 +28,7 @@ const isInviteModalOpen = ref(false)
             </div>
           </template>
 
-          <DeploymentsList :template="template" :deployments="deployments" :refresh="refresh" />
+          <DeploymentsList :deployments="deployments" :refresh="refresh" />
         </UCard>
         <UDashboardModal v-model="isInviteModalOpen" title="Create Deployment"
           :ui="{ width: 'sm:max-w-md' }">

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { Deployment, Template } from '~/types'
+import type { Deployment, File } from '~/types'
+import { v4 as uuidv4 } from 'uuid';
 
 const route = useRoute()
 
 const { data: deployment, refresh } = await useFetch<Deployment>(`/api/deployment/${route.params.id}`)
 setInterval(refresh, 5000)
-const { data: template } = await useFetch<Template>(`/api/template/${deployment.value?.templateID}`)
 const deleteModal = ref(false)
 const redeployModal = ref(false)
 
@@ -37,16 +37,6 @@ function getItems(deployment: Deployment, refresh: Function) {
         </template>
       </UDashboardNavbar>
       <UDashboardPanelContent>
-        <UDashboardSection title="Template" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
-          <div class="flex items-center gap-2">
-            <span>{{ template?.name }}</span>
-            <span>{{ template?.flakeURL }}</span>
-
-            <NuxtLink :to="`/dashboard/template/${deployment?.templateID}`" class="text-blue-500 dark:text-blue-400">
-              <UIcon name="i-heroicons-arrow-right" />
-            </NuxtLink>
-          </div>  
-        </UDashboardSection>
         <UDashboardSection title="URL" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
           <!-- display deployment.host as a link -->
           <NuxtLink :to="`https://${deployment?.host}`" class="text-blue-500 dark:text-blue-400" target="_blank">
