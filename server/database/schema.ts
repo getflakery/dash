@@ -38,12 +38,12 @@ export const deployments = sqliteTable('deployments', {
   createdAt: integer('created_at').notNull(),
   host: text('host'),
   port: integer('port'),
-  data: text('data', { mode: 'json' }).$type<{ 
-  port_mappings: {
+  data: text('data', { mode: 'json' }).$type<{
+    port_mappings: {
       lb_port: number,
       instance_port: number,
     }[],
-    aws_resources: { 
+    aws_resources: {
       launch_template_id: string,
       autoscaling_group_id: string,
     },
@@ -51,7 +51,7 @@ export const deployments = sqliteTable('deployments', {
     max_instances: number,
     public_ip: boolean,
     load_balancer: boolean,
-   }>(),
+  }>(),
 });
 
 export const target = sqliteTable('target', {
@@ -69,5 +69,9 @@ export const target = sqliteTable('target', {
 export const deploymentLogs = sqliteTable('deployment_logs', {
   id: text('id').primaryKey(),
   deploymentID: text('deployment_id').notNull().references(() => deployments.id, { onDelete: 'cascade' }).notNull(),
-  logs: text('logs', { mode: 'json' }).$type<{ date: number, exec: string }[]>(),
+  logs: text('logs', { mode: 'json' }).$type<{
+    date: number,
+    exec: string,
+    host: string,
+  }[]>(),
 });
