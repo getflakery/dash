@@ -77,8 +77,11 @@ function getItems(deployment: Deployment, refresh: Function) {
           <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
             Logs for {{ deployment?.name }}
           </h3>
-          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
-            @click="isOpen = false" />
+          <div class="flex items-center gap-2">
+            <UButton type="submit" label="Refresh" :onclick="refresh" icon="i-heroicons-arrow-path" />
+            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+              @click="isOpen = false" />
+              </div>  
         </div>
       </template>
       <div class="code-block" style="position: relative;">
@@ -102,12 +105,15 @@ function getItems(deployment: Deployment, refresh: Function) {
   font-family: 'Fira Code', monospace;
   overflow-x: scroll;
   position: relative;
-  color: #333; /* Default text color */
+  color: #333;
+  /* Default text color */
 }
 
 .dark .code-block {
-  background-color: #2d2d2d; /* Dark mode background color */
-  color: #ddd; /* Dark mode text color */
+  background-color: #2d2d2d;
+  /* Dark mode background color */
+  color: #ddd;
+  /* Dark mode text color */
 }
 
 .custom-scroll::-webkit-scrollbar {
@@ -127,5 +133,4 @@ function getItems(deployment: Deployment, refresh: Function) {
   position: absolute;
   top: 10px;
   right: 10px;
-}
-</style>
+}</style>
