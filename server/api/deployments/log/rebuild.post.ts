@@ -13,6 +13,7 @@ export default eventHandler(async (event) => {
         [key: string]: {
             date: number;
             exec: string;
+            host: string;
         }[];
     } = logsBody.reduce((acc: any, log: any) => {
         if (acc[log.deployment_id] === undefined) {
@@ -21,6 +22,7 @@ export default eventHandler(async (event) => {
         acc[log.deployment_id].push({
             date: new Date(log.timestamp),
             exec: log.message,
+            host: log.host,
         });
         return acc;
     }, {});
