@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import type { Deployment } from '~/types'
+import type { Deployment, Template } from '~/types'
 
 defineProps({
   deployments: {
     type: Array as PropType<Deployment[]>,
     default: () => []
+  },
+  template : {
+    type: Object as PropType<Template>,
+    default: () => {}
   },
   refresh: {
     type: Function,
