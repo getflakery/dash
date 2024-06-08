@@ -69,16 +69,6 @@ const query = computed(() => ({ q: q.value, statuses: selectedStatuses.value, lo
 
 
 
-function onSelect(row: Deployment) {
-  sleep(100)
-  const index = selected.value.findIndex(item => item.id === row.id)
-  if (index === -1) {
-    selected.value.push(row)
-  } else {
-    selected.value.splice(index, 1)
-  }
-}
-
 defineShortcuts({
   '/': () => {
     input.value?.input?.focus()

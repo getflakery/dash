@@ -4,12 +4,27 @@ import type { Deployment, Template } from '~/types'
 const route = useRoute()
 
 const { data: deployment, refresh } = await useFetch<Deployment>(`/api/deployment/${route.params.id}`)
-setInterval(refresh, 5000)
+
+onNuxtReady(() => {
+  setInterval(refresh, 5000)
+});
 const { data: template } = await useFetch<Template>(`/api/template/${deployment.value?.templateID}`)
 const deleteModal = ref(false)
 const redeployModal = ref(false)
 
 const isOpen = ref(false)
+
+const hosts = deployment.value?.logs?.reduce((acc, log) => {
+  acc.add(log.host)
+  return acc
+}, new Set<string>())
+
+const selectedHosts = ref<string[]>([Array.from(hosts ?? [])[0]])
+const getLogs = (hsts: string[]) => deployment.value?.logs?.
+  filter(log => hsts.includes(log.host)).
+  reduce((acc, log) => acc + log.exec + '\n', '')
+
+
 
 function getItems(deployment: Deployment, refresh: Function) {
   return [
@@ -59,13 +74,22 @@ function getItems(deployment: Deployment, refresh: Function) {
 
         <!-- Logs: -->
         <UDashboardSection title="Logs" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
-          <div class="code-block" style="position: relative; height: 300px;">
+          <USelectMenu
+            v-model="selectedHosts"
+            icon="i-heroicons-cpu-chip"
+            placeholder="hosts"
+            multiple
+            :options="Array.from(hosts ?? [])"
+            :ui-menu="{ option: { base: 'capitalize' } }"
+
+          />
+
+          <div class="code-block" style="height: 300px;">
             <pre class="custom-scroll">
               <code>
-                {{ deployment?.logs?.reduce((acc, log) => acc + log.exec + '\n', '') }}
+                {{ getLogs(selectedHosts) }}  
               </code>
             </pre>
-            <UButton @click="isOpen = !isOpen" icon="i-heroicons-arrows-pointing-out" class="fullscreen-button" />
           </div>
         </UDashboardSection>
       </UDashboardPanelContent>
@@ -98,10 +122,11 @@ function getItems(deployment: Deployment, refresh: Function) {
               </div>  
         </div>
       </template>
+
       <div class="code-block" style="position: relative;">
         <pre class="custom-scroll">
           <code>
-            {{ deployment?.logs?.reduce((acc, log) => acc + log.exec + '\n', '') }}
+            {{ getLogs(selectedHosts) }}
           </code>
         </pre>
       </div>

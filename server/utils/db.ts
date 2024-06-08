@@ -13,17 +13,18 @@ export const useDB = () => {
   const config = useRuntimeConfig()
 
   if (!_db) {
-    if (process.dev) {
-      // local sqlite in development
-      const sqlite = new Database(join(process.cwd(), './db.sqlite'))
-      _db = drizzle(sqlite)
-    } else {
-      // Turso in production
+
+    if (config.db_url && config.turso_token) {
       _db = drizzleLibSQL(createLibSQLClient({
         url: config.db_url,
         authToken: config.turso_token,
       }))
-    }
+    } else {
+      // local sqlite in development
+      const sqlite = new Database(join(process.cwd(), './db.sqlite'))
+      _db = drizzle(sqlite)
+    } 
+
   }
   return _db
 }

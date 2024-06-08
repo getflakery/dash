@@ -15,7 +15,8 @@ export interface Deployment {
   name?: string
   logs: {
     date: number,
-    exec: string
+    exec: string,
+    host: string,
   }[],
   network: Network
   host: string
