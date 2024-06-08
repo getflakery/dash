@@ -1,11 +1,10 @@
 import { useValidatedParams, useValidatedBody, z, } from 'h3-zod'
-import { templateFiles as schemaTemplateFiles, files, deployments} from '~/server/database/schema'
+import { templateFiles as schemaTemplateFiles, files, deployments } from '~/server/database/schema'
 import { eq, and } from 'drizzle-orm'
 import { useEC2Client } from '~/server/utils/aws'
-import {
-  TerminateInstancesCommand,
-  } from "@aws-sdk/client-ec2";
-  
+import { AutoScalingClient, DeleteAutoScalingGroupCommand } from '@aws-sdk/client-auto-scaling';
+
+
 export default eventHandler(async (event) => {
   const { id } = await useValidatedParams(event, {
     id: z.string().uuid(),
@@ -22,27 +21,6 @@ export default eventHandler(async (event) => {
   const userID = session.user.id
   const db = useDB()
 
-  // if (deleteFiles) {
-  //   // delete all files associated with the template through templateFiles
-  //   // if the file has no other associations 
-  //   // then delete the file from the files table
-  //   const associatedFiles = await db.select().from(schemaTemplateFiles).where(eq(schemaTemplateFiles.templateId, id)).all()
-  //   associatedFiles?.forEach(async (file) => {
-  //     const otherAssociations = await db.select().from(schemaTemplateFiles).where(and(eq(schemaTemplateFiles.fileId, file.fileId), eq(schemaTemplateFiles.templateId, id))).get()
-  //     if (otherAssociations !== undefined) {
-  //       await db.delete(schemaTemplateFiles).where(eq(schemaTemplateFiles.fileId, file.fileId)).execute()
-  //       await db.delete(files).where(eq(files.id, file.fileId)).execute()
-  //     } else {
-  //       await db.delete(schemaTemplateFiles).where(and(eq(schemaTemplateFiles.fileId, file.fileId), eq(schemaTemplateFiles.templateId, id))).execute()
-  //     }
-  //   })
-
-
-  // } else {
-  //   // remove the association from templateFiles but do not delete the files
-  //   await db.delete(schemaTemplateFiles).where(eq(schemaTemplateFiles.templateId, id)).execute()
-  // }
-
   let instance = await db.select().from(deployments).where(
     and(
       eq(deployments.id, id),
@@ -57,16 +35,29 @@ export default eventHandler(async (event) => {
 
   const client = useEC2Client()
 
+  const autoscalingGroup = instance.data?.aws_resources?.autoscaling_group_id
 
-  try {
-    await client.send(
-      new TerminateInstancesCommand({
-        InstanceIds: [deployments.awsInstanceID],
-      })
-    )
-  } catch (err) {
-    console.error(err);
+  if (autoscalingGroup) {
+    const client = new AutoScalingClient({ region: 'your-region' }); // Replace 'your-region' with the appropriate AWS region
+    const command = new DeleteAutoScalingGroupCommand({
+      AutoScalingGroupName: autoscalingGroup,
+      ForceDelete: true
+    });
+
+    try {
+      await client.send(command);
+      console.log(`Auto Scaling group ${autoscalingGroup} deleted successfully`);
+    } catch (error) {
+      console.error(`Failed to delete Auto Scaling group ${autoscalingGroup}:`, error);
+      throw new Error('Failed to delete Auto Scaling group');
+    }
+
   }
+
+  // todo delete security group
+  // todo delete launch template
+
+
 
   return db.delete(deployments).where(eq(deployments.id, id))
 
