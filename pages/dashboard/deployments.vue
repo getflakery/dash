@@ -47,6 +47,9 @@ const defaultColumns = [{
   key: 'flakeURL',
   label: 'Flake URL',
 
+}, {
+  key: 'host',
+  label: 'URL',
 }]
 
 const q = ref('')
@@ -159,6 +162,7 @@ function saveName(id: string) {
             <!-- save -->
             <UButton v-if="getEditMode(row.id)" @click="() => saveName(row.id)" icon="i-heroicons-check" size="2xs" />
           </div>
+          
 
         </template>
 
@@ -169,6 +173,14 @@ function saveName(id: string) {
             <span class="text-blue-500 dark:text-blue-400 hover:underline">{{ row.template }}</span>
           </NuxtLink>
         </template>
+
+        <!-- URL links to self -->
+        <template #host-data="{ row }">
+          <NuxtLink :to="`https://${row.host}`" class="text-blue-500 dark:text-blue-400 hover:underline" target="_blank">
+            {{ row.host }}
+          </NuxtLink>
+        </template>
+     
 
 
       </UTable>
