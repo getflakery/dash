@@ -34,24 +34,19 @@ export default eventHandler(async (event) => {
 
 
 
-  const autoscalingGroup = instance.data?.aws_resources?.autoscaling_group_id
+  const client = useAutoScalingClient()
+  const command = new DeleteAutoScalingGroupCommand({
+    AutoScalingGroupName: instance.id,
+    ForceDelete: true
+  });
 
-  if (autoscalingGroup) {
-    const client = useAutoScalingClient()
-    const command = new DeleteAutoScalingGroupCommand({
-      AutoScalingGroupName: autoscalingGroup,
-      ForceDelete: true
-    });
+  try {
+    const result = await client.send(command);
+    console.log(result);
+  } catch (err) {
+    console.log(err);
 
-    try {
-      await client.send(command);
-      console.log(`Auto Scaling group ${autoscalingGroup} deleted successfully`);
-    } catch (error) {
-      console.error(`Failed to delete Auto Scaling group ${autoscalingGroup}:`, error);
-      throw new Error('Failed to delete Auto Scaling group');
-    }
-
-  }
+}
 
   // todo delete security group
   // todo delete launch template
