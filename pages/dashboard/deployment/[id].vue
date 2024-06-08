@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const route = useRoute()
 
 const { data: deployment, refresh } = await useFetch<Deployment>(`/api/deployment/${route.params.id}`)
+setInterval(refresh, 5000)
 const deleteModal = ref(false)
 const redeployModal = ref(false)
 
