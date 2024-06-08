@@ -22,15 +22,12 @@ const deployments = deps.value.map((d, i) => {
 const defaultColumns = [{
   key: 'name',
   label: 'Name',
-  sortable: true
 }, {
   key: 'template',
   label: 'Template',
-  sortable: true
 }, {
   key: 'flakeURL',
   label: 'Flake URL',
-  sortable: true
 
 }]
 
