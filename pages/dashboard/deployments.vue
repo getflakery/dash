@@ -131,8 +131,8 @@ function saveName(id: string) {
 
       </UDashboardModal>
 
-      <UTable v-model="selected" v-model:sort="sort" :rows="deployments" :columns="columns" :loading="pending"
-        sort-mode="manual" class="w-full" :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }" @select="onSelect">
+      <UTable :rows="deployments" :columns="columns" :loading="pending"
+        sort-mode="manual" class="w-full" :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }">
 
         <!-- Name links to deployment id -->
         <template #name-data="{ row }">
