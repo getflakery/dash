@@ -39,13 +39,15 @@ function getItems(deployment: Deployment, refresh: Function) {
       <UDashboardPanelContent>
         <UDashboardSection title="Template" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
           <div class="flex items-center gap-2">
-            <span>{{ template?.name }}</span>
-            <span>{{ template?.flakeURL }}</span>
 
             <NuxtLink :to="`/dashboard/template/${deployment?.templateID}`" class="text-blue-500 dark:text-blue-400">
-              <UIcon name="i-heroicons-arrow-right" />
+              <span>{{ template?.name ? template.name : "Unamed Template" }}</span>
             </NuxtLink>
           </div>  
+        </UDashboardSection>
+        <!-- flakeURL -->
+        <UDashboardSection title="Flake URL" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
+          <span>{{ template?.flakeURL }}</span>
         </UDashboardSection>
         <UDashboardSection title="URL" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
           <!-- display deployment.host as a link -->
