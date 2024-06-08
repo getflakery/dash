@@ -107,8 +107,7 @@ function saveName(id: string) {
         <template #right>
 
 
-          <UButton label="New Deployment" trailing-icon="i-heroicons-plus" color="gray"
-            @click="isNewUserModalOpen = true" />
+
         </template>
       </UDashboardNavbar>
 
