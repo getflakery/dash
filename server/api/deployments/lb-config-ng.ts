@@ -61,8 +61,13 @@ export default eventHandler(async (event) => {
         return acc;
     }, {});
 
-    routers = await deps.reduce<Promise<routers>>(async (acc, dep) => { 
-        if (dep.production) {
+    let prodDeployments = await db.select().from(deployments).where(
+        eq(deployments.production, 1)
+    ).execute();
+
+    if (prodDeployments) {
+
+        routers = await prodDeployments.reduce<Promise<routers>>(async (acc, dep) => {
             let template = await db.select().from(templates).where(
                 eq(deployments.id, dep.templateID)
             ).get();
@@ -80,10 +85,11 @@ export default eventHandler(async (event) => {
                     }
                 }
             }
+
         }
-        return acc;
+            , Promise.resolve(routers));
+
     }
-    , Promise.resolve(routers));
 
 
     let services = deps.reduce<services>((acc, dep) => {
