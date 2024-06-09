@@ -1,0 +1,1 @@
+ALTER TABLE deployments ADD `production` integer NOT NULL;

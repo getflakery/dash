@@ -1,3 +1,4 @@
+import { int } from 'drizzle-orm/mysql-core';
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
 // Template table definition
@@ -52,6 +53,7 @@ export const deployments = sqliteTable('deployments', {
     public_ip: boolean,
     load_balancer: boolean,
   }>(),
+  production: integer('production').notNull(),
 });
 
 export const target = sqliteTable('target', {
