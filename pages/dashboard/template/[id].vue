@@ -16,6 +16,7 @@ const toggleEditMode = () => {
 
 const name = ref(template.value?.name)
 const flakeURL = ref(template.value?.flakeURL)
+const host = ref(template.value?.host)
 
 const deleteModal = ref(false)
 const templateToDelete = ref()
@@ -31,7 +32,8 @@ const saveEdit = async function () {
     },
     body: JSON.stringify({
       name: name.value,
-      flakeURL: flakeURL.value
+      flakeURL: flakeURL.value,
+      host: host.value
     })
   });
   // todo toast
@@ -124,6 +126,20 @@ function getItems(template: Template, refresh: Function | undefined) {
                 {{ template?.flakeURL }}
 
               </div>
+
+              <!-- host -->
+
+              <div class="flex items-center">
+                <h3 class="text-lg font-semibold leading-tight">
+                  Host:
+                </h3>
+                <UTextarea v-if="editMode" :rows="1" v-model="host"
+                  class="flex-grow mt-1 border-gray-300 text-sm font-normal" />
+                <div v-else class="flex-grow mt-1 rounded-md border-gray-300 shadow-sm text-sm font-normal p-2">
+                  {{ template?.host }}
+                </div>
+              </div>
+
 
 
 

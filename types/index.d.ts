@@ -7,6 +7,7 @@ export interface Template {
   name?: string
   flakeURL: string
   deployments: Deployment[]
+  host: string
 };
 
 export interface Deployment {
