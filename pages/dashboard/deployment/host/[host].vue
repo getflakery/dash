@@ -3,10 +3,13 @@ import type { Deployment, Template } from '~/types'
 
 const route = useRoute()
 
-const { data: deployment, refresh } = await useFetch<Deployment>(`/api/deployment/${route.params.id}`)
+const host = JSON.parse(atob(route.params.host))
 
+const { data: deployment, refresh } = await useFetch<Deployment>(`/api/deployment/${host.deployment}`)
 
-const { data: template } = await useFetch<Template>(`/api/template/${deployment.value?.templateID}`)
+onNuxtReady(() => {
+  setInterval(refresh, 5000)
+});
 const deleteModal = ref(false)
 const redeployModal = ref(false)
 
@@ -38,55 +41,51 @@ function getItems(deployment: Deployment, refresh: Function) {
 }
 
 function select(host: { host: string }) {
-  let base64Encoded = btoa(JSON.stringify({
-    deployment: deployment.value.id,
-    host: host.host
-  }))
-  navigateTo(`/dashboard/deployment/host/${base64Encoded}`)
+  let base64Encoded = btoa(host.host)
+  navigateTo(`/dashboard/deployment/${deployment.value?.id}/host/${base64Encoded}`)
 }
 </script>
 
 <template>
   <UDashboardPage>
     <UDashboardPanel grow>
-      <UDashboardNavbar :title="`Deployment Details for ${deployment?.name}`">
+      <UDashboardNavbar :title="` Details for Host ${host.host}`">
         <template #right>
           <UButton type="submit" label="Refresh" :onclick="refresh" icon="i-heroicons-arrow-path" />
-          <UDropdown :items="getItems(i, refresh)" position="bottom-end">
-            <UButton color="white" label="Actions" trailing-icon="i-heroicons-chevron-down-20-solid" />
-          </UDropdown>
         </template>
       </UDashboardNavbar>
       <UDashboardPanelContent>
-        <UDashboardSection title="Template" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
-          <div class="flex items-center gap-2">
 
-            <NuxtLink :to="`/dashboard/template/${deployment?.templateID}`" class="text-blue-500 dark:text-blue-400">
-              <span>{{ template?.name ? template.name : "Unamed Template" }}</span>
 
-            </NuxtLink>
-          </div>
-        </UDashboardSection>
+        <!-- <UDashboardSection title="Host" :description="host.host" />
+        <UDashboardSection title="Deployment" >
+            <template #description>
+              <NuxtLink :to="`/dashboard/deployment/${deployment?.id}`" class="">
+                {{ deployment?.name }}
+              </NuxtLink>
+            </template>
+            </UDashboardSection> -->
+
+            <UDashboardSection title="Host" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
+                <span>{{ host.host }}</span>
+                </UDashboardSection>
+                <UDashboardSection title="Deployment" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
+                    <NuxtLink :to="`/dashboard/deployment/${deployment?.id}`" class="text-blue-500 dark:text-blue-400">
+                      <span>{{ deployment?.name }}</span>
+                    </NuxtLink>
+                  </UDashboardSection>
+
+
+
         <!-- flakeURL -->
-        <UDashboardSection title="Flake URL" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
-          <span>{{ template?.flakeURL }}</span>
-        </UDashboardSection>
-        <UDashboardSection title="URL" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
-          <!-- display deployment.host as a link -->
-          <NuxtLink :to="`https://${deployment?.host}`" class="text-blue-500 dark:text-blue-400" target="_blank">
-            {{ deployment?.host }}
-          </NuxtLink>
-        </UDashboardSection>
-
-        <UDashboardSection title="Instances" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }" />
-
-        <UTable :rows="Array.from(hosts ?? []).map(host => ({ host: host }))" @select="select" />
-
-
-
-
-
-        <!-- Logs: -->
+        <UDashboardSection title="Logs" />
+        <div class="code-block" style="position: relative;">
+        <pre class="custom-scroll">
+          <code>
+            {{ getLogs([host.host]) }}
+          </code>
+        </pre>
+      </div>
 
       </UDashboardPanelContent>
     </UDashboardPanel>
@@ -119,13 +118,7 @@ function select(host: { host: string }) {
         </div>
       </template>
 
-      <div class="code-block" style="position: relative;">
-        <pre class="custom-scroll">
-          <code>
-            {{ getLogs(selectedHosts) }}
-          </code>
-        </pre>
-      </div>
+
     </UCard>
   </UModal>
 </template>
