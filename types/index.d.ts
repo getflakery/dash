@@ -20,7 +20,8 @@ export interface Deployment {
     host: string,
   }[],
   network: Network
-  host: string
+  host: string,
+  production: boolean,
 };
 
 export interface File {

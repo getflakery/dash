@@ -10,17 +10,28 @@ export default eventHandler(async (event) => {
 
     const {
         name,
+        production,
     } = await useValidatedBody(event, {
         name: z.string(),
+        production: z.boolean().optional(),
     })
     const db = useDB()
     const session = await requireUserSession(event)
 
-
-
-    return await db.update(deployments).set({
+    let update:{
+        name: string
+        production?: number
+    } = {
         name: name,
-    }).where(
+    
+    }
+
+    if (production !== undefined) {
+        update["production"] = production ? 1 : 0
+    }
+
+
+    return await db.update(deployments).set(update).where(
         eq(deployments.id, id)
     ).returning().get()
 

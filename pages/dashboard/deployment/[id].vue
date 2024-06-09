@@ -29,6 +29,24 @@ const getLogs = (hsts: string[]) => deployment.value?.logs?.
 function getItems(deployment: Deployment, refresh: Function) {
   return [
     [{
+      label: 'Promote to Production',
+      icon: 'i-heroicons-paper-airplane',
+      click: async () => {
+        await fetch(`/api/deployment/${deployment.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: deployment.name,
+            production: true
+          })
+        })
+        refresh()
+      }
+    },
+      
+    {
       label: 'Delete',
       icon: 'i-heroicons-trash-20-solid',
       labelClass: 'text-red-500 dark:text-red-400',
@@ -54,7 +72,7 @@ function select(host: { host: string }) {
       <UDashboardNavbar :title="`Deployment Details for ${deployment?.name}`">
         <template #right>
           <UButton type="submit" label="Refresh" :onclick="refresh" icon="i-heroicons-arrow-path" />
-          <UDropdown :items="getItems(i, refresh)" position="bottom-end">
+          <UDropdown :items="getItems(deployment, refresh)" position="bottom-end">
             <UButton color="white" label="Actions" trailing-icon="i-heroicons-chevron-down-20-solid" />
           </UDropdown>
         </template>
@@ -78,6 +96,11 @@ function select(host: { host: string }) {
           <NuxtLink :to="`https://${deployment?.host}`" class="text-blue-500 dark:text-blue-400" target="_blank">
             {{ deployment?.host }}
           </NuxtLink>
+        </UDashboardSection>
+
+        <!-- is production? -->
+        <UDashboardSection title="Production" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }">
+          <span>{{ deployment?.production ? 'Yes' : 'No' }}</span>
         </UDashboardSection>
 
         <UDashboardSection title="Instances" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }" />
