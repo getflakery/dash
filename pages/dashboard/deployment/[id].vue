@@ -4,7 +4,9 @@ import type { Deployment, Template } from '~/types'
 const route = useRoute()
 
 const { data: deployment, refresh } = await useFetch<Deployment>(`/api/deployment/${route.params.id}`)
-
+onNuxtReady(() => {
+  setInterval(refresh, 5000)
+});
 
 const { data: template } = await useFetch<Template>(`/api/template/${deployment.value?.templateID}`)
 const deleteModal = ref(false)
