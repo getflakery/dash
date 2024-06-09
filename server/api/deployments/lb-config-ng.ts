@@ -65,11 +65,13 @@ export default eventHandler(async (event) => {
         eq(deployments.production, 1)
     ).execute();
 
+    console.log(prodDeployments);
+
     if (prodDeployments) {
 
         routers = await prodDeployments.reduce<Promise<routers>>(async (acc, dep) => {
             let template = await db.select().from(templates).where(
-                eq(deployments.id, dep.templateID)
+                eq(templates.id, dep.templateID)
             ).get();
             if (!template) {
                 return acc;
