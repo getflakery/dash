@@ -7,7 +7,7 @@ export const templates = sqliteTable('templates', {
   flakeURL: text('flake_url').notNull(),
   awsInstanceType: text('aws_instance_type'),
   userID: text('user_id').notNull(),
-
+  host: text('host'),
 });
 
 // File table definition
