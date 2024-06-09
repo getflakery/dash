@@ -70,7 +70,7 @@ export default eventHandler(async (event) => {
                 return acc;
             }
             return {
-                ...await acc,
+                ...await acc, // todo unnecessary copy
                 [template.id]: {
                     entryPoints: ["websecure"],
                     rule: `Host(\`${template.host}.flakery.xyz\`)`,
