@@ -379,7 +379,7 @@ export default eventHandler(async (event) => {
   }
 
   let ec2Client = useEC2Client()
-\
+
   let sg_id = await createSecurityGroup(tags.deployment_id, ec2Client, vpc_id ?? "")
 
   if (sg_id == null || sg_id == undefined) {
