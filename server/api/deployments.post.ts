@@ -312,6 +312,7 @@ export default eventHandler(async (event) => {
     minInstances: z.number(),
     maxInstances: z.number(),
     targetPort: z.number().optional(),
+    production: z.boolean().optional().default(false),
   })
   let templateID = body.templateID
 
@@ -378,7 +379,7 @@ export default eventHandler(async (event) => {
   }
 
   let ec2Client = useEC2Client()
-
+\
   let sg_id = await createSecurityGroup(tags.deployment_id, ec2Client, vpc_id ?? "")
 
   if (sg_id == null || sg_id == undefined) {
@@ -459,7 +460,8 @@ export default eventHandler(async (event) => {
       max_instances: body.maxInstances,
       public_ip: body.publicIP,
       load_balancer: body.loadBalancer,
-    }
+    },
+    production: body.production ? 1 : 0,
   }).returning().get()
 
 
