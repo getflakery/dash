@@ -7,7 +7,7 @@ export const templates = sqliteTable('templates', {
   flakeURL: text('flake_url').notNull(),
   awsInstanceType: text('aws_instance_type'),
   userID: text('user_id').notNull(),
-  host: text('host'),
+  host: text('host').unique(),
 });
 
 // File table definition
@@ -59,6 +59,7 @@ export const target = sqliteTable('target', {
   deploymentID: text('deployment_id').notNull().references(() => deployments.id, { onDelete: 'cascade' }).notNull(),
   host: text('host').notNull(),
 });
+
 
 // { date: 1716184200.938395,
 //   exec:

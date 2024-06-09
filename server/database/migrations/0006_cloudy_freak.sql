@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `templates_host_unique` ON `templates` (`host`);

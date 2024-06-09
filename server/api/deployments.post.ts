@@ -12,7 +12,7 @@ import petname from 'node-petname'
 import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client, _InstanceType, type LaunchTemplateIamInstanceProfileSpecificationRequest } from "@aws-sdk/client-ec2";
 import { CreateAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
 
-import { Route53Client, ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
+import {  ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
 
 async function createCNAMERecord(domainName, targetDNS, hostedZoneId, route53Client) {
   const params = {
