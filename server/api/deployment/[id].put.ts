@@ -18,16 +18,32 @@ export default eventHandler(async (event) => {
     const db = useDB()
     const session = await requireUserSession(event)
 
-    let update:{
+    let update: {
         name: string
         production?: number
     } = {
         name: name,
-    
+
     }
 
     if (production !== undefined) {
-        update["production"] = production ? 1 : 0
+        if (production) {
+            update["production"] = 1
+            // find current production deployment and set it to false
+            let currentProduction = await db.select().from(deployments).where(
+                and(
+                    eq(deployments.userID, session.user.id),
+                    eq(deployments.production, 1)
+                )
+            ).get()
+            if (currentProduction) {
+                await db.update(deployments).set({ production: 0 }).where(
+                    eq(deployments.id, currentProduction.id)
+                ).returning().get()
+            }
+        } else {
+            update["production"] = 0
+        }
     }
 
 
