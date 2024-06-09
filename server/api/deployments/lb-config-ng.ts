@@ -1,5 +1,5 @@
-import { deployments, target } from "~/server/database/schema";
-import { inArray } from 'drizzle-orm'
+import { deployments, target, templates } from "~/server/database/schema";
+import { inArray, eq } from 'drizzle-orm'
 
 interface routers {
     [key: string]: {
@@ -60,6 +60,31 @@ export default eventHandler(async (event) => {
         }
         return acc;
     }, {});
+
+    routers = await deps.reduce<Promise<routers>>(async (acc, dep) => { 
+        if (dep.production) {
+            let template = await db.select().from(templates).where(
+                eq(deployments.id, dep.templateID)
+            ).get();
+            if (!template) {
+                return acc;
+            }
+            return {
+                ...await acc,
+                [template.id]: {
+                    entryPoints: ["websecure"],
+                    rule: `Host(\`${template.host}.flakery.xyz\`)`,
+                    service: dep.id,
+                    tls: {
+                        certResolver: "letsencrypt"
+                    }
+                }
+            }
+        }
+        return acc;
+    }
+    , Promise.resolve(routers));
+
 
     let services = deps.reduce<services>((acc, dep) => {
         let targets = targetsByDeployment[dep.id].map(t => t.host).map(h => `${h}:${dep.port}`).map(
