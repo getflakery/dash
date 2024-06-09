@@ -133,12 +133,13 @@ function getItems(template: Template, refresh: Function | undefined) {
                 <h3 class="text-lg font-semibold leading-tight">
                   Host:
                 </h3>
+              </div>
+
                 <UTextarea v-if="editMode" :rows="1" v-model="host"
                   class="flex-grow mt-1 border-gray-300 text-sm font-normal" />
                 <div v-else class="flex-grow mt-1 rounded-md border-gray-300 shadow-sm text-sm font-normal p-2">
-                  {{ template?.host }}
+                  {{ template?.host }}.flakery.xyz
                 </div>
-              </div>
 
 
 
