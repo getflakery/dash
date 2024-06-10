@@ -1,0 +1,1 @@
+ALTER TABLE target ADD `completed` integer DEFAULT 0 NOT NULL;

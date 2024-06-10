@@ -1,0 +1,1 @@
+ALTER TABLE target ADD `exit_code` integer;

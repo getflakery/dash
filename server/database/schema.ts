@@ -54,12 +54,16 @@ export const deployments = sqliteTable('deployments', {
     load_balancer: boolean,
   }>(),
   production: integer('production').notNull(),
+  promote_to_production: integer('promote_to_production').notNull().default(0),
+  state: text('state').notNull().default('waiting for instances to come online'),
 });
 
 export const target = sqliteTable('target', {
   id: text('id').primaryKey(),
   deploymentID: text('deployment_id').notNull().references(() => deployments.id, { onDelete: 'cascade' }).notNull(),
   host: text('host').notNull(),
+  completed: integer('completed').notNull().default(0),
+  exitCode: integer('exit_code'),
 });
 
 
