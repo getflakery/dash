@@ -79,7 +79,7 @@ async function createLaunchTemplate(
         BlockDeviceMappings: [{
           DeviceName: "/dev/xvda",
           Ebs: {
-            VolumeSize: 80,
+            VolumeSize: 256,
             VolumeType: "gp2",
             DeleteOnTermination: true
           }
