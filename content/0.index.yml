@@ -8,7 +8,7 @@ hero:
 
   links:
     - label: Get started
-      to: '/dashboard/templates'
+      to: '/api/auth/github'
       size: xl
       color: black
       icon: i-heroicons-arrow-right-20-solid
