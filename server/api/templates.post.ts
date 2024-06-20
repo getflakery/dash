@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
 
 import petname from 'node-petname'
-import {  ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
+import { ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
 
 function toSubDomain(text: string) {
   if (text.length === 0) {
@@ -76,7 +76,11 @@ export default eventHandler(async (event) => {
 
   const db = useDB()
 
- const host = toSubDomain(name || "")
+  const id = uuidv4()
+  let first6OfID = id.substring(0, 6)
+
+
+  const host = `${toSubDomain(name || "")}.${first6OfID}`
   const template = await db.insert(templates).values({
     name,
     flakeURL,
@@ -86,7 +90,7 @@ export default eventHandler(async (event) => {
     host,
   }).returning().get()
 
-  
+
   const route53Client = useRoute53Client()
   await createCNAMERecord(`${host}.flakery.xyz`, "loadb.flakery.xyz", "Z03309493AGZOVY2IU47X", route53Client);
 
