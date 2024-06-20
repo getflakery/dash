@@ -1,6 +1,8 @@
 
 <script setup lang="ts">
-import type { Template, Network } from '~/types';
+import type { Template } from '~/types';
+import { useDebounceFn } from '@vueuse/core'
+
 
 // Define props with types
 const props = defineProps<{
@@ -32,7 +34,13 @@ function addLBVals(lb: boolean, tp: number) {
   }
 }
 
+const dbfn = useDebounceFn(() => deployInstance(
+        props.template.id,
+        props.refresh,
+      ), 1000, { maxWait: 5000 })
+
 const deployInstance = async (id: string, refresh: () => void) => {
+  console.log('deploying')
   deploying.value = true
 
 
@@ -102,10 +110,7 @@ const deployInstance = async (id: string, refresh: () => void) => {
   <div class="flex justify-end gap-4">
     <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
     <UButton icon="i-heroicons-paper-airplane" :loading="deploying" type="submit" label="Deploy From Template"
-      color="black" @click="deployInstance(
-        props.template.id,
-        props.refresh,
-      )" />
+      color="black" @click="dbfn" />
   </div>
 </template>
 

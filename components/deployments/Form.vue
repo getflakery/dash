@@ -1,6 +1,7 @@
 
 <script setup lang="ts">
 import type { Template, Network } from '~/types';
+import { useDebounceFn } from '@vueuse/core'
 
 // Define props with types
 const props = defineProps<{
@@ -14,6 +15,7 @@ const emit = defineEmits(['close'])
 const deploying = ref(false)
 
 const deployInstance = async (refresh: () => void  | undefined) => {
+   
   deploying.value = true
 
   let inst = await $fetch(`/api/instances`, {
@@ -21,8 +23,6 @@ const deployInstance = async (refresh: () => void  | undefined) => {
     body: JSON.stringify({
       templateID: templateSelected.value.id,
       ...state,
-      ports: selectedPorts.value,
-      newNetWork: !newNetWork.value,
     })
   }
   )
@@ -49,63 +49,14 @@ const state = reactive({
   ports: [22, 80, 443]
 
 })
-const selected = ref([])
-
-const selectedPorts = ref([22, 80, 443])
-const ports = computed({
-  get: () => selectedPorts.value,
-  set: async (i) => {
 
 
-    selectedPorts.value = i
-    state.ports.concat(i)
-    // deduplicate
-    state.ports = Array.from(new Set(state.ports))
-  }
-})
-
-
-const loading = ref(true)
-const boxSelected = ref(true)
-
-
-
-const networkLoading = ref(false)
-const networkSelected = ref()
-
-function clearNetworkSelected() {
-  networkSelected.value = undefined
-}
-
-
-
-async function networkSearch(q: string) {
-  loading.value = true
-  const { data: networks } = await useFetch<Network[]>('/api/networks', { default: () => [] })
-
-
-  loading.value = false
-
-  return networks.value.filter((network) => {
-    return network.domain.toLowerCase().includes(q.toLowerCase())
-  })
-}
-
-
-const newNetWork = ref(false)
-
-function toggleNetwork() {
-  newNetWork.value = !newNetWork.value
-}
 
 
 
 const templateLoading = ref(false)
 const templateSelected = ref()
 
-function clearTemplateSelected() {
-  networkSelected.value = undefined
-}
 
 
 async function templateSearch(q: string) {
@@ -148,9 +99,7 @@ function toggleTemplate() {
 
     <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
     <UButton icon="i-heroicons-paper-airplane" :loading="deploying" type="submit" label="Deploy Instance From Template"
-      color="black" @click="deployInstance(
-        props.refresh
-      )" />
+      color="black" @click="useDebounceFn(() =>deployInstance(props.refresh), 1000, { maxWait: 5000 })" />
   </div>
 </template>
 
