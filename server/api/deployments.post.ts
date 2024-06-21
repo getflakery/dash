@@ -417,7 +417,7 @@ export default eventHandler(async (event) => {
       // additional parameters can be specified here
     },
     MinSize: body.minInstances ?? 1,
-    MaxSize: body.maxInstances ?? 1,
+    MaxSize: body.minInstances ?? 1, // just make a static number of instances instead elastic
     VPCZoneIdentifier: subnet,
     // AvailabilityZones: ["us-west-1a", "us-west-1c"],
     // DesiredCapacity: 1,

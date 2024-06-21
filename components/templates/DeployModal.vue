@@ -89,13 +89,10 @@ const deployInstance = async (id: string, refresh: () => void) => {
   </UFormGroup>
 
 
-  <UFormGroup label="Min Instances" name="minInstances">
+  <UFormGroup label="Number of Instances" name="numInstances">
     <UInput v-model="minInstances" type="number" placeholder="1" />
   </UFormGroup>
 
-  <UFormGroup label="Max Instances" name="maxInstances">
-    <UInput v-model="maxInstances" type="number" placeholder="1" />
-  </UFormGroup>
 
   <!-- checkbox for public ip default unchecked -->
   <UCheckbox v-model="publicIP" label="Public IP" />
