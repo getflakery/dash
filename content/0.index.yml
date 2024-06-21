@@ -5,11 +5,3 @@ hero:
   title: Flakery
   description: Deploy Nix Flakes to the cloud with ease
 
-
-  links:
-    - label: Get started
-      to: '/api/auth/github'
-      size: xl
-      color: black
-      icon: i-heroicons-arrow-right-20-solid
-      trailing: true
