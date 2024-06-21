@@ -26,6 +26,14 @@ export default eventHandler(async (event) => {
 
     }
 
+    const deploymentToUpdate = await db.select().from(deployments).where(
+        eq(deployments.id, id)
+    ).get()
+
+    if (!deploymentToUpdate) {
+        throw new Error(`DeploymentNotFound: ${id}`)
+    }
+
     if (production !== undefined) {
         if (production) {
             update["production"] = 1
@@ -33,7 +41,9 @@ export default eventHandler(async (event) => {
             let currentProduction = await db.select().from(deployments).where(
                 and(
                     eq(deployments.userID, session.user.id),
-                    eq(deployments.production, 1)
+                    eq(deployments.production, 1),
+                    eq(deployments.templateID, deploymentToUpdate.templateID)
+                    
                 )
             ).get()
             if (currentProduction) {
