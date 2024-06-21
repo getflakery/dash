@@ -22,11 +22,6 @@ const links = [{
 },
 
 {
-  label: 'Documentation',
-  icon: 'i-heroicons-book-open',
-  to: 'https://ui.nuxt.com/pro/guide',
-  target: '_blank'
-}, {
   label: 'GitHub repository',
   icon: 'i-simple-icons-github',
   to: 'https://github.com/getflakery/',
