@@ -4,8 +4,24 @@ import type { Deployment, Template } from '~/types'
 const route = useRoute()
 
 const { data: deployment, refresh } = await useFetch<Deployment>(`/api/deployment/${route.params.id}`)
+let hosts = ref(deployment.value?.logs?.reduce((acc, log) => {
+  acc.add(log.host)
+  return acc
+}, new Set<string>()))
+
+
+
 onNuxtReady(() => {
-  setInterval(refresh, 5000)
+  setInterval(() => {
+    refresh()
+    hosts.value = deployment.value?.logs?.reduce((acc, log) => {
+      acc.add(log.host)
+      return acc
+    }, new Set<string>())
+  }
+    , 5000)
+
+
 });
 
 const { data: template } = await useFetch<Template>(`/api/template/${deployment.value?.templateID}`)
@@ -14,12 +30,8 @@ const redeployModal = ref(false)
 
 const isOpen = ref(false)
 
-const hosts = deployment.value?.logs?.reduce((acc, log) => {
-  acc.add(log.host)
-  return acc
-}, new Set<string>())
 
-const selectedHosts = ref<string[]>([Array.from(hosts ?? [])[0]])
+const selectedHosts = ref<string[]>([Array.from(hosts.value ?? [])[0]])
 const getLogs = (hsts: string[]) => deployment.value?.logs?.
   filter(log => hsts.includes(log.host)).
   reduce((acc, log) => acc + log.exec + '\n', '')
