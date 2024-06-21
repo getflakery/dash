@@ -50,6 +50,10 @@ const defaultColumns = [{
 }, {
   key: 'host',
   label: 'URL',
+}, {
+  key: 'production',
+  label: 'Production',
+  sortable: true,
 }]
 
 const q = ref('')
@@ -121,7 +125,7 @@ function saveName(id: string) {
       </UDashboardModal>
 
       <UTable :rows="deployments" :columns="columns" :loading="pending"
-        sort-mode="manual" class="w-full" :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }">
+         class="w-full" :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }">
 
         <!-- Name links to deployment id -->
         <template #name-data="{ row }">
