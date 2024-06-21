@@ -45,7 +45,7 @@ function getItems(deployment: Deployment, refresh: Function) {
         refresh()
       }
     },
-      
+
     {
       label: 'Delete',
       icon: 'i-heroicons-trash-20-solid',
@@ -105,7 +105,14 @@ function select(host: { host: string }) {
 
         <UDashboardSection title="Instances" orientation="horizontal" :ui="{ container: 'Flg:sticky top-2' }" />
 
-        <UTable :rows="Array.from(hosts ?? []).map(host => ({ host: host }))" @select="select" />
+        <UTable :rows="Array.from(hosts ?? []).map(host => ({ host: host }))" @select="select"
+          :loading="Array.from(hosts ?? []).length == 0">
+          <template #loading-state>
+            <div class="flex items-center justify-center h-32">
+              Waiting for Instances to come online...
+            </div>
+          </template>
+        </UTable>
 
 
 
