@@ -22,10 +22,8 @@ const confirmDelete = async (id: string,
       deleteNetwork,
     })
   })
-  if (refresh !== undefined) {
-    refresh()
-  }
-  emit('close')
+  // navigate to deployments page
+  await navigateTo(`/dashboard/deployments`)
 
 }
 
