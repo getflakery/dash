@@ -37,7 +37,6 @@ const route = useRoute()
 const { branch } = useContentSource()
 
 const { data: nav } = await useAsyncData('navigation', () => fetchContentNavigation())
-const { data: files } = useLazyFetch<ParsedContent[]>('/api/search.json', { default: () => [], server: false })
 
 // Computed
 

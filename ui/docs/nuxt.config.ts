@@ -80,10 +80,9 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: [
-        '/',
+        // '/',
         '/getting-started',
         '/dev/getting-started',
-        '/api/search.json',
         '/api/releases.json',
         '/api/pulls.json'
       ],
