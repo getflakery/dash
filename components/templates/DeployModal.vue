@@ -61,6 +61,8 @@ const deployInstance = async (id: string, refresh: () => void) => {
     )
     deploying.value = false
 
+    emit('close')
+
     await navigateTo(`/dashboard/deployment/${inst.id}`)
 
   } catch (e) {
