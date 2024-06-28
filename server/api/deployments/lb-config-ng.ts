@@ -7,7 +7,10 @@ interface routers {
         entryPoints: string[]
         rule: string
         service: string
-        tls?: {}
+        tls?: {
+            certfile: string
+            keyfile: string
+        }
     }
 }
 
@@ -52,7 +55,10 @@ export default eventHandler(async (event) => {
             entryPoints: ["websecure"],
             rule: `Host(\`${dep.host}\`)`,
             service: dep.id,
-            tls: { }
+            tls: { 
+                certfile = "/var/lib/acme/flakery.xyz/cert.pem";
+                keyfile = "/var/lib/acme/flakery.xyz/key.pem";
+            }
         }
         return acc;
     }, {});
@@ -78,7 +84,11 @@ export default eventHandler(async (event) => {
                     entryPoints: ["websecure"],
                     rule: `Host(\`${template.host}.flakery.xyz\`)`,
                     service: dep.id,
-                    tls: {}
+                    tls: {
+
+          certfile = "/var/lib/acme/flakery.xyz/cert.pem";
+          keyfile = "/var/lib/acme/flakery.xyz/key.pem";
+                    }
                 }
             }
 
