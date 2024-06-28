@@ -80,7 +80,7 @@ export default eventHandler(async (event) => {
   let first6OfID = id.substring(0, 6)
 
 
-  const host = `${toSubDomain(name || "")}.${first6OfID}`
+  const host = `${toSubDomain(name || "")}-${first6OfID}`
   const template = await db.insert(templates).values({
     name,
     flakeURL,

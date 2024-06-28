@@ -431,7 +431,7 @@ export default eventHandler(async (event) => {
   );
 
 
-  let lbDns = `${name}.${tags.deployment_id.substring(0, 6)}.flakery.xyz`
+  let lbDns = `${name}-${tags.deployment_id.substring(0, 6)}.flakery.xyz`
 
   if (body.loadBalancer) {
     const route53Client = useRoute53Client()
