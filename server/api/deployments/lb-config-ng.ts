@@ -82,9 +82,7 @@ export default eventHandler(async (event) => {
                     entryPoints: ["websecure"],
                     rule: `Host(\`${template.host}.flakery.xyz\`)`,
                     service: dep.id,
-                    // tls: {
-                    //     certResolver: "letsencrypt"
-                    // }
+                    tls: {}
                 }
             }
 
