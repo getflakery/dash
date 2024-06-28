@@ -3,23 +3,15 @@ import { inArray, eq } from 'drizzle-orm'
 
 interface routers {
     [key: string]: {
-        middlewares?: string[]
-        entryPoints: string[]
-        rule: string
         service: string
-        tls?: {
-
-        }
     }
 }
 
 interface services {
     [key: string]: {
-        loadBalancer: {
-            servers: {
-                url: string
-            }[]
-        }
+        servers: {
+            url: string
+        }[]
     }
 }
 
@@ -50,13 +42,8 @@ export default eventHandler(async (event) => {
 
 
     let routers = deps.reduce<routers>((acc, dep) => {
-        acc[dep.id] = {
-            entryPoints: ["websecure"],
-            rule: `Host(\`${dep.host}\`)`,
-            service: dep.id,
-            tls: {
-
-            }
+        acc[`${dep.host}.flakery.xyz`] = {
+            service: dep.id
         }
         return acc;
     }, {});
@@ -78,14 +65,8 @@ export default eventHandler(async (event) => {
             }
             return {
                 ...await acc, // todo unnecessary copy
-                [template.id]: {
-                    entryPoints: ["websecure"],
-                    rule: `Host(\`${template.host}.flakery.xyz\`)`,
+                [`${template.host}.flakery.xyz`]: {
                     service: dep.id,
-                    tls: {
-
-
-                    }
                 }
             }
 
@@ -104,9 +85,7 @@ export default eventHandler(async (event) => {
             }
         )
         acc[dep.id] = {
-            loadBalancer: {
                 servers: targets
-            }
         }
         return acc;
     }, {});
