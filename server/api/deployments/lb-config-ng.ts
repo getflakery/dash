@@ -56,8 +56,7 @@ export default eventHandler(async (event) => {
             rule: `Host(\`${dep.host}\`)`,
             service: dep.id,
             tls: {
-                certfile: "/var/lib/acme/flakery.xyz/cert.pem",
-                keyfile :"/var/lib/acme/flakery.xyz/key.pem",
+
             }
         }
         return acc;
@@ -86,8 +85,7 @@ export default eventHandler(async (event) => {
                     service: dep.id,
                     tls: {
 
-                        certfile: "/var/lib/acme/flakery.xyz/cert.pem",
-                        keyfile: "/var/lib/acme/flakery.xyz/key.pem"
+
                     }
                 }
             }
