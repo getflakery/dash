@@ -7,9 +7,7 @@ interface routers {
         entryPoints: string[]
         rule: string
         service: string
-        tls?: {
-            certResolver: string
-        }
+        tls?: {}
     }
 }
 
@@ -54,9 +52,7 @@ export default eventHandler(async (event) => {
             entryPoints: ["websecure"],
             rule: `Host(\`${dep.host}\`)`,
             service: dep.id,
-            // tls: {
-            //     certResolver: "letsencrypt"
-            // }
+            tls: { }
         }
         return acc;
     }, {});
