@@ -42,7 +42,10 @@ export default eventHandler(async (event) => {
 
 
     let routers = deps.reduce<routers>((acc, dep) => {
-        acc[`${dep.host}.flakery.xyz`] = {
+        if (!dep.host) {
+            return acc;
+        }
+        acc[dep.host] = {
             service: dep.id
         }
         return acc;
