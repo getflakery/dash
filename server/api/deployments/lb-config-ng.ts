@@ -8,8 +8,7 @@ interface routers {
         rule: string
         service: string
         tls?: {
-            certfile: string
-            keyfile: string
+
         }
     }
 }
