@@ -10,17 +10,31 @@ export default eventHandler(async (event) => {
   const db = useDB()
   const session = await requireUserSession(event)
   const userID = session.user.id
-  let template = await db.select().from(templates).where(
-    and(
-      eq(templates.userID, userID),
-      eq(templates.id, id))
-  ).get();
+  let template;
+  try {
+    template = await db.select().from(templates).where(
+      and(
+        eq(templates.userID, userID),
+        eq(templates.id, id))
+    ).get();
+  } catch (e) {
+    throw new Error("Error getting template")
+  }
 
-  let deps = await db.select().from(deployments).where(
-    and(
-      eq(deployments.userID, userID),
-      eq(deployments.templateID, id))
-  ).all();
+  if (!template) {
+    throw new Error("Template not found")
+  }
+
+  let deps;
+  try {
+    deps = await db.select().from(deployments).where(
+      and(
+        eq(deployments.userID, userID),
+        eq(deployments.templateID, id))
+    ).all();
+  } catch (e) {
+    throw new Error("Error getting deployments")
+  }
 
   return {
     ...template,
