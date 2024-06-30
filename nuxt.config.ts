@@ -8,8 +8,13 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "nuxt-auth-utils",
     "@nuxt/content",
-    "nuxt-openapi-docs-module"
+    "nuxt-openapi-docs-module",
+    '@nuxtjs/sentry'
   ],
+  sentry: {
+    dsn: 'https://609c15a991de076c7b0978feac5b81a8@o4507134751408128.ingest.us.sentry.io/4507518393384960', // Enter your project's DSN.
+    // Additional module options go here.
+  },
   ui: {
     icons: ["heroicons", "simple-icons"],
     safelistColors: ["primary", "red", "orange", "green"],
