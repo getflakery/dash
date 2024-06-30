@@ -28,6 +28,10 @@ export default eventHandler(async (event) => {
     throw new Error("Template not found")
   }
 
+  console.log(JSON.stringify({
+    message: "Getting deployments",
+  }))
+
   let deps;
   try {
     deps = await db.select().from(deployments).where(
