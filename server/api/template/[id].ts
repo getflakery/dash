@@ -10,6 +10,9 @@ export default eventHandler(async (event) => {
   const db = useDB()
   const session = await requireUserSession(event)
   const userID = session.user.id
+  console.log(JSON.stringify({
+    message: "Getting template",
+  }))
   let template;
   try {
     template = await db.select().from(templates).where(
