@@ -118,7 +118,8 @@ function addFile() {
                 <div v-else>
 
                     <div class="flex items-center justify-between">
-                        <div class="flex-1 font-medium">{{ file.path }}</div>
+                        <div class="flex-1 font-medium">🔒
+                        {{ file.path }}</div>
                         <div>
                             <UButton class="mr-2" color="red" variant="soft" size="2xs"
                                 icon="i-heroicons-x-mark-20-solid" @click="deleteFile(index)" />

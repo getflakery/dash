@@ -133,15 +133,27 @@ function getItems(template: Template, refresh: Function | undefined) {
                 <h3 class="text-lg font-semibold leading-tight">
                   Host:
                 </h3>
+                <UPopover mode="hover" class="">
+                  <UIcon name="i-heroicons-question-mark-circle" class="px-4 bold" />
+
+                  <template #panel>
+                    <div class="p-4 w-96">
+                      <p class="text-sm font-normal leading-tight">Your template host is a persistant url that you can
+                        point your deployments to by promoting them to production. This ensures a stable domain across
+                        multiple deployments.</p>
+                    </div>
+                  </template>
+                </UPopover>
               </div>
 
 
-                <!-- <div v-else class="flex-grow mt-1 rounded-md border-gray-300 shadow-sm text-sm font-normal p-2">
+              <!-- <div v-else class="flex-grow mt-1 rounded-md border-gray-300 shadow-sm text-sm font-normal p-2">
                   {{ template?.host }}.flakery.xyz
                 </div> -->
-                <NuxtLink :to="`https://${template?.host}.flakery.xyz`" class="text-blue-500 dark:text-blue-400" target="_blank">
-                  {{ template?.host }}.flakery.xyz
-                </NuxtLink>
+              <NuxtLink :to="`https://${template?.host}.flakery.xyz`" class="text-blue-500 dark:text-blue-400"
+                target="_blank">
+                {{ template?.host }}.flakery.xyz
+              </NuxtLink>
 
 
 
@@ -156,9 +168,25 @@ function getItems(template: Template, refresh: Function | undefined) {
             <DeploymentsList :deployments="template?.deployments" :refresh="refresh" />
           </UCard>
           <UCard>
-            <h3 class="text-lg font-semibold leading-tight">
-              Files: 🔒
-            </h3>
+            <!-- justify between -->
+            <div class="flex">
+              <h3 class="text-lg font-semibold leading-tight">
+                Encrypted Files:
+
+              </h3>
+              <UPopover mode="hover" class="">
+                <UIcon name="i-heroicons-question-mark-circle" class="px-4 bold" />
+
+                <template #panel>
+                  <div class="p-4 w-96">
+                    <p class="text-sm font-normal leading-tight">Encrypted Files are added to each of your deployment's
+                      instances before your flake is applied.
+                      This allows you to bootstrap your secrets using any method you want, whether you need to provide
+                      a key to aegnix or sops, or just want to use builtins.readFile</p>
+                  </div>
+                </template>
+              </UPopover>
+            </div>
 
             <TemplatesFileForm :templateID="template?.id" />
           </UCard>
