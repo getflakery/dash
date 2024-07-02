@@ -134,7 +134,7 @@ function getItems(template: Template, refresh: Function | undefined) {
                   Host:
                 </h3>
                 <UPopover mode="hover" class="">
-                  <UIcon name="i-heroicons-question-mark-circle" class="px-4 bold" />
+                  <UIcon name="i-heroicons-question-mark-circle" class="px-4" />
 
                   <template #panel>
                     <div class="p-4 w-96">
@@ -175,7 +175,7 @@ function getItems(template: Template, refresh: Function | undefined) {
 
               </h3>
               <UPopover mode="hover" class="">
-                <UIcon name="i-heroicons-question-mark-circle" class="px-4 bold" />
+                <UIcon name="i-heroicons-question-mark-circle" class="px-4" />
 
                 <template #panel>
                   <div class="p-4 w-96">
