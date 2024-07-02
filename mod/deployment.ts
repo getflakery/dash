@@ -9,8 +9,9 @@ import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, Crea
 import { CreateAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
 
 import { ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
-import { templates } from "~/server/database/schema";
+import { templates, deployments } from "~/server/database/schema";
 import { eq, and } from 'drizzle-orm'
+import petname from 'node-petname'
 
 async function authorizeInboundTrafficForAllPorts(securityGroupId: string, client: EC2Client) {
     try {
@@ -97,41 +98,43 @@ async function authorizeInboundTrafficForPort(securityGroupId: string, client: E
 
 async function createCNAMERecord(domainName, targetDNS, hostedZoneId, route53Client) {
     const params = {
-      ChangeBatch: {
-        Changes: [
-          {
-            Action: "UPSERT",
-            ResourceRecordSet: {
-              Name: domainName,
-              Type: "CNAME",
-              TTL: 300,
-              ResourceRecords: [
+        ChangeBatch: {
+            Changes: [
                 {
-                  Value: targetDNS
+                    Action: "UPSERT",
+                    ResourceRecordSet: {
+                        Name: domainName,
+                        Type: "CNAME",
+                        TTL: 300,
+                        ResourceRecords: [
+                            {
+                                Value: targetDNS
+                            }
+                        ]
+                    }
                 }
-              ]
-            }
-          }
-        ]
-      },
-      HostedZoneId: hostedZoneId
+            ]
+        },
+        HostedZoneId: hostedZoneId
     };
-  
+
     try {
-      const command = new ChangeResourceRecordSetsCommand(params);
-      const response = await route53Client.send(command);
-      console.log("CNAME record created:", response);
+        const command = new ChangeResourceRecordSetsCommand(params);
+        const response = await route53Client.send(command);
+        console.log("CNAME record created:", response);
     } catch (error) {
-      console.error("Error creating CNAME record:", error);
-      throw new Error(`CNAMERecordCreationFailed: ${error}`);
+        console.error("Error creating CNAME record:", error);
+        throw new Error(`CNAMERecordCreationFailed: ${error}`);
     }
-  }
-  
-  
+}
+
+
 
 export interface AWSDeploymentInput {
     config: RuntimeConfig,
     templateID: string,
+    userID: string,
+    production: boolean,
     overrides: {
         awsInstanceType?: string;
         publicIP?: boolean;
@@ -183,14 +186,40 @@ export class AWSDeployment {
         await this.createLaunchTemplate(template.flakeURL);
         await this.createAutoScalingGroup();
 
-        let lbDns = `${template.name}-${this.deploymentID.substring(0, 6)}.flakery.xyz`
+        const name = petname(2, "-")
+        let lbDns = `${name}-${this.deploymentID.substring(0, 6)}.flakery.xyz`
 
         if (this.shouldCreateLoadBalancer()) {
             await createCNAMERecord(lbDns, "loadb.flakery.xyz", "Z03309493AGZOVY2IU47X", this.route53Client);
         }
 
 
-        throw new Error('Not implemented');
+
+
+        let deployment = await this.db.insert(deployments).values({
+            id: this.deploymentID,
+            userID: this.input.userID,
+            templateID: this.input.templateID,
+            name,
+            createdAt: new Date().valueOf(),
+            host: lbDns,
+            port: this.input.overrides.targetPort ?? 8080,
+            data: {
+                aws_resources: {
+                    launch_template_id: this.deploymentID,
+                    autoscaling_group_id: this.deploymentID,
+                },
+                min_instances: this.input.overrides.minInstances ?? 1,
+                max_instances: this.input.overrides.minInstances ?? 1,
+                public_ip: this.input.overrides.publicIP ?? false,
+                load_balancer: this.input.overrides.loadBalancer ?? true,
+            },
+            production: this.input.production ? 1 : 0,
+        }).returning().get()
+        if (!deployment) {
+            throw new Error('Deployment creation failed');
+        }
+        return deployment;
     }
 
     private async createAutoScalingGroup(): Promise<void> {

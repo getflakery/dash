@@ -29,6 +29,8 @@ export default eventHandler(async (event) => {
   const awsDeployment = new AWSDeployment({
     config,
     templateID,
+    userID,
+    production: body.production,
     overrides: {
       awsInstanceType: body.awsInstanceType,
       publicIP: body.publicIP,
