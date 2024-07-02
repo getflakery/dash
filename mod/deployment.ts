@@ -166,7 +166,7 @@ export class AWSDeployment {
 
 
     // add method to create a deployment
-    public async Create(): Promise<Deployment> {
+    public async Create(){
         const sg_id = await this.createSecurityGroup();
 
         if (this.shouldCreateLoadBalancer()) {
