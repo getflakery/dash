@@ -141,7 +141,7 @@ export default eventHandler(async (event) => {
       {
         config,
         templateID: bcacheID, 
-        userID,
+        userID: "57335981.0", // todo hardcoded tech debt
         production: false,
         overrides: {
           awsInstanceType: "t3.micro",
