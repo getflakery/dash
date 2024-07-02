@@ -1,6 +1,6 @@
 import { useDB } from "../utils/db"
 import { useValidatedBody, z, } from 'h3-zod'
-import { templates, files as schemaFiles, templateFiles } from '~/server/database/schema'
+import { templates, files as schemaFiles, templateFiles, privateBinaryCache  } from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
 
@@ -129,7 +129,13 @@ export default eventHandler(async (event) => {
   })
 
 
-
+  // check if privateBinaryCache exists for this user
+  // if not, create one
+  const existingPrivateBinaryCache = await db.select().from(privateBinaryCache).where(eq(privateBinaryCache.name, userID)).get();
+  if (!existingPrivateBinaryCache) {
+    
+  }
+  
 
   return template
 })
