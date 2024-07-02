@@ -183,7 +183,7 @@ export class AWSDeployment {
 
         }
 
-        await this.createLaunchTemplate(template.flakeURL);
+        await this.createLaunchTemplate(template.flakeURL, sg_id);
         await this.createAutoScalingGroup();
 
         const name = petname(2, "-")
@@ -247,6 +247,7 @@ export class AWSDeployment {
 
     private async createLaunchTemplate(
         flake_url: string,
+        sg_id: string,
     ): Promise<void> {
         let tags = {
             turso_token: this.input.config.turso_token,
@@ -266,6 +267,22 @@ export class AWSDeployment {
                 MetadataOptions: {
                     InstanceMetadataTags: "enabled"
                 },
+                TagSpecifications: [{
+                    ResourceType: "instance",
+                    Tags: Object.entries(tags).map(([key, value]) => ({ Key: key, Value: value }))
+                  }],
+                  BlockDeviceMappings: [{
+                    DeviceName: "/dev/xvda",
+                    Ebs: {
+                      VolumeSize: 256,
+                      VolumeType: "gp2",
+                      DeleteOnTermination: true
+                    }
+                  }],
+                  SecurityGroupIds: [sg_id],
+                  InstanceMarketOptions: {
+                    MarketType: "spot",
+                  },
             }
         });
 
