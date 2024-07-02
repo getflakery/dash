@@ -2,15 +2,15 @@ import type { AutoScalingClient } from "@aws-sdk/client-auto-scaling";
 import type { Route53Client } from "@aws-sdk/client-route-53";
 import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
-import type { Deployment, RuntimeConfig, Template } from "~/types";
+import type { RuntimeConfig } from "~/types";
 import type { CryptoString } from "~/server/utils/crypto";
 import { v4 as uuidv4 } from 'uuid';
-import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client, _InstanceType, type LaunchTemplateIamInstanceProfileSpecificationRequest } from "@aws-sdk/client-ec2";
+import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client, _InstanceType } from "@aws-sdk/client-ec2";
 import { CreateAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
 
 import { ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
 import { templates, deployments } from "~/server/database/schema";
-import { eq, and } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import petname from 'node-petname'
 
 async function authorizeInboundTrafficForAllPorts(securityGroupId: string, client: EC2Client) {
