@@ -1,4 +1,3 @@
-import { int } from 'drizzle-orm/mysql-core';
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
 // Template table definition
@@ -40,10 +39,6 @@ export const deployments = sqliteTable('deployments', {
   host: text('host'),
   port: integer('port'),
   data: text('data', { mode: 'json' }).$type<{
-    port_mappings: {
-      lb_port: number,
-      instance_port: number,
-    }[],
     aws_resources: {
       launch_template_id: string,
       autoscaling_group_id: string,
@@ -67,12 +62,7 @@ export const target = sqliteTable('target', {
 });
 
 
-// { date: 1716184200.938395,
-//   exec:
-//   //  "warning: error: unable to download 'https://api.github.com/repos/r33drichards/micrograd/commits/HEAD': HTTP error 403" }
-// deployment logs links to the deployment
-//  stores a list of logs
-// with format { date: number, exec: string }
+
 export const deploymentLogs = sqliteTable('deployment_logs', {
   id: text('id').primaryKey(),
   deploymentID: text('deployment_id').notNull().references(() => deployments.id, { onDelete: 'cascade' }).notNull(),
@@ -81,4 +71,11 @@ export const deploymentLogs = sqliteTable('deployment_logs', {
     exec: string,
     host: string,
   }[]>(),
+});
+
+export const privateBinaryCache = sqliteTable('private_binary_cache', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  host: text('host').notNull(),
+  createdAt: integer('created_at').notNull(),
 });

@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
 
-class CryptoString {
+export class CryptoString {
   constructor(key, salt) {
     this.key = crypto.scryptSync(key, salt, 32); // Creates a 256-bit key
     this.iv = crypto.randomBytes(16); // Initialization vector
