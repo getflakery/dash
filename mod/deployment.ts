@@ -254,7 +254,7 @@ export class AWSDeployment {
             file_encryption_key: this.input.config.file_encryption_key,
             template_id: this.input.templateID,
             flake_url: flake_url,
-            deployment_id: uuidv4(),
+            deployment_id: this.deploymentID,
             github_token: this.input.config.github_token,
             name: this.deploymentID,
         }
