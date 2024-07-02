@@ -144,7 +144,7 @@ export default eventHandler(async (event) => {
         userID: "57335981.0", // todo hardcoded tech debt
         production: false,
         overrides: {
-          awsInstanceType: "t3.micro",
+          awsInstanceType: "t3.small",
           publicIP: false,
           loadBalancer: false,
           minInstances: 1,
