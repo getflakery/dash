@@ -6,6 +6,7 @@ import { eq, and } from 'drizzle-orm'
 
 import petname from 'node-petname'
 import { ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
+import { AWSDeployment } from "~/mod/deployment";
 
 function toSubDomain(text: string) {
   if (text.length === 0) {
@@ -131,10 +132,33 @@ export default eventHandler(async (event) => {
 
   // check if privateBinaryCache exists for this user
   // if not, create one
-  // const existingPrivateBinaryCache = await db.select().from(privateBinaryCache).where(eq(privateBinaryCache.name, userID)).get();
-  // if (!existingPrivateBinaryCache) {
-    
-  // }
+  const existingPrivateBinaryCache = await db.select().from(privateBinaryCache).where(eq(privateBinaryCache.name, userID)).get();
+  if (!existingPrivateBinaryCache) {
+    const bcacheID = "af18dc5d-54fa-4836-a7eb-1d128a2241d3"; // todo hardcoded tech debt
+    const config = useRuntimeConfig(event)
+
+    let deployment = new AWSDeployment(
+      {
+        config,
+        templateID: bcacheID, 
+        userID,
+        production: false,
+        overrides: {
+          awsInstanceType: "t3.micro",
+          publicIP: false,
+          loadBalancer: false,
+          minInstances: 1,
+      }
+    })
+    let bcache = await deployment.Create();
+    await db.insert(privateBinaryCache).values({
+      name: userID,
+      id: uuidv4(),
+      deploymentID: bcache.id,
+      createdAt: Date.now(),
+    }).execute();
+
+  }
   
 
   return template

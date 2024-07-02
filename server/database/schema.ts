@@ -76,6 +76,6 @@ export const deploymentLogs = sqliteTable('deployment_logs', {
 export const privateBinaryCache = sqliteTable('private_binary_cache', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
-  host: text('host').notNull(),
+  deploymentID: text('deployment_id').notNull().references(() => deployments.id, { onDelete: 'cascade' }).notNull(),
   createdAt: integer('created_at').notNull(),
 });
