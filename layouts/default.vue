@@ -36,6 +36,19 @@ const groups = [{
   label: 'Go to',
   commands: links.map(link => ({ ...link, shortcuts: link.tooltip?.shortcuts }))
 },
+  // add navigation to template details page for each template
+  ...templates.value.map(template => ({
+    key: template.id,
+    label: template.name,
+    commands: [{
+      id: `details-${template.id}`,
+      label: `View ${template.name} ${template.flakeURL}`,
+      icon: 'i-heroicons-document',
+      click: () => {
+        navigateTo(`/dashboard/template/${template.id}`)
+      }
+    }]
+  })),
   ...templates.value.map(template => ({
     key: template.id,
     label: template.name,
@@ -48,20 +61,9 @@ const groups = [{
         templateToDeploy.value = template
       }
     }]
-  }))
-  //  {
-  //   key: 'code',
-  //   label: 'Code',
-  //   commands: [{
-  //     id: 'source',
-  //     label: 'View page source',
-  //     icon: 'i-simple-icons-github',
-  //     click: () => {
-  //       window.open(`https://github.com/nuxt-ui-pro/dashboard/blob/main/pages${route.path === '/' ? '/index' : route.path}.vue`, '_blank')
-  //     }
-  //   }
-  // ]
-  // }
+  })),
+  
+
 ]
 
 const createInstanceOpen = ref(false)
