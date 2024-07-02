@@ -131,10 +131,10 @@ export default eventHandler(async (event) => {
 
   // check if privateBinaryCache exists for this user
   // if not, create one
-  const existingPrivateBinaryCache = await db.select().from(privateBinaryCache).where(eq(privateBinaryCache.name, userID)).get();
-  if (!existingPrivateBinaryCache) {
+  // const existingPrivateBinaryCache = await db.select().from(privateBinaryCache).where(eq(privateBinaryCache.name, userID)).get();
+  // if (!existingPrivateBinaryCache) {
     
-  }
+  // }
   
 
   return template
