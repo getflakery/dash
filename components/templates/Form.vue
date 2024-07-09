@@ -3,8 +3,8 @@
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
 import { reactive, ref } from 'vue';
-import { v4 as uuidv4 } from 'uuid';
-import type { Network } from '~/types'
+import { useDebounceFn } from '@vueuse/core'
+
 
 defineProps({
   refresh: Function,
@@ -43,7 +43,8 @@ const validate = (state: any): FormError[] => {
   return errors
 }
 
-async function onSubmit(refresh: Function | undefined) {
+async function onSubmit() {
+
   // post state too /api/templates
   let resp = await $fetch('/api/templates', {
     method: 'POST',
@@ -61,15 +62,14 @@ async function onSubmit(refresh: Function | undefined) {
 
 }
 
-function saveEdit(file: any){
-  state.files.push(file)
-}
+
+const save = useDebounceFn(onSubmit, 1000, { maxWait: 5000 })
 
 </script>
 
 
 <template>
-  <UForm :validate="validate" :validate-on="['submit']" :state="state" class="space-y-4" @submit="onSubmit">
+  <UForm :validate="validate" :validate-on="['submit']" :state="state" class="space-y-4">
     <UFormGroup label="Flake URL" name="flakeURL">
       <UInput v-model="state.flakeURL" type="text" placeholder="github:getflakery/basic-flake" autofocus />
     </UFormGroup>
@@ -81,11 +81,9 @@ function saveEdit(file: any){
     </UFormGroup>
 
 
-
-
     <div class="flex justify-end gap-3">
       <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
-      <UButton type="submit" label="Save" color="black" @click="onSubmit(refresh)" />
+      <UButton type="submit" label="Save" color="black" @click="save" />
     </div>
 
 
@@ -103,4 +101,5 @@ function saveEdit(file: any){
 .file-list-leave-to {
   opacity: 0;
   transform: translateX(30px);
-}</style>
+}
+</style>
