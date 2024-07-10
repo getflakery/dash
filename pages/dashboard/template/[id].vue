@@ -52,7 +52,21 @@ function getItems(template: Template, refresh: Function | undefined) {
         templateToDeploy.value = template
 
       }
-    }],
+    },
+    {
+      label: 'Build',
+      icon: 'i-heroicons-wrench-screwdriver',
+      click: async () => {
+        await fetch(`/api/template/build/${template.id}`, {
+          method: 'POST',
+        });
+        if (refresh) {
+          await refresh();
+        }
+
+      }
+    }
+    ],
     [
       {
         label: 'Delete',
