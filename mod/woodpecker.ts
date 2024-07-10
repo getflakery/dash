@@ -75,7 +75,8 @@ export class Woodpecker {
         return await this.api.reposRepoIdPipelinesPost(
             this.woodpecker_api_key,
             this.woodpecker_repo_id,
-            {
+            {   
+                branch: 'master',
                 variables: await this.getVars(),
             }
         )
