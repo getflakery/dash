@@ -78,6 +78,8 @@ export default defineNuxtConfig({
     crypto_string_key: '', // can be overridden by NUXT_CRYPTO_STRING_KEY environment variable
     crypto_string_salt: '', // can be overridden by NUXT_CRYPTO_STRING_SALT environment variable
     jwt_secret: '', // can be overridden by NUXT_JWT_SECRET environment variable
+    woodpecker_token: '', // can be overridden by NUXT_WOODPECKER_TOKEN environment variable
+    woodpecker_repo_id: 1, // can be overridden by NUXT_WOODPECKER_REPO_ID environment variable
     public: {
       vpc_id: 'vpc-0c1c37e1a494e6adf', // can be overridden by NUXT_PUBLIC_VPC_ID environment variable
       public_subnet_1: 'subnet-08307ac15ba441caf', // can be overridden by NUXT_PUBLIC_SUBNET_1 environment variable
