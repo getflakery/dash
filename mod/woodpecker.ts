@@ -3,23 +3,20 @@ import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import type { LibSQLDatabase } from 'drizzle-orm/libsql';
 import type { RuntimeConfig } from 'nuxt/schema';
 import { templates, privateBinaryCache, deployments } from '~/server/database/schema';
-import {
-    PipelinesApi,
-} from '~/woodpecker-client/api'
 
 
 export class Woodpecker {
     templateID: string;
     woodpecker_api_key: string;
     woodpecker_repo_id: number;
-    api: PipelinesApi;
+    // api: PipelinesApi;
     db: BetterSQLite3Database | LibSQLDatabase<Record<string, never>>;
     config: RuntimeConfig;
 
 
     constructor(templateID: string) {
         this.templateID = templateID;
-        this.api = new PipelinesApi();
+        // this.api = new PipelinesApi();
         this.db = useDB();
         const config = useRuntimeConfig();
         this.config = config;
@@ -38,7 +35,7 @@ export class Woodpecker {
         SSH_PRIVATE_KEY_B64: string;
         GITHUB_TOKEN?: string;
     }> {
-        const template = await this.db.select().from(templates).where(eq(templates.id, templateID)).get();
+        const template = await this.db.select().from(templates).where(eq(templates.id, this.templateID)).get();
         if (!template) {
             throw new Error('Template not found');
         }
@@ -72,13 +69,22 @@ export class Woodpecker {
 
     // create a build 
     async createBuild() {
-        return await this.api.reposRepoIdPipelinesPost(
-            this.woodpecker_api_key,
-            this.woodpecker_repo_id,
-            {   
+
+        const resp =  await fetch('https://woodpecker-ci-19fcc5.flakery.xyz/api/repos/1/pipelines', {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Bearer ${this.woodpecker_api_key}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
                 branch: 'master',
                 variables: await this.getVars(),
-            }
-        )
+            })
+        });
+        console.log(resp);
+        const data = await resp.json();
+        console.log(data);
+        return data;
     }
 }
