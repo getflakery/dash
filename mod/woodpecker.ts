@@ -5,6 +5,13 @@ import type { RuntimeConfig } from 'nuxt/schema';
 import { templates, privateBinaryCache, deployments } from '~/server/database/schema';
 
 
+function flakeUrlToConfigUrl(flakeUrl: string) {
+    // github:getflakery/bootstrap#grafana	-> github:getflakery/bootstrap#nixosConfigurations.grafana.config.system.build.toplevel
+    const parts = flakeUrl.split('#');
+    const right = parts[1];
+    return `${parts[0]}#nixosConfigurations.${right}.config.system.build.toplevel`;
+}
+
 export class Woodpecker {
     templateID: string;
     woodpecker_api_key: string;
@@ -60,7 +67,7 @@ export class Woodpecker {
             TEMPLATE_ID: this.templateID,
             ENCRYPTION_KEY: this.config.file_encryption_key,
             TURSO_TOKEN: this.config.turso_token,
-            FLAKE: template.flakeURL,
+            FLAKE: flakeUrlToConfigUrl(template.flakeURL),
             BINARY_CACHE_HOST: deployment.host,
             SSH_PRIVATE_KEY_B64: this.config.ssh_private_key_b64,
             // GITHUB_TOKEN: config.github_token,
@@ -69,7 +76,6 @@ export class Woodpecker {
 
     // create a build 
     async createBuild() {
-
         const resp =  await fetch('https://woodpecker-ci-19fcc5.flakery.xyz/api/repos/1/pipelines', {
             method: 'POST',
             headers: {
@@ -82,9 +88,7 @@ export class Woodpecker {
                 variables: await this.getVars(),
             })
         });
-        console.log(resp);
         const data = await resp.json();
-        console.log(data);
         return data;
     }
 }
