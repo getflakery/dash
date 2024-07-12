@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import type { LibSQLDatabase } from 'drizzle-orm/libsql';
 import type { RuntimeConfig } from 'nuxt/schema';
-import { templates, privateBinaryCache, deployments } from '~/server/database/schema';
+import { templates, privateBinaryCache, deployments, target } from '~/server/database/schema';
 
 
 function flakeUrlToConfigUrl(flakeUrl: string) {
@@ -34,7 +34,7 @@ export class Woodpecker {
 
     // get vars 
     async getVars(): Promise<{
-        BINARY_CACHE_HOST: string;
+        BINARY_CACHE_IP: string;
         FLAKE: string;
         TEMPLATE_ID: string;
         ENCRYPTION_KEY: string;
@@ -63,12 +63,25 @@ export class Woodpecker {
             throw new Error('Binary Cache does not have a host');
         }
 
+        const targets = await this.db.select().from(target).where(eq(target.deploymentID, binaryCache.deploymentID)).all();
+
+        if (targets.length === 0) {
+            throw new Error('No targets found');
+        }
+
+        // get last target 
+        const t = targets[targets.length - 1];
+        if (!t) {
+            throw new Error('No target found');
+        }
+
+
         return {
             TEMPLATE_ID: this.templateID,
             ENCRYPTION_KEY: this.config.file_encryption_key,
             TURSO_TOKEN: this.config.turso_token,
             FLAKE: flakeUrlToConfigUrl(template.flakeURL),
-            BINARY_CACHE_HOST: deployment.host,
+            BINARY_CACHE_IP: t.host,
             SSH_PRIVATE_KEY_B64: this.config.ssh_private_key_b64,
             // GITHUB_TOKEN: config.github_token,
         }
