@@ -88,7 +88,7 @@ export class Woodpecker {
     }
 
     // create a build 
-    async createBuild() {
+    async Create() {
         const resp =  await fetch('https://woodpecker-ci-19fcc5.flakery.xyz/api/repos/1/pipelines', {
             method: 'POST',
             headers: {

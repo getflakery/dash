@@ -1,6 +1,6 @@
 import { useDB } from "../utils/db"
 import { useValidatedBody, z, } from 'h3-zod'
-import { templates, files as schemaFiles, templateFiles, privateBinaryCache  } from '~/server/database/schema'
+import { templates, files as schemaFiles, templateFiles, privateBinaryCache } from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
 
@@ -57,7 +57,7 @@ async function createCNAMERecord(domainName, targetDNS, hostedZoneId, route53Cli
 
 
 export default eventHandler(async (event) => {
-  const {
+  let {
     name,
     flakeURL,
     awsInstanceType,
@@ -94,6 +94,46 @@ export default eventHandler(async (event) => {
 
   const route53Client = useRoute53Client()
   await createCNAMERecord(`${host}.flakery.xyz`, "loadb.flakery.xyz", "Z03309493AGZOVY2IU47X", route53Client);
+
+  // create metadata files for userid, templateid
+
+  if (files === undefined) {
+    files = []
+  }
+
+  files.push({
+    id: uuidv4(),
+    path: "/metadata/user-id",
+    content: userID.toString(),
+  })
+
+  files.push({
+    id: uuidv4(),
+    path: "/metadata/template-id",
+    content: template.id,
+  })
+
+  files.push({
+    id: uuidv4(),
+    path: "/metadata/template-host",
+    content: host,
+  })
+
+  // add token 
+
+  const tok = useJWT().sign({ userID, templateID: template.id })
+
+  files.push({
+    id: uuidv4(), 
+    path: "/metadata/user-token",
+    content: tok,
+  })
+
+
+
+
+
+
 
 
   // for each file, create if not exists, otherwise update if exists
@@ -134,22 +174,22 @@ export default eventHandler(async (event) => {
   // if not, create one
   const existingPrivateBinaryCache = await db.select().from(privateBinaryCache).where(eq(privateBinaryCache.name, userID)).get();
   if (!existingPrivateBinaryCache) {
-    const bcacheID = "af18dc5d-54fa-4836-a7eb-1d128a2241d3"; // todo hardcoded tech debt
+    const bcacheID = "ba69f587-04ba-4db1-a218-69708fc0ec62"; // todo hardcoded tech debt
     const config = useRuntimeConfig(event)
 
     let deployment = new AWSDeployment(
       {
         config,
-        templateID: bcacheID, 
+        templateID: bcacheID,
         userID: "57335981.0", // todo hardcoded tech debt
         production: false,
         overrides: {
-          awsInstanceType: "t3.small",
+          awsInstanceType: "m7i.large",
           publicIP: false,
           loadBalancer: false,
           minInstances: 1,
-      }
-    })
+        }
+      })
     let bcache = await deployment.Create();
     await db.insert(privateBinaryCache).values({
       name: userID,
@@ -159,7 +199,7 @@ export default eventHandler(async (event) => {
     }).execute();
 
   }
-  
+
 
   return template
 })

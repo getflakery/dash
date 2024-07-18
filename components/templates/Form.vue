@@ -43,7 +43,10 @@ const validate = (state: any): FormError[] => {
   return errors
 }
 
+const submitting = ref(false);
+
 async function onSubmit() {
+  submitting.value = true
 
   // post state too /api/templates
   let resp = await $fetch('/api/templates', {
@@ -58,6 +61,8 @@ async function onSubmit() {
 
   // redirect to dashboard/template/{resp.id}
   await navigateTo(`/dashboard/template/${resp.id}`)
+
+  submitting.value = false
 
 
 }
@@ -83,7 +88,7 @@ const save = useDebounceFn(onSubmit, 1000, { maxWait: 5000 })
 
     <div class="flex justify-end gap-3">
       <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
-      <UButton type="submit" label="Save" color="black" @click="save" />
+      <UButton type="submit" label="Save" color="black" @click="save"   :disabled="submitting" :loading="submitting" />
     </div>
 
 

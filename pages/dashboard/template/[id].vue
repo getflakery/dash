@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { Template, Deployment, File } from '~/types'
 import { v4 as uuidv4 } from 'uuid';
+import { te } from 'date-fns/locale';
 
 
 const route = useRoute()
 
 const { data: template, refresh } = await useFetch<Template>(`/api/template/${route.params.id}`)
-
+  
 
 const editMode = ref(false);
 

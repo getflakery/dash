@@ -10,5 +10,5 @@ export default eventHandler(async (event) => {
     const woodpecker = new Woodpecker(
         id,
     )
-    await woodpecker.createBuild()
+    await woodpecker.Create()
 })
