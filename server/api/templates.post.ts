@@ -129,6 +129,7 @@ export default eventHandler(async (event) => {
     content: tok,
   })
 
+  console.log('creating encrypted files')
 
   // for each file, create if not exists, otherwise update if exists
   files?.forEach(async (file) => {
@@ -163,6 +164,7 @@ export default eventHandler(async (event) => {
     }).execute()
   })
 
+  console.log('creating private binary cache')
 
   // check if privateBinaryCache exists for this user
   // if not, create one
