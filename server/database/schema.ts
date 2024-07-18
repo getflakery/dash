@@ -80,7 +80,7 @@ export const privateBinaryCache = sqliteTable('private_binary_cache', {
   createdAt: integer('created_at').notNull(),
 });
 
-export const woodpeckerToken  = sqliteTable('private_binary_cache', {
+export const woodpeckerToken  = sqliteTable('woodpecker_token', {
   id: text('id').primaryKey(),
   createdAt: integer('created_at').notNull(),
   token: text('token').notNull(),
