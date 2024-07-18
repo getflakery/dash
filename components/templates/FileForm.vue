@@ -118,7 +118,9 @@ function addFile() {
                 <div v-else>
 
                     <div class="flex items-center justify-between">
-                        <div class="flex-1 font-medium">🔒
+                        <div class="flex-1 font-medium">
+                        <UIcon name="i-heroicons-lock-closed" />
+
                         {{ file.path }}</div>
                         <div>
                             <UButton class="mr-2" color="red" variant="soft" size="2xs"
