@@ -29,7 +29,6 @@ export class Woodpecker {
         this.config = config;
         this.woodpecker_api_key = config.woodpecker_token;
         this.woodpecker_repo_id = config.woodpecker_repo_id;
-
     }
 
     // get vars 
@@ -89,12 +88,18 @@ export class Woodpecker {
 
     // create a build 
     async Create() {
+        const template = await this.db.select().from(templates).where(eq(templates.id, this.templateID)).get();
+        if (!template) {
+            throw new Error('Template not found');
+        }
+        const tok = await useJWT().sign({ userID: template.userID, templateID: this.templateID });
         const resp =  await fetch('https://woodpecker-ci-19fcc5.flakery.xyz/api/repos/1/pipelines', {
             method: 'POST',
             headers: {
                 'accept': 'application/json',
                 'Authorization': `Bearer ${this.woodpecker_api_key}`,
                 'Content-Type': 'application/json',
+                'X-Flakery-User-Key': tok,
             },
             body: JSON.stringify({
                 branch: 'master',
