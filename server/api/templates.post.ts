@@ -174,7 +174,7 @@ export default eventHandler(async (event) => {
   // if not, create one
   const existingPrivateBinaryCache = await db.select().from(privateBinaryCache).where(eq(privateBinaryCache.name, userID)).get();
   if (!existingPrivateBinaryCache) {
-    const bcacheID = "ba69f587-04ba-4db1-a218-69708fc0ec62"; // todo hardcoded tech debt
+    const bcacheID = "9177d3f8-0300-4946-955d-d23c1de83d8f"; // todo hardcoded tech debt
     const config = useRuntimeConfig(event)
 
     let deployment = new AWSDeployment(
