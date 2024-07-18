@@ -195,6 +195,7 @@ export class AWSDeployment {
 
 
 
+        console.log('THIS', this)
 
         try {
             let deployment = await this.db.insert(deployments).values({
