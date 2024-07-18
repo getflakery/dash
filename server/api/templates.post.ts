@@ -186,8 +186,12 @@ export default eventHandler(async (event) => {
           minInstances: 1,
         }
       })
+
+      console.log('deploying bcache')
     
     let bcache = await deployment.Create();
+    console.log('saving bcache')
+
     await db.insert(privateBinaryCache).values({
       name: userID,
       id: uuidv4(),
