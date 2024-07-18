@@ -167,14 +167,19 @@ export class AWSDeployment {
 
     // add method to create a deployment
     public async Create(){
+
+        console.log('creating security group')
         const sg_id = await this.createSecurityGroup();
 
+
+        console.log('creating sg rules')
         if (this.shouldCreateLoadBalancer()) {
             await authorizeInboundTrafficForPort(sg_id, this.ec2Client, this.input.overrides.targetPort ?? 8080)
         } else {
             await authorizeInboundTrafficForAllPorts(sg_id, this.ec2Client)
         }
 
+        console.log('fetching template')
         let template = await this.db.select().from(templates).where(
             eq(templates.id, this.input.templateID)
         ).get()
@@ -183,17 +188,18 @@ export class AWSDeployment {
 
         }
 
+        console.log('creating launch template')
         await this.createLaunchTemplate(template.flakeURL, sg_id);
+        console.log('creating asg')
         await this.createAutoScalingGroup();
 
         const name = petname(2, "-")
         let lbDns = `${name}-${this.deploymentID.substring(0, 6)}.flakery.xyz`
 
         if (this.shouldCreateLoadBalancer()) {
+            console.log('creating cname record')
             await createCNAMERecord(lbDns, "loadb.flakery.xyz", "Z03309493AGZOVY2IU47X", this.route53Client);
         }
-
-
 
         console.log('THIS', this)
 
