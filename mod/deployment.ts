@@ -196,30 +196,37 @@ export class AWSDeployment {
 
 
 
-        let deployment = await this.db.insert(deployments).values({
-            id: this.deploymentID,
-            userID: this.input.userID,
-            templateID: this.input.templateID,
-            name,
-            createdAt: new Date().valueOf(),
-            host: lbDns,
-            port: this.input.overrides.targetPort ?? 8080,
-            data: {
-                aws_resources: {
-                    launch_template_id: this.deploymentID,
-                    autoscaling_group_id: this.deploymentID,
+        try {
+            let deployment = await this.db.insert(deployments).values({
+                id: this.deploymentID,
+                userID: this.input.userID,
+                templateID: this.input.templateID,
+                name,
+                createdAt: new Date().valueOf(),
+                host: lbDns,
+                port: this.input.overrides.targetPort ?? 8080,
+                data: {
+                    aws_resources: {
+                        launch_template_id: this.deploymentID,
+                        autoscaling_group_id: this.deploymentID,
+                    },
+                    min_instances: this.input.overrides.minInstances ?? 1,
+                    max_instances: this.input.overrides.minInstances ?? 1,
+                    public_ip: this.input.overrides.publicIP ?? false,
+                    load_balancer: this.input.overrides.loadBalancer ?? true,
                 },
-                min_instances: this.input.overrides.minInstances ?? 1,
-                max_instances: this.input.overrides.minInstances ?? 1,
-                public_ip: this.input.overrides.publicIP ?? false,
-                load_balancer: this.input.overrides.loadBalancer ?? true,
-            },
-            production: this.input.production ? 1 : 0,
-        }).returning().get()
-        if (!deployment) {
-            throw new Error('Deployment creation failed');
+                production: this.input.production ? 1 : 0,
+            }).returning().get()
+            if (!deployment) {
+                throw new Error('Deployment creation failed');
+            }
+            return deployment;
+        } catch (error) {
+            console.error("Error creating deployment:", error);
+            console.error(this);
+            throw new Error(`DeploymentCreationFailed: ${error}`);
         }
-        return deployment;
+
     }
 
     private async createAutoScalingGroup(): Promise<void> {

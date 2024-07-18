@@ -130,12 +130,6 @@ export default eventHandler(async (event) => {
   })
 
 
-
-
-
-
-
-
   // for each file, create if not exists, otherwise update if exists
   files?.forEach(async (file) => {
     const existingFile = await db.select().from(schemaFiles).where(eq(schemaFiles.id, file.id)).get()
