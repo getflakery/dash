@@ -8,9 +8,9 @@ export default eventHandler(async (event) => {
     })
     const {
         woodpeckerToken,
-      } = await useValidatedBody(event, {
+    } = await useValidatedBody(event, {
         woodpeckerToken: z.string(),
-      })
+    })
 
 
     const db = useDB()
@@ -25,6 +25,6 @@ export default eventHandler(async (event) => {
         createdAt: Date.now(),
 
     }).returning().get()
-    
+
     return new Response('ok', { status: 200 })
 })
