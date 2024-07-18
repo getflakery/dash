@@ -1,14 +1,15 @@
-import { useValidatedBody, z } from "h3-zod"
+import { useValidatedBody, useValidatedParams, z } from "h3-zod"
 import { woodpeckerToken as schemaWoodpeckerToken } from "~/server/database/schema"
 import { v4 as uuidv4 } from 'uuid';
 
 export default eventHandler(async (event) => {
+    const { id } = await useValidatedParams(event, {
+        id: z.string().uuid(),
+    })
     const {
         woodpeckerToken,
-        userID,
       } = await useValidatedBody(event, {
         woodpeckerToken: z.string(),
-        userID: z.string(),
       })
 
 
@@ -20,7 +21,7 @@ export default eventHandler(async (event) => {
         token: encryptedData.encryptedData,
         iv: encryptedData.iv,
         id: uuidv4(),
-        userID,
+        userID: id,
         createdAt: Date.now(),
 
     }).returning().get()
