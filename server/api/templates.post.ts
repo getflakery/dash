@@ -164,7 +164,10 @@ export default eventHandler(async (event) => {
     }).execute()
   })
 
-  console.log('creating private binary cache')
+  console.log({
+    "message": 'creating private binary cache',
+    "userID": userID,
+  })
 
   // check if privateBinaryCache exists for this user
   // if not, create one
