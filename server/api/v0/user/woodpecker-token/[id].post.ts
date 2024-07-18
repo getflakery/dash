@@ -3,9 +3,11 @@ import { woodpeckerToken as schemaWoodpeckerToken } from "~/server/database/sche
 import { v4 as uuidv4 } from 'uuid';
 
 export default eventHandler(async (event) => {
+    console.log('get id')
     const { id } = await useValidatedParams(event, {
         id: z.number(),
     })
+    console.log('get woodpeckerToken')
     const {
         woodpeckerToken,
     } = await useValidatedBody(event, {
@@ -16,7 +18,9 @@ export default eventHandler(async (event) => {
     const db = useDB()
     const cs = useCryptoString()
 
+    console.log('encrypting woodpeckerToken')
     let encryptedData = await cs.encrypt(woodpeckerToken)
+    console.log('inserting woodpeckerToken')
     let token = await db.insert(schemaWoodpeckerToken).values({
         token: encryptedData.encryptedData,
         iv: encryptedData.iv,
