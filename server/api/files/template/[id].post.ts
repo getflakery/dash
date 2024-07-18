@@ -10,7 +10,6 @@ export default eventHandler(async (event) => {
     const session = await requireUserSession(event)
     const userID = session.user.id
 
-
     const {
         file,
     } = await useValidatedBody(event, {
