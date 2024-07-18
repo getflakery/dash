@@ -169,9 +169,11 @@ export default eventHandler(async (event) => {
   // check if privateBinaryCache exists for this user
   // if not, create one
   const existingPrivateBinaryCache = await db.select().from(privateBinaryCache).where(eq(privateBinaryCache.name, userID)).get();
+  console.log('existingPrivateBinaryCache', existingPrivateBinaryCache)
   if (!existingPrivateBinaryCache) {
     const bcacheID = "9177d3f8-0300-4946-955d-d23c1de83d8f"; // todo hardcoded tech debt
     const config = useRuntimeConfig(event)
+    console.log('creating deployment for bcache')
 
     let deployment = new AWSDeployment(
       {
