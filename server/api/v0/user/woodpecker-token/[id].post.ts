@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 export default eventHandler(async (event) => {
     console.log('get id')
     const { id } = await useValidatedParams(event, {
-        id: z.number(),
+        id: z.string(),
     })
     console.log('get woodpeckerToken')
     const {
@@ -25,7 +25,7 @@ export default eventHandler(async (event) => {
         token: encryptedData.encryptedData,
         iv: encryptedData.iv,
         id: uuidv4(),
-        userID: id.toString(),
+        userID: id,
         createdAt: Date.now(),
 
     }).returning().get()
