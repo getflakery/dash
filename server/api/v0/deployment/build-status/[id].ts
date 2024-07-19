@@ -25,7 +25,9 @@ export default eventHandler(async (event) => {
         return new Response('template not found', { status: 404 })
     }
     console.log('get token')
-    const woodpecker_token = await db.select().from(woodpeckerToken).where(eq(woodpeckerToken.userID, template.userID)).get()
+    // strip .0 from template.userID
+    const userID = template.userID.split('.')[0] // this will def never come back to bite me
+    const woodpecker_token = await db.select().from(woodpeckerToken).where(eq(woodpeckerToken.userID, userID)).get()
     if (woodpecker_token == null || woodpecker_token == undefined) {
         return new Response('token not found', { status: 404 })
     }
