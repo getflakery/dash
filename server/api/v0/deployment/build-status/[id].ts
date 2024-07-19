@@ -11,13 +11,18 @@ export default eventHandler(async (event) => {
     const { id } = await useValidatedParams(event, {
         id: z.string().uuid(),
     })
-    const sess = await requireUserSession(event)
     const db = useDB()
+
+    console.log('get deployment')
     const deployment = await db.select().from(deployments).where(eq(deployments.id, id)).get()
     if (deployment == null || deployment == undefined) {
         return new Response('not found', { status: 404 })
     }
-    const woodpecker_token = await db.select().from(woodpeckerToken).where(eq(woodpeckerToken.userID, sess.user.id)).get()
+    const template = await db.select().from(templates).where(eq(templates.id, deployment.templateID)).get()
+    if (template == null || template == undefined) {
+        return new Response('not found', { status: 404 })
+    }
+    const woodpecker_token = await db.select().from(woodpeckerToken).where(eq(woodpeckerToken.userID, template.userID)).get()
     if (woodpecker_token == null || woodpecker_token == undefined) {
         return new Response('not found', { status: 404 })
     }
