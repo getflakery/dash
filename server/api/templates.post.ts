@@ -177,7 +177,7 @@ export default eventHandler(async (event) => {
 
   console.log('existingPrivateBinaryCache', existingPrivateBinaryCache)
   if (!existingPrivateBinaryCache) {
-    const bcacheID = "9177d3f8-0300-4946-955d-d23c1de83d8f"; // todo hardcoded tech debt
+    const bcacheID = "6bfa64d0-2ffa-4620-8ad3-0fae9dbebdf0"; // todo hardcoded tech debt
     const config = useRuntimeConfig(event)
     console.log('creating deployment for bcache')
 
