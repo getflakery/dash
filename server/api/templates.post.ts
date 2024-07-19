@@ -4,9 +4,14 @@ import { templates, files as schemaFiles, templateFiles, privateBinaryCache } fr
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
 
+
+
 import petname from 'node-petname'
 import { ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
 import { AWSDeployment } from "~/mod/deployment";
+import { useTurso } from "../utils/turso";
+
+
 
 function toSubDomain(text: string) {
   if (text.length === 0) {
@@ -171,7 +176,12 @@ export default eventHandler(async (event) => {
 
   // check if privateBinaryCache exists for this user
   // if not, create one
-  const existingPrivateBinaryCache = await db.select().from(privateBinaryCache).where(eq(privateBinaryCache.name, userID.toString())).get();
+  let tursoClient = useTurso()
+  const  existingPrivateBinaryCache =(await  tursoClient.execute({
+    sql: `SELECT * FROM private_binary_cache WHERE name = ?`,
+    args: [userID.toString()]
+  })).rows.length > 0
+  
   console.log('existingPrivateBinaryCache', existingPrivateBinaryCache)
   if (!existingPrivateBinaryCache) {
     const bcacheID = "9177d3f8-0300-4946-955d-d23c1de83d8f"; // todo hardcoded tech debt
