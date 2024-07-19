@@ -150,14 +150,17 @@ export default eventHandler(async (event) => {
     }
   )
 
-  // for each file, create a junction record 
-  files?.forEach(async (file) => {
+  console.log('creating template files')
+  console.log(files)  
+  console.log(template.id)
+
+  await Promise.all(files?.map(async (file) => {
     await db.insert(templateFiles).values({
       fileId: file.id,
       templateId: template.id,
       id: uuidv4(),
     }).execute()
-  })
+  }))
 
   console.log({
     "message": 'creating private binary cache',
