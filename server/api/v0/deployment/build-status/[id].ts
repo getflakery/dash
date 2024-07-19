@@ -16,16 +16,22 @@ export default eventHandler(async (event) => {
     console.log('get deployment')
     const deployment = await db.select().from(deployments).where(eq(deployments.id, id)).get()
     if (deployment == null || deployment == undefined) {
-        return new Response('not found', { status: 404 })
+        return new Response('deployment not found', { status: 404 })
     }
+    console.log('get template')
+
     const template = await db.select().from(templates).where(eq(templates.id, deployment.templateID)).get()
     if (template == null || template == undefined) {
-        return new Response('not found', { status: 404 })
+        return new Response('template not found', { status: 404 })
     }
+    console.log('get token')
     const woodpecker_token = await db.select().from(woodpeckerToken).where(eq(woodpeckerToken.userID, template.userID)).get()
     if (woodpecker_token == null || woodpecker_token == undefined) {
-        return new Response('not found', { status: 404 })
+        return new Response('token not found', { status: 404 })
     }
+
+    console.log('decrypt token')
+
     const cs = useCryptoString()
     const decrpytedData = await cs.decrypt( {
         iv: woodpecker_token.iv,
@@ -35,6 +41,8 @@ export default eventHandler(async (event) => {
         deployment.templateID,
         decrpytedData,
     )
+    console.log('get pipeline')
+
     const resp = await woodpecker.Get()   
     console.log(resp)
     return resp.id
