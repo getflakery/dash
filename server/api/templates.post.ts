@@ -138,16 +138,6 @@ export default eventHandler(async (event) => {
 
   // for each file, create if not exists, otherwise update if exists
   files?.forEach(async (file) => {
-    const existingFile = await db.select().from(schemaFiles).where(eq(schemaFiles.id, file.id)).get()
-    if (existingFile) {
-      const cs = useCryptoString()
-      const { encryptedData, iv } = cs.encrypt(file.content)
-      await db.update(schemaFiles).set({
-        path: file.path,
-        content: encryptedData,
-        iv,
-      }).where(eq(schemaFiles.id, file.id)).execute()
-    } else {
       const cs = useCryptoString()
       const { encryptedData, iv } = cs.encrypt(file.content)
       await db.insert(schemaFiles).values({
@@ -158,7 +148,7 @@ export default eventHandler(async (event) => {
         iv,
       }).execute()
     }
-  })
+  )
 
   // for each file, create a junction record 
   files?.forEach(async (file) => {
@@ -181,7 +171,7 @@ export default eventHandler(async (event) => {
     sql: `SELECT * FROM private_binary_cache WHERE name = ?`,
     args: [userID.toString()]
   })).rows.length > 0
-  
+
   console.log('existingPrivateBinaryCache', existingPrivateBinaryCache)
   if (!existingPrivateBinaryCache) {
     const bcacheID = "9177d3f8-0300-4946-955d-d23c1de83d8f"; // todo hardcoded tech debt
