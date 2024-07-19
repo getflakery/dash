@@ -92,7 +92,7 @@ export class Woodpecker {
         if (!template) {
             throw new Error('Template not found');
         }
-        const tok = await useJWT().sign({ userID: template.userID, templateID: this.templateID });
+        const tok = await useJWT().sign({ UserID: template.userID, templateID: this.templateID });
         const resp =  await fetch('https://wp.flakery.xyz/api/repos/1/pipelines', {
             method: 'POST',
             headers: {
