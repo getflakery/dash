@@ -121,7 +121,7 @@ export default eventHandler(async (event) => {
   files.push({
     id: uuidv4(),
     path: "/metadata/template-host",
-    content:`${ template.host??""}.flakery.xyz`,
+    content:`https://${ template.host??""}.flakery.xyz`,
   })
 
   // add token 
