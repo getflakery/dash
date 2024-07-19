@@ -1,7 +1,8 @@
 import { Woodpecker } from "~/mod/woodpecker";
 
 import { useValidatedParams, z} from 'h3-zod'
-import { woodpeckerToken } from "~/server/database/schema";
+import { woodpeckerToken, templates } from "~/server/database/schema";
+import { eq } from 'drizzle-orm';
 
 export default eventHandler(async (event) => {
     const { id } = await useValidatedParams(event, {
@@ -22,5 +23,7 @@ export default eventHandler(async (event) => {
         id,
         decrpytedData,
     )
-    await woodpecker.Create()
+    const resp =  await woodpecker.Create()
+    return resp
+
 })

@@ -94,6 +94,7 @@ export default eventHandler(async (event) => {
     userID,
     id: uuidv4(),
     host,
+    createdAt: Date.now(),
   }).returning().get()
 
 

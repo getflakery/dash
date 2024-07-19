@@ -93,7 +93,7 @@ export class Woodpecker {
             throw new Error('Template not found');
         }
         const tok = await useJWT().sign({ UserID: template.userID, templateID: this.templateID });
-        const resp =  await fetch('https://wp.flakery.xyz/api/repos/1/pipelines', {
+        const resp = await fetch('https://wp.flakery.xyz/api/repos/1/pipelines', {
             method: 'POST',
             headers: {
                 'accept': 'application/json',
@@ -105,6 +105,32 @@ export class Woodpecker {
                 branch: 'master',
                 variables: await this.getVars(),
             })
+        });
+        if (!resp.ok) {
+            throw new Error('Failed to create pipeline');
+        }
+        const data = await resp.json();
+        // update template pipeline id with resp.id
+        await this.db.update(templates).set({
+            pipelineID: data.id
+        }).where(eq(templates.id, this.templateID)).execute()
+        return data;
+    }
+
+    async Get() {
+        const template = await this.db.select().from(templates).where(eq(templates.id, this.templateID)).get();
+        if (!template) {
+            throw new Error('Template not found');
+        }
+        const tok = await useJWT().sign({ UserID: template.userID, templateID: this.templateID });
+        const resp = await fetch('https://comic-dassie-8723c6.flakery.xyz/api/repos/1/pipelines/' + template.pipelineID, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Bearer ${this.woodpecker_api_key}`,
+                'Content-Type': 'application/json',
+                'X-Flakery-User-Key': tok,
+            },
         });
         if (!resp.ok) {
             throw new Error('Failed to create pipeline');

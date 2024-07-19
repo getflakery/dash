@@ -8,6 +8,8 @@ export const templates = sqliteTable('templates', {
   awsInstanceType: text('aws_instance_type'),
   userID: text('user_id').notNull(),
   host: text('host').unique(),
+  createdAt: integer('created_at').notNull(),
+  pipelineID: integer('pipeline_id'),
 });
 
 // File table definition
