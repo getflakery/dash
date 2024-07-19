@@ -137,18 +137,18 @@ export default eventHandler(async (event) => {
   console.log('creating encrypted files')
 
   // for each file, create if not exists, otherwise update if exists
-  files?.forEach(async (file) => {
-      const cs = useCryptoString()
-      const { encryptedData, iv } = cs.encrypt(file.content)
-      await db.insert(schemaFiles).values({
-        path: file.path,
-        content: encryptedData,
-        userID,
-        id: file.id,
-        iv,
-      }).execute()
-    }
-  )
+
+  await Promise.all(files?.map(async (file) => {
+    const cs = useCryptoString()
+    const { encryptedData, iv } = cs.encrypt(file.content)
+    await db.insert(schemaFiles).values({
+      path: file.path,
+      content: encryptedData,
+      userID,
+      id: file.id,
+      iv,
+    }).execute()
+  }))
 
   console.log('creating template files')
   console.log(files)  
