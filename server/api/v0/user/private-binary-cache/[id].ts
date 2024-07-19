@@ -7,7 +7,6 @@ export default eventHandler(async (event) => {
     const { id } = await useValidatedParams(event, {
         id: z.string(),
     })
-
     
     const db = useDB()
 

@@ -106,6 +106,10 @@ export class Woodpecker {
                 variables: await this.getVars(),
             })
         });
+        if (!resp.ok) {
+            console.log(await resp.text());
+            throw new Error('Failed to create pipeline');
+        }
         const data = await resp.json();
         return data;
     }
