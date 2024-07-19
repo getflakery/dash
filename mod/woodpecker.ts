@@ -122,6 +122,7 @@ export class Woodpecker {
         if (!template) {
             throw new Error('Template not found');
         }
+        console.log(template.pipelineID);
         const tok = await useJWT().sign({ UserID: template.userID, templateID: this.templateID });
         const resp = await fetch('https://comic-dassie-8723c6.flakery.xyz/api/repos/1/pipelines/' + template.pipelineID, {
             method: 'GET',
@@ -133,7 +134,9 @@ export class Woodpecker {
             },
         });
         if (!resp.ok) {
-            throw new Error('Failed to create pipeline');
+            console.log(resp);
+            console.log(await resp.text());
+            throw new Error('Failed to get pipeline');
         }
         const data = await resp.json();
         return data;
