@@ -35,7 +35,7 @@ export default eventHandler(async (event) => {
         encryptedData: woodpecker_token.token
     })
     const woodpecker = new Woodpecker(
-        deployment.templateID,
+        id,
         decrpytedData,
     )
     console.log('get pipeline')
