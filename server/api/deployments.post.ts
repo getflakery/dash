@@ -26,7 +26,7 @@ export default eventHandler(async (event) => {
 
   const userID = session.user.id
 
-  const awsDeployment = new AWSDeployment({
+  const awsDeployment = new AWSDeployment({ 
     config,
     templateID,
     userID,
