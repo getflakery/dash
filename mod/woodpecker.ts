@@ -21,13 +21,13 @@ export class Woodpecker {
     config: RuntimeConfig;
 
 
-    constructor(templateID: string) {
+    constructor(templateID: string, woodpecker_api_key: string) {
         this.templateID = templateID;
         // this.api = new PipelinesApi();
         this.db = useDB();
         const config = useRuntimeConfig();
         this.config = config;
-        this.woodpecker_api_key = config.woodpecker_token;
+        this.woodpecker_api_key = woodpecker_api_key;
         this.woodpecker_repo_id = config.woodpecker_repo_id;
     }
 
@@ -107,7 +107,6 @@ export class Woodpecker {
             })
         });
         if (!resp.ok) {
-            console.log(await resp.text());
             throw new Error('Failed to create pipeline');
         }
         const data = await resp.json();
