@@ -47,5 +47,5 @@ export default eventHandler(async (event) => {
 
     const resp = await woodpecker.Get()   
     console.log(resp)
-    return resp.id
+    return resp.status
 })
