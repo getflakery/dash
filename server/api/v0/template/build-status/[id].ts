@@ -13,14 +13,9 @@ export default eventHandler(async (event) => {
     })
     const db = useDB()
 
-    console.log('get deployment')
-    const deployment = await db.select().from(deployments).where(eq(deployments.id, id)).get()
-    if (deployment == null || deployment == undefined) {
-        return new Response('deployment not found', { status: 404 })
-    }
     console.log('get template')
 
-    const template = await db.select().from(templates).where(eq(templates.id, deployment.templateID)).get()
+    const template = await db.select().from(templates).where(eq(templates.id, id)).get()
     if (template == null || template == undefined) {
         return new Response('template not found', { status: 404 })
     }
