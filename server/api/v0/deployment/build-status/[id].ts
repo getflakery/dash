@@ -35,5 +35,7 @@ export default eventHandler(async (event) => {
         deployment.templateID,
         decrpytedData,
     )
-    return await woodpecker.Get()   
+    const resp = await woodpecker.Get()   
+    console.log(resp)
+    return resp.id
 })
