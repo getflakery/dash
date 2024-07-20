@@ -1,6 +1,6 @@
 import { useDB } from "../utils/db"
 import { useValidatedBody, z, } from 'h3-zod'
-import { templates, files as schemaFiles, templateFiles, privateBinaryCache } from '~/server/database/schema'
+import { templates, files as schemaFiles, templateFiles, privateBinaryCache, deployments, target } from '~/server/database/schema'
 import { v4 as uuidv4 } from 'uuid';
 import { eq, and } from 'drizzle-orm'
 
@@ -151,17 +151,7 @@ export default eventHandler(async (event) => {
     }).execute()
   }))
 
-  console.log('creating template files')
-  console.log(files)  
-  console.log(template.id)
 
-  await Promise.all(files?.map(async (file) => {
-    await db.insert(templateFiles).values({
-      fileId: file.id,
-      templateId: template.id,
-      id: uuidv4(),
-    }).execute()
-  }))
 
   console.log({
     "message": 'creating private binary cache',
@@ -209,6 +199,60 @@ export default eventHandler(async (event) => {
     }).execute();
 
   }
+
+  // get private binary cache id
+  const binaryCache = await db.select().from(privateBinaryCache).where(eq(privateBinaryCache.name, userID)).get()
+  if (!binaryCache) {
+    throw new Error('Binary cache not found')
+  }
+
+  // get binary cache deployment
+  const deployment = await db.select().from(deployments).where(eq(deployments.id, binaryCache.deploymentID)).get()
+  if (!deployment) {
+    throw new Error('Deployment not found')
+  }
+
+  // get last target
+  const targets = await db.select().from(target).where(eq(target.deploymentID, binaryCache.deploymentID)).all()
+  if (targets.length === 0) {
+    throw new Error('No targets found')
+  }
+
+  const t = targets[targets.length - 1]
+  if (!t) {
+    throw new Error('No target found')
+  }
+
+  let binaryCachePublicKey = binaryCache.publickey
+
+  // add binary cache public key to metadata
+  files.push({
+    id: uuidv4(),
+    path: "/metadata/binary-cache-public-key",
+    content: binaryCachePublicKey?? "",
+  })
+
+  // add binary cache host to metadata
+
+  files.push({
+    id: uuidv4(),
+    path: "/metadata/binary-cache-host",
+    content: t.host,
+  })
+
+
+
+  console.log('creating template files')
+  console.log(files)  
+  console.log(template.id)
+
+  await Promise.all(files?.map(async (file) => {
+    await db.insert(templateFiles).values({
+      fileId: file.id,
+      templateId: template.id,
+      id: uuidv4(),
+    }).execute()
+  }))
 
 
   return template
