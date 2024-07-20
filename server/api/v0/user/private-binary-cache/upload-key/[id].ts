@@ -35,5 +35,5 @@ export default eventHandler(async (event) => {
     }).where(
         eq(privateBinaryCache.name, id)
     ).returning().get()
-    return pbc
+    return updatedPbc
 })
