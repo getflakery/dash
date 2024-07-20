@@ -71,12 +71,8 @@ function getItems(template: Template, refresh: Function | undefined) {
       label: 'Link Git Repo',
       icon: 'i-heroicons-code-bracket',
       click: async () => {
-        await fetch(`/api/template/link-git/${template.id}`, {
-          method: 'POST',
-        });
-        if (refresh) {
-          await refresh();
-        }
+        // navigate to /api/template/link-git/${template.id}
+        window.location = `/api/template/link-git/${template.id}`
 
       }
     }

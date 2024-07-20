@@ -10,6 +10,8 @@ export const templates = sqliteTable('templates', {
   host: text('host').unique(),
   createdAt: integer('created_at').notNull(),
   pipelineID: integer('pipeline_id'),
+  repoFullName: text('repo_full_name'),
+  webhook: integer('webhook').notNull().default(0),
 });
 
 // File table definition
