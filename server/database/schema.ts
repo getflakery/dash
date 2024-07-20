@@ -82,6 +82,9 @@ export const privateBinaryCache = sqliteTable('private_binary_cache', {
   name: text('name').notNull(), // user id name is a bad way to do this
   deploymentID: text('deployment_id').notNull().references(() => deployments.id, { onDelete: 'cascade' }).notNull(),
   createdAt: integer('created_at').notNull(),
+  privatekey: text('private_key'),
+  iv: text('initialization_vector'),
+  publickey: text('public_key'),
 });
 
 export const woodpeckerToken  = sqliteTable('woodpecker_token', {
