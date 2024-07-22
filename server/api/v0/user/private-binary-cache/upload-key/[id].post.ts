@@ -4,7 +4,7 @@ import { privateBinaryCache } from "~/server/database/schema"
 
 export default eventHandler(async (event) => {
     console.log('get id')
-    const { id } = await useValidatedParams(event, {
+    let { id } = await useValidatedParams(event, {
         id: z.string(),
     })
 
@@ -14,6 +14,10 @@ export default eventHandler(async (event) => {
     })
     
     const db = useDB()
+
+    if (!id.includes('.0')) {
+        id = id + '.0'
+    }
 
     const pbc = await db.select().from(privateBinaryCache).where(
         eq(privateBinaryCache.name, id)
