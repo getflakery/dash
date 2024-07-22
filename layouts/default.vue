@@ -20,7 +20,15 @@ const links = [{
   to: '/dashboard/deployments',
   icon: 'i-heroicons-server-stack',
   // badge: '4',
-}]
+}, 
+{
+  id: 'settings',
+  label: 'Settings',
+  to: '/settings',
+  icon: 'i-heroicons-cog-6-tooth',
+  // badge: '4',
+}
+]
 
 const footerLinks = [{
   label: 'Help & Support',

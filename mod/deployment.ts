@@ -6,7 +6,7 @@ import type { RuntimeConfig } from "~/types";
 import type { CryptoString } from "~/server/utils/crypto";
 import { v4 as uuidv4 } from 'uuid';
 import { AuthorizeSecurityGroupIngressCommand, CreateLaunchTemplateCommand, CreateSecurityGroupCommand, EC2Client, _InstanceType } from "@aws-sdk/client-ec2";
-import { CreateAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
+import { CreateAutoScalingGroupCommand, DeleteAutoScalingGroupCommand } from "@aws-sdk/client-auto-scaling";
 
 import { ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
 import { templates, deployments } from "~/server/database/schema";
@@ -130,6 +130,7 @@ async function createCNAMERecord(domainName, targetDNS, hostedZoneId, route53Cli
 
 
 
+// todo a lot of this is probably better for the create method instead of the constructor 
 export interface AWSDeploymentInput {
     config: RuntimeConfig,
     templateID: string,
@@ -328,7 +329,26 @@ export class AWSDeployment {
         return response.GroupId;
 
     }
+
+
+
 }
 
+export default async function Delete(
+    deploymentID: string,
+) {
+    const client = useAutoScalingClient()
+    const db = useDB()
 
-
+    const command = new DeleteAutoScalingGroupCommand({
+        AutoScalingGroupName: deploymentID,
+        ForceDelete: true
+    });
+    try {
+        const result = await client.send(command);
+        console.log(result);
+      } catch (err) {
+        console.log(err);
+    }  
+    return db.delete(deployments).where(eq(deployments.id, deploymentID))
+}
