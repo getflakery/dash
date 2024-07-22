@@ -44,6 +44,7 @@ export default eventHandler(async (event) => {
         publicIP: false,
         loadBalancer: false,
         minInstances: 1,
+        targetPort: 3007,
       }
     })
 
