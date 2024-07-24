@@ -112,7 +112,7 @@ export class Woodpecker {
         const data = await resp.json();
         // update template pipeline id with resp.id
         await this.db.update(templates).set({
-            pipelineID: data.id
+            pipelineID: data.number
         }).where(eq(templates.id, this.templateID)).execute()
         return data;
     }
