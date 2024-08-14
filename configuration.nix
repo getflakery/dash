@@ -32,7 +32,7 @@
   systemd.services.podman-nocodb.after = [ "create-dir.service" ];
 
   virtualisation.oci-containers.containers = {
-    nocodb = {
+    flakery = {
       image = "public.ecr.aws/t7q1f7c9/flakery:latest";
       autoStart = true;
       ports = [ "3000:3000" ];
