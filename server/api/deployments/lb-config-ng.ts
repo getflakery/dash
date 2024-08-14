@@ -21,8 +21,19 @@ export default eventHandler(async (event) => {
     const db = useDB()
 
     console.log("getting targets");
+    let allTargets
+    try {
 
-    let allTargets = await db.select().from(target).all();
+     allTargets = await db.select().from(target).all();
+    } catch (e) {
+        console.error(e);
+        return {
+            "http": {
+                "routers": {},
+                "services": {}
+            }
+        }
+    }
 
 
     console.log("indexing targets");
