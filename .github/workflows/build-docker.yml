@@ -39,6 +39,11 @@ jobs:
         VERCEL_ORG_ID: team_QReBIZfC9Npefbffo6mPT3qO
       run: |
         ./envs.sh
+        # format the .env file to be used as build args
+        # remove comments and empty lines
+        sed -i '/^$/d' .env
+        sed -i '/^#/d' .env
+
         docker build -t public.ecr.aws/t7q1f7c9/flakery:$IMAGE_TAG $(for i in `cat .env`; do out+="--build-arg $i " ; done; echo $out;out="") .
         docker build -t public.ecr.aws/t7q1f7c9/flakery:latest $(for i in `cat .env`; do out+="--build-arg $i " ; done; echo $out;out="") .
         docker push public.ecr.aws/t7q1f7c9/flakery:$IMAGE_TAG
