@@ -40,6 +40,9 @@
               ./configuration.nix
             ];
           };
+
+          packages.nixosConfigurations.flakery-config-only =  ./configuration.nix;
+
           packages.test = pkgs.testers.runNixOSTest
             {
               name = "test builds";
