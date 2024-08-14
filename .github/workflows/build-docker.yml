@@ -35,4 +35,6 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build -t public.ecr.aws/t7q1f7c9/flakery:$IMAGE_TAG .
+        docker build -t public.ecr.aws/t7q1f7c9/flakery:latest .
         docker push public.ecr.aws/t7q1f7c9/flakery:$IMAGE_TAG
+        docker push public.ecr.aws/t7q1f7c9/flakery:latest

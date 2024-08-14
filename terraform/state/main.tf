@@ -31,6 +31,7 @@ resource "aws_iam_policy" "github_actions" {
         Action   = [
             "ecr:*",
             "ecr-public:*",
+            "sts:GetServiceBearerToken"
         ]
         Resource = "*"
       },
