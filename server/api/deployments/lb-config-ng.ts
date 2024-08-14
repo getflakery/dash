@@ -1,5 +1,8 @@
 import { deployments, target, templates } from "~/server/database/schema";
 import { inArray, eq } from 'drizzle-orm'
+import { createClient } from "@libsql/client";
+
+
 
 interface routers {
     [key: string]: {
@@ -15,8 +18,23 @@ interface services {
     }
 }
 
+
+
 export default eventHandler(async (event) => {
     console.log("lb config");
+
+    const config = useRuntimeConfig()
+
+     const turso = createClient({
+        url: config.db_url,
+        authToken: config.turso_token,
+      });
+
+    //   seleect 1+1 to test
+      const resp = await turso.execute("SELECT 1+1");
+      console.log(resp)
+
+      
 
     const db = useDB()
 
