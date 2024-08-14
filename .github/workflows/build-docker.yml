@@ -10,6 +10,10 @@ permissions:
 
 jobs:
   build-and-push:
+    matrix:
+      tags:
+        - public.ecr.aws/t7q1f7c9/flakery:latest
+        - public.ecr.aws/t7q1f7c9/flakery:{{ github.sha }}
     runs-on: ubuntu-latest
     
     steps:
@@ -33,7 +37,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: "public.ecr.aws/t7q1f7c9/flakery:latest"
+        tags:
         # cache-from: type=gha
         # cache-to: type=gha,mode=max
         build-args: |
