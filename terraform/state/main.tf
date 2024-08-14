@@ -30,6 +30,7 @@ resource "aws_iam_policy" "github_actions" {
         Effect   = "Allow"
         Action   = [
             "ecr:*",
+            "ecr-public:*",
         ]
         Resource = "*"
       },
