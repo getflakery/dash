@@ -21,6 +21,7 @@
               awscli2
               bun
               terraform
+               nodePackages_latest.vercel
             ];
           };
         in
