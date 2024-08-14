@@ -3,6 +3,20 @@
 - [Documentation](https://flakery.dev/documentation/quick-start)
 
 
+## build oci image 
+
+```
+podman build -t flakery .
+```
+
+## run oci image 
+
+```
+podman run -p 3000:3000 flakery
+```
+
+
+
 ## Setup
 
 enter nix development shell 
