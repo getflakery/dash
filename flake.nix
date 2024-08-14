@@ -1,7 +1,7 @@
 {
   description = "basic flake-utils";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
   inputs.flakery.url = "github:getflakery/flakes";
 
