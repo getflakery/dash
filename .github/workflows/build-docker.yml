@@ -38,17 +38,16 @@ jobs:
         # cache-to: type=gha,mode=max
         build-args: |
           NUXT_WEBHOOK_CLIENT_ID=${{ secrets.NUXT_WEBHOOK_CLIENT_ID }}
-          NUXT_WEBHOOK_URL=${{ secrets.NUXT_WEBHOOK_URL }}
+          NUXT_WEBHOOK_URL="https://flakery.dev/api/template/webhook"
           NUXT_WEBHOOK_CLIENT_SECRET=${{ secrets.NUXT_WEBHOOK_CLIENT_SECRET }}
           NUXT_JWT_SECRET=${{ secrets.NUXT_JWT_SECRET }}
-          AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}
           AWS_KEY=${{ secrets.AWS_KEY }}
           AWS_SECRET=${{ secrets.AWS_SECRET }}
           BACKEND_URL=${{ secrets.BACKEND_URL }}
-          NODE_OPTIONS=${{ secrets.NODE_OPTIONS }}
+          NODE_OPTIONS="--max_old_space_size=4096"
           NUXT_CRYPTO_STRING_KEY=${{ secrets.NUXT_CRYPTO_STRING_KEY }}
           NUXT_CRYPTO_STRING_SALT=${{ secrets.NUXT_CRYPTO_STRING_SALT }}
-          NUXT_DB_URL=${{ secrets.NUXT_DB_URL }}
+          NUXT_DB_URL="libsql://flakery-r33drichards.turso.io"
           NUXT_FILE_ENCRYPTION_KEY=${{ secrets.NUXT_FILE_ENCRYPTION_KEY }}
           NUXT_GITHUB_TOKEN=${{ secrets.NUXT_GITHUB_TOKEN }}
           NUXT_OAUTH_GITHUB_CLIENT_ID=${{ secrets.NUXT_OAUTH_GITHUB_CLIENT_ID }}
@@ -56,6 +55,6 @@ jobs:
           NUXT_SESSION_PASSWORD=${{ secrets.NUXT_SESSION_PASSWORD }}
           NUXT_TURSO_TOKEN=${{ secrets.NUXT_TURSO_TOKEN }}
           NUXT_UI_PRO_LICENSE=${{ secrets.NUXT_UI_PRO_LICENSE }}
-          PROD=${{ secrets.PROD }}
+          PROD=1
 
 
