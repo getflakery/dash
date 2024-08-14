@@ -20,8 +20,12 @@ export default eventHandler(async (event) => {
 
     const db = useDB()
 
+    console.log("getting targets");
+
     let allTargets = await db.select().from(target).all();
 
+
+    console.log("indexing targets");
     // index by deployment id
     let targetsByDeployment = allTargets.reduce<{
         [deploymentID: string]: typeof allTargets
@@ -34,6 +38,8 @@ export default eventHandler(async (event) => {
     }, {});
     let deploymentIDs = Object.keys(targetsByDeployment);
 
+
+    console.log("getting deployments");
     // select id, host from deployments where id in (...)
     let deps = await db
         .select()
@@ -41,6 +47,8 @@ export default eventHandler(async (event) => {
         .where(inArray(deployments.id, deploymentIDs))
         .execute();
 
+
+    
 
     let routers = deps.reduce<routers>((acc, dep) => {
         if (!dep.host) {
