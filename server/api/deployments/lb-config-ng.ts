@@ -20,6 +20,9 @@ export default eventHandler(async (event) => {
 
     const db = useDB()
 
+    // test db connection by selectin 1 + 1
+
+
     console.log("getting targets");
     let allTargets
     try {

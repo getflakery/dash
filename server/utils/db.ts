@@ -12,9 +12,13 @@ let _db: BetterSQLite3Database | LibSQLDatabase | null = null
 export const useDB = () => {
   const config = useRuntimeConfig()
 
+  console.log(config.db_url, config.turso_token)
+
   if (!_db) {
 
     if (config.db_url && config.turso_token) {
+
+      // create a libsql client 
       _db = drizzleLibSQL(createLibSQLClient({
         url: config.db_url,
         authToken: config.turso_token,
