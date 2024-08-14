@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i bash -p curl jq
+#! nix-shell -i bash -p curl jq coreutils
 
 # Replace with your Vercel API token
 # VERCEL_TOKEN=
@@ -17,8 +17,17 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Print environment variables
-echo "$response" | jq -r '.envs[] | "\(.key)=\(.value)"'
-
-# Note: `jq` is used here to parse the JSON response. 
-# If jq is not installed, you can install it using your package manager, e.g., `sudo apt-get install jq`
+# Decode base64 encoded values and print environment variables
+echo "$response" | jq -r '.envs[] | "\(.key)=\(.value)"' | while IFS= read -r line; do
+    key=$(echo "$line" | cut -d '=' -f 1)
+    value=$(echo "$line" | cut -d '=' -f 2)
+    
+    # Check if value is base64 encoded by attempting to decode it
+    decoded_value=$(echo "$value" | base64 --decode 2>/dev/null)
+    
+    if [ $? -eq 0 ]; then
+        echo "$key=$decoded_value"
+    else
+        echo "$line"
+    fi
+done
