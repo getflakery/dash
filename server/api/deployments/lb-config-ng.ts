@@ -16,6 +16,7 @@ interface services {
 }
 
 export default eventHandler(async (event) => {
+    console.log("lb config");
 
     const db = useDB()
 
