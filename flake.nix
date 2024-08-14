@@ -41,7 +41,12 @@
             ];
           };
 
-          packages.nixosConfigurations.flakery-config-only =  ./configuration.nix;
+          packages.nixosConfigurations.flakery-config-only = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+              ./configuration.nix
+            ];
+          };
 
           packages.test = pkgs.testers.runNixOSTest
             {
