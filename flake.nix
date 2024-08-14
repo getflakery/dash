@@ -27,19 +27,18 @@
               qemu
             ];
           };
-          flakery = pkgs.lib.nixosSystem {
+        in
+        {
+          devShells.default = devshell;
+
+
+          packages.nixosConfigurations.flakery = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
             modules = [
               flakery.nixosModules.flakery
               ./configuration.nix
             ];
           };
-        in
-        {
-          devShells.default = devshell;
-
-
-          packages.nixosConfigurations.flakery = flakery;
           packages.test = pkgs.testers.runNixOSTest
             {
               name = "test builds";
