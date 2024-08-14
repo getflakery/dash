@@ -22,6 +22,8 @@
               bun
               terraform
                nodePackages_latest.vercel
+               podman
+               qemu
             ];
           };
         in
