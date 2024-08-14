@@ -34,7 +34,6 @@ jobs:
     - name: Run `nix envs`
       env:
         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       run: ./envs.sh > .env
     - name: Build, tag, and push docker image to Amazon ECR Public
       env:
