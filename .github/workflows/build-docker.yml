@@ -34,8 +34,8 @@ jobs:
         context: .
         push: true
         tags: "public.ecr.aws/t7q1f7c9/flakery:latest"
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        # cache-from: type=gha
+        # cache-to: type=gha,mode=max
         build-args: |
           NUXT_WEBHOOK_CLIENT_ID=${{ secrets.NUXT_WEBHOOK_CLIENT_ID }}
           NUXT_WEBHOOK_URL=${{ secrets.NUXT_WEBHOOK_URL }}
