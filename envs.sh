@@ -8,7 +8,7 @@
 # VERCEL_PROJECT_ID=
 
 # Fetch environment variables from Vercel
-response=$(curl -s -X GET "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID/env" \
+response=$(curl -s -X GET "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID/env?decrypt=true" \
 -H "Authorization: Bearer $VERCEL_TOKEN")
 
 # Check if the request was successful
