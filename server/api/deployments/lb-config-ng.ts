@@ -31,7 +31,9 @@ export default eventHandler(async (event) => {
     let allTargets
     try {
 
-     allTargets = await db.select().from(target).all();
+     allTargets = await db.select().from(target).where(
+        eq(target.healthy, 1)
+     ).all();
     } catch (e) {
         console.error(e);
         return {
