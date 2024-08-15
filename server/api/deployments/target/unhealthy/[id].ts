@@ -5,9 +5,10 @@ import { target as targetSchema } from '~/server/database/schema'
 
 export default eventHandler(async (event) => {
     console.log("unhealthy target")
-    const { target } = await useValidatedBody(event, {
-        target: z.string(),
+    const { Target } = await useValidatedBody(event, {
+        Target: z.string(),
     })
+    const target = Target
     console.log("target", target)
 
     const id = await useValidatedParams(event, {
