@@ -3,7 +3,7 @@
 {
   system.stateVersion = "23.05";
 
-  # Enable common container config files in /etc/containers
+
   virtualisation.containers.enable = true;
   virtualisation = {
     podman = {
@@ -18,7 +18,7 @@
       defaultNetwork.settings.dns_enabled = true;
     };
   };
-
+  networking.firewall.interfaces.podman0.allowedUDPPorts = [ 53 ];
 
   # make nocodb depend on create-dir
   virtualisation.oci-containers.backend = "podman";
@@ -29,14 +29,17 @@
       autoStart = true;
       ports = [ "3000:3000" ];
       environmentFiles = [ "/.env" ];
+      extraOptions = [ "--cap-add=CAP_NET_RAW" ]; # maybe not needed
+
     };
     watchtower = {
       image = "containrrr/watchtower";
       autoStart = true;
       volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+      # -i 2
+      cmd = [ "-i" "2" ];
     };
   };
-
   # port 3000
   networking.firewall.allowedTCPPorts = [ 3000 ];
 

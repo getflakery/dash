@@ -179,6 +179,10 @@ export class AWSDeployment {
         } else {
             await authorizeInboundTrafficForAllPorts(sg_id, this.ec2Client)
         }
+        
+        // for health checks
+        await authorizeInboundTrafficForPort(sg_id, this.ec2Client, 9002)
+
 
         console.log('fetching template')
         let template = await this.db.select().from(templates).where(
