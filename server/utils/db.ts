@@ -3,8 +3,7 @@ import { drizzle as drizzleLibSQL, LibSQLDatabase } from 'drizzle-orm/libsql'
 import { drizzle, type BetterSQLite3Database } from 'drizzle-orm/better-sqlite3'
 // @ts-ignore
 import Database from 'better-sqlite3'
-import { join } from 'pathe'
-
+import { join } from 'path'
 export * as tables from '~/server/database/schema'
 
 let _db: BetterSQLite3Database | LibSQLDatabase | null = null
@@ -12,7 +11,6 @@ let _db: BetterSQLite3Database | LibSQLDatabase | null = null
 export const useDB = () => {
   const config = useRuntimeConfig()
 
-  console.log(config.db_url, config.turso_token)
 
   if (!_db) {
 
