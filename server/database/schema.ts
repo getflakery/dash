@@ -1,3 +1,4 @@
+import { he } from 'date-fns/locale';
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
 // Template table definition
@@ -63,6 +64,7 @@ export const target = sqliteTable('target', {
   host: text('host').notNull(),
   completed: integer('completed').notNull().default(0),
   exitCode: integer('exit_code'),
+  healthy: integer('healthy').notNull().default(1),
 });
 
 
