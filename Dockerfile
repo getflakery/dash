@@ -1,4 +1,4 @@
-FROM node
+FROM node:lts
 
 # Install pnpm
 RUN npm install -g pnpm
