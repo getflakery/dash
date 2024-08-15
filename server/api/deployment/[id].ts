@@ -14,38 +14,45 @@ export default eventHandler(async (event) => {
       eq(deployments.id, id))
   ).get();
 
-  let  logs = await db.select().from(deploymentLogs).where(
-    eq(deploymentLogs.deploymentID, id)
-  ).all();
-
-
-  switch (logs) {
-    case null:
-      return {
-        ...inst,
-        logs: []
-      }
-    default:
-      return {
-        ...inst,
-        ...logs.reduce((acc, log) => {
-          if (
-            acc.logs === undefined ||
-            acc.logs === null
-          ) {
-            acc.logs = []
-          }
-          if (
-            log.logs === undefined ||
-            log.logs === null
-          ) {
-            log.logs = []
-          }
-          acc.logs.push(...log.logs)
-          acc.logs?.sort((a, b) => a.date - b.date)
-          return acc
-        }, {})
-      }
+  console.log("inst", inst) 
+  return {
+    ...inst,
+    logs: []
   }
+
+  // const limit = 2; // Adjust the limit based on your needs
+  // const offset = 0;  // Update this for pagination
+  // let logs = await db.select().from(deploymentLogs).where(
+  //   eq(deploymentLogs.deploymentID, id)
+  // ).limit(limit).offset(offset).all();
+  
+  // console.log("logs", logs)
+
+
+  // switch (logs) {
+  //   case null:
+
+  //   default:
+  //     return {
+  //       ...inst,
+  //       ...logs.reduce((acc, log) => {
+  //         if (
+  //           acc.logs === undefined ||
+  //           acc.logs === null
+  //         ) {
+  //           acc.logs = []
+  //         }
+  //         if (
+  //           log.logs === undefined ||
+  //           log.logs === null
+  //         ) {
+  //           log.logs = []
+  //         }
+  //         acc.logs.push(...log.logs)
+  //         acc.logs?.sort((a, b) => a.date - b.date)
+  //         return acc
+  //       }, {})
+  //     }
+  // }
 })
 
