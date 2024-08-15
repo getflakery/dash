@@ -11,7 +11,7 @@ export default eventHandler(async (event) => {
     const target = Host
     console.log("target", target)
 
-    const id = await useValidatedParams(event, {
+    const { id } = await useValidatedParams(event, {
         id: z.string(),
     })
 
@@ -28,5 +28,4 @@ export default eventHandler(async (event) => {
     )
     console.log("resp", resp)
     return resp
-    
 })
