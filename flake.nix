@@ -22,9 +22,6 @@
               awscli2
               bun
               terraform
-              nodePackages_latest.vercel
-              podman
-              qemu
             ];
           };
         in
@@ -41,6 +38,15 @@
             ];
           };
 
+          packages.nixosConfigurations.reverse-proxy = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+              flakery.nixosModules.reverse-proxy
+              flakery.nixosConfigurations.base
+              ./reverse-proxy.nix
+            ];
+          };
+
           packages.nixosConfigurations.flakery-config-only = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
             modules = [
@@ -53,6 +59,8 @@
               name = "test builds";
               nodes = {
                 machine1 = ./configuration.nix;
+                machine2 = ./reverse-proxy.nix;
+
               };
               testScript = ''
                 start_all();

@@ -40,7 +40,14 @@
       cmd = [ "-i" "2" ];
     };
   };
+  systemd.services.podman-flakery = {
+    serviceConfig = {
+      Restart = "always";
+    };
+  };
   # port 3000
   networking.firewall.allowedTCPPorts = [ 3000 ];
+
+
 
 }
