@@ -1,5 +1,5 @@
 import {
-EC2Client,
+    EC2Client,
 
 } from "@aws-sdk/client-ec2";
 
@@ -13,24 +13,26 @@ import { ElasticLoadBalancingV2Client } from "@aws-sdk/client-elastic-load-balan
 import { Route53Client, ChangeResourceRecordSetsCommand } from "@aws-sdk/client-route-53";
 
 
-const getConf= () => {
-    if (process.env.PROD == '1') {
-        console.log('using prod aws conf')
-        if (!process.env.AWS_KEY || !process.env.AWS_SECRET) {
-            throw new Error('AWS_KEY and AWS_SECRET must be set in prod')
-        }
+const getConf = () => {
+    const config = useRuntimeConfig()
+
+    if (config.aws_key && config.aws_secret) {
+        console.log('using env aws conf')
         return {
             region: 'us-west-2',
             credentials: {
-                accessKeyId: process.env.AWS_KEY as string,
-                secretAccessKey: process.env.AWS_SECRET as string,
+                accessKeyId: config.AWS_ACCESS_KEY_ID,
+                secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
             }
-            
+
         }
     }
+
+
+
     console.log('using dev aws conf')
     return {
-        region: 'us-west-2',        
+        region: 'us-west-2',
     }
 }
 
@@ -41,7 +43,7 @@ export const useEC2Client = () => {
         _client = new EC2Client(getConf())
     }
     return _client
-     
+
 }
 
 // // // autoscaling
@@ -51,7 +53,7 @@ export const useAutoScalingClient = () => {
         _autoScalingClient = new AutoScalingClient(getConf())
     }
     return _autoScalingClient
-     
+
 }
 
 let _elbClient: ElasticLoadBalancingV2Client | null = null
@@ -60,7 +62,7 @@ export const useELBClient = () => {
         _elbClient = new ElasticLoadBalancingV2Client(getConf())
     }
     return _elbClient
-     
+
 }
 
 let _route53Client: Route53Client | null = null
@@ -69,5 +71,5 @@ export const useRoute53Client = () => {
         _route53Client = new Route53Client(getConf())
     }
     return _route53Client
-     
+
 }

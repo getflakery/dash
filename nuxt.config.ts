@@ -84,6 +84,8 @@ export default defineNuxtConfig({
     webhook_url: '"https://flakery.com/api/template/webhook"', // can be overridden by NUXT_WEBHOOK_URL environment variable
     webhook_client_id: 'Ov23ligVxZURmhfutUBC', // can be overridden by NUXT_WEBHOOK_CLIENT_ID environment variable
     webhook_client_secret: '', // can be overridden by NUXT_WEBHOOK_CLIENT_SECRET environment variable
+    AWS_ACCESS_KEY_ID: '', // can be overridden by NUXT_AWS_KEY environment variable
+    AWS_SECRET_ACCESS_KEY: '', // can be overridden by NUXT_AWS_SECRET environment variable
     public: {
       vpc_id: 'vpc-0c1c37e1a494e6adf', // can be overridden by NUXT_PUBLIC_VPC_ID environment variable
       public_subnet_1: 'subnet-08307ac15ba441caf', // can be overridden by NUXT_PUBLIC_SUBNET_1 environment variable
