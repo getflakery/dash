@@ -135,6 +135,12 @@ export default eventHandler(async (event) => {
     content: tok,
   })
 
+  files.push({
+    id: uuidv4(),
+    path: "/metadata/flake-url",
+    content: flakeURL,
+  })
+
   console.log('creating encrypted files')
 
   // for each file, create if not exists, otherwise update if exists
