@@ -15,6 +15,10 @@ import { Route53Client, ChangeResourceRecordSetsCommand } from "@aws-sdk/client-
 
 const getConf= () => {
     if (process.env.PROD == '1') {
+        console.log('using prod aws conf')
+        if (!process.env.AWS_KEY || !process.env.AWS_SECRET) {
+            throw new Error('AWS_KEY and AWS_SECRET must be set in prod')
+        }
         return {
             region: 'us-west-2',
             credentials: {
@@ -24,6 +28,7 @@ const getConf= () => {
             
         }
     }
+    console.log('using dev aws conf')
     return {
         region: 'us-west-2',        
     }
